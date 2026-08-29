@@ -39,62 +39,62 @@ export default function ContactPage() {
           </SlideUp>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
           
-          <SlideUp delay={0.3} className="lg:col-span-1">
-            <div className="bg-white/70 backdrop-blur-xl p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] shadow-[inset_0_-4px_0_0_rgba(0,0,0,0.02)] border border-white/50 h-full relative overflow-hidden">
+          <SlideUp delay={0.3} className="h-full">
+            <div className="bg-white/80 backdrop-blur-xl p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white relative overflow-hidden h-full flex flex-col justify-center">
               <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-2xl"></div>
               
-              <h3 className="text-2xl font-bold font-display text-secondary mb-10 relative z-10">Contact Information</h3>
+              <h3 className="text-2xl font-bold font-display text-secondary mb-8 relative z-10">Contact Information</h3>
               
-              <div className="space-y-10 relative z-10">
-                <div className="flex items-start gap-5 group">
+              <div className="space-y-8 relative z-10">
+                <div className="flex items-start gap-4 group">
                   <div className="w-12 h-12 bg-surface border border-gray-100 text-primary rounded-xl flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
                     <MapPin size={24} strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-secondary mb-1">Our Location</h4>
-                    <p className="text-secondary-light">Hyderabad, India</p>
+                    <h4 className="font-bold text-secondary mb-0.5">Our Location</h4>
+                    <p className="text-secondary-light text-sm">Hyderabad, India</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-5 group">
+                <div className="flex items-start gap-4 group">
                   <div className="w-12 h-12 bg-surface border border-gray-100 text-primary rounded-xl flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
                     <Phone size={24} strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-secondary mb-1">Phone Number</h4>
-                    <p className="text-secondary-light">+91 9999999999</p>
+                    <h4 className="font-bold text-secondary mb-0.5">Phone Number</h4>
+                    <p className="text-secondary-light text-sm">+91 7036592351</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-5 group">
+                <div className="flex items-start gap-4 group">
                   <div className="w-12 h-12 bg-surface border border-gray-100 text-primary rounded-xl flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
                     <Mail size={24} strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-secondary mb-1">Email Address</h4>
-                    <p className="text-secondary-light">contact@vishait.com</p>
+                    <h4 className="font-bold text-secondary mb-0.5">Email Address</h4>
+                    <p className="text-secondary-light text-sm">contact@vishait.com</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-5 group">
+                <div className="flex items-start gap-4 group">
                   <div className="w-12 h-12 bg-surface border border-gray-100 text-primary rounded-xl flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
                     <Clock size={24} strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-secondary mb-1">Working Hours</h4>
-                    <p className="text-secondary-light">Mon - Fri: 9:00 AM - 6:00 PM</p>
+                    <h4 className="font-bold text-secondary mb-0.5">Working Hours</h4>
+                    <p className="text-secondary-light text-sm">Mon - Fri: 9:00 AM - 6:00 PM</p>
                   </div>
                 </div>
               </div>
             </div>
           </SlideUp>
 
-          <SlideUp delay={0.4} className="lg:col-span-2">
-            <div className="bg-white/70 backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] shadow-[0_20px_40px_rgb(0,0,0,0.04)] border border-white/50 h-full relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-full h-2 bg-gradient-to-r from-primary to-blue-300"></div>
-              <h3 className="text-3xl font-bold font-display text-secondary mb-8">Send us a message</h3>
+          <SlideUp delay={0.4} className="h-full">
+            <div className="bg-white/80 backdrop-blur-xl p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white h-full relative overflow-hidden flex flex-col">
+              <div className="absolute top-0 right-0 w-full h-1.5 bg-gradient-to-r from-primary to-blue-400"></div>
+              <h3 className="text-2xl font-bold font-display text-secondary mb-6">Send us a message</h3>
               <ContactForm />
             </div>
           </SlideUp>

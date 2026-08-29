@@ -51,7 +51,7 @@ export default function Navbar() {
       {/* Main Navbar */}
       <nav
         className={`w-full transition-all duration-300 border-b border-gray-100/50 ${
-          isScrolled ? "bg-white/80 backdrop-blur-md shadow-sm py-3" : "bg-white/95 py-3"
+          isScrolled ? "bg-white shadow-md py-3" : "bg-white py-3"
         }`}
       >
         <div className="container flex justify-between items-center">
@@ -99,38 +99,64 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       <div
-        className={`fixed inset-0 bg-white/95 backdrop-blur-xl z-40 transform transition-transform duration-300 lg:hidden flex flex-col pt-28 pb-8 px-8 overflow-y-auto ${
-          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed inset-0 bg-[#0a0f1c]/98 backdrop-blur-3xl z-40 transform transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden flex flex-col pt-28 pb-10 px-6 overflow-y-auto ${
+          mobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col gap-6 text-xl font-medium mb-12">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className={pathname === link.href ? "text-primary" : "text-secondary"}
-            >
-              {link.name}
-            </Link>
-          ))}
+        {/* Background Decorative elements */}
+        <div className="absolute top-0 right-0 w-[80%] h-[300px] bg-primary/20 rounded-full blur-[120px] -z-10"></div>
+        <div className="absolute bottom-0 left-0 w-[80%] h-[300px] bg-blue-600/10 rounded-full blur-[100px] -z-10"></div>
+
+        <div className="flex flex-col gap-2 mb-8">
+          <p className="text-white/40 text-xs font-bold tracking-[0.2em] uppercase mb-4 px-4">Navigation</p>
+          {navLinks.map((link, idx) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ transitionDelay: `${mobileMenuOpen ? idx * 50 : 0}ms` }}
+                className={`flex items-center justify-between p-4 rounded-2xl transition-all duration-300 transform ${
+                  mobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
+                } ${
+                  isActive 
+                    ? "bg-primary/10 text-primary border border-primary/20" 
+                    : "text-white/70 hover:bg-white/5 hover:text-white border border-transparent"
+                }`}
+              >
+                <span className="text-2xl font-display font-bold">{link.name}</span>
+                {isActive && <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(14,165,233,0.8)]"></div>}
+              </Link>
+            );
+          })}
         </div>
-        <div className="mt-auto flex flex-col gap-4">
+
+        <div className="mt-auto">
+          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8"></div>
+          
+          <div className="flex flex-col gap-4 px-2 mb-8 text-white/60 text-sm font-medium">
+            <a href="mailto:contact@vishait.com" className="flex items-center gap-4 hover:text-white transition-colors">
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-primary">
+                <Mail size={18} />
+              </div>
+              contact@vishait.com
+            </a>
+            <a href="tel:+917036592351" className="flex items-center gap-4 hover:text-white transition-colors">
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-primary">
+                <Phone size={18} />
+              </div>
+              +91 7036592351
+            </a>
+          </div>
+
           <Link
             href="/get-a-quote"
             onClick={() => setMobileMenuOpen(false)}
-            className="btn btn-primary w-full py-4 text-center text-lg"
+            className="w-full py-4 bg-primary text-white text-center font-bold text-lg rounded-xl hover:bg-primary-dark transition-all duration-300 shadow-[0_8px_20px_rgba(14,165,233,0.3)] shadow-[inset_0_-2px_0_0_rgba(0,0,0,0.1)] block"
           >
             Get a Project Quote
           </Link>
-          <div className="flex flex-col gap-3 mt-4 text-secondary-light">
-            <a href="mailto:contact@vishait.com" className="flex items-center gap-3">
-              <Mail size={20} className="text-primary" /> contact@vishait.com
-            </a>
-            <a href="tel:+919999999999" className="flex items-center gap-3">
-              <Phone size={20} className="text-primary" /> +91 9999999999
-            </a>
-          </div>
         </div>
       </div>
     </header>

@@ -27,10 +27,15 @@ export default function ContactForm() {
       formData.append(key, value as string);
     });
 
-    // Wait, the handler needs to support contact. I will update enquiryHandlers.ts.
     const result = await submitContactEnquiry(formData);
     
     if (result.success) {
+      // Navigate to WhatsApp
+      const phoneNumber = "917036592351";
+      const text = `Hello Visha IT Solutions,%0A%0A*Name:* ${data.fullName}%0A*Email:* ${data.email}%0A*Subject:* ${data.subject}%0A*Message:* ${data.message}`;
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${text}`;
+      window.open(whatsappUrl, '_blank');
+      
       setSuccess(true);
       reset();
     } else {
@@ -50,30 +55,30 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {serverError && (
         <div className="p-4 bg-red-50 text-red-600 rounded-lg text-sm font-medium border border-red-100">
           {serverError}
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label className="block text-sm font-bold text-secondary mb-2">Full Name *</label>
+          <label className="block text-sm font-bold text-secondary mb-1.5">Full Name *</label>
           <input
             {...register("fullName")}
-            className="w-full bg-surface/50 border border-gray-200 text-secondary rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
+            className="w-full bg-surface/50 border border-gray-200 text-secondary rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
             placeholder="John Doe"
           />
           {errors.fullName && <p className="mt-1 text-sm text-red-500 font-medium">{errors.fullName.message}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-secondary mb-2">Email Address *</label>
+          <label className="block text-sm font-bold text-secondary mb-1.5">Email Address *</label>
           <input
             {...register("email")}
             type="email"
-            className="w-full bg-surface/50 border border-gray-200 text-secondary rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
+            className="w-full bg-surface/50 border border-gray-200 text-secondary rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
             placeholder="john@example.com"
           />
           {errors.email && <p className="mt-1 text-sm text-red-500 font-medium">{errors.email.message}</p>}
@@ -81,21 +86,21 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-secondary mb-2">Subject *</label>
+        <label className="block text-sm font-bold text-secondary mb-1.5">Subject *</label>
         <input
           {...register("subject")}
-          className="w-full bg-surface/50 border border-gray-200 text-secondary rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
+          className="w-full bg-surface/50 border border-gray-200 text-secondary rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
           placeholder="How can we help?"
         />
         {errors.subject && <p className="mt-1 text-sm text-red-500 font-medium">{errors.subject.message}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-secondary mb-2">Message *</label>
+        <label className="block text-sm font-bold text-secondary mb-1.5">Message *</label>
         <textarea
           {...register("message")}
-          rows={6}
-          className="w-full bg-surface/50 border border-gray-200 text-secondary rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] resize-none"
+          rows={5}
+          className="w-full bg-surface/50 border border-gray-200 text-secondary rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] resize-none"
           placeholder="Your message here..."
         />
         {errors.message && <p className="mt-1 text-sm text-red-500 font-medium">{errors.message.message}</p>}

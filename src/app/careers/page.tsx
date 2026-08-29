@@ -31,29 +31,29 @@ export default async function CareersPage() {
             </div>
           </FadeIn>
           <SlideUp delay={0.1}>
-            <h1 className="text-5xl md:text-6xl font-display font-bold text-secondary mb-6 tracking-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-secondary mb-6 tracking-tight">
               Careers at Visha IT
             </h1>
           </SlideUp>
           <SlideUp delay={0.2}>
-            <p className="text-lg md:text-xl text-secondary-light leading-relaxed">
+            <p className="text-base md:text-xl text-secondary-light leading-relaxed max-w-2xl mx-auto">
               We are always looking for talented individuals who are passionate about technology and innovation. Explore our open positions below.
             </p>
           </SlideUp>
         </div>
 
         {jobs.length > 0 ? (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-5 md:gap-6">
             {jobs.map((job: any, idx: number) => (
               <SlideUp key={job._id} delay={0.1 + (idx * 0.1)}>
-                <div className="group bg-white/70 backdrop-blur-xl border border-white/50 p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] shadow-[inset_0_-4px_0_0_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-6 overflow-hidden relative">
+                <div className="group bg-white/70 backdrop-blur-xl border border-white/50 p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] shadow-[inset_0_-4px_0_0_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-5 md:gap-6 overflow-hidden relative">
                   
                   {/* Hover gradient effect */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out z-0"></div>
 
                   <div className="relative z-10 flex-grow">
-                    <h3 className="text-2xl font-bold font-display text-secondary mb-3 group-hover:text-primary transition-colors">{job.title || job.jobTitle}</h3>
-                    <div className="flex flex-wrap gap-4 text-secondary-light text-sm font-medium mb-4">
+                    <h3 className="text-xl md:text-2xl font-bold font-display text-secondary mb-3 group-hover:text-primary transition-colors">{job.title || job.jobTitle}</h3>
+                    <div className="flex flex-wrap gap-2 md:gap-4 text-secondary-light text-xs md:text-sm font-medium mb-4">
                       <div className="flex items-center gap-1.5 bg-surface/80 px-3 py-1.5 rounded-lg border border-gray-100">
                         <Briefcase size={16} className="text-primary" /> {job.department}
                       </div>
@@ -64,12 +64,12 @@ export default async function CareersPage() {
                         <Clock size={16} className="text-primary" /> {job.type || job.employmentType}
                       </div>
                     </div>
-                    <p className="text-secondary-light line-clamp-2 max-w-3xl leading-relaxed">
+                    <p className="text-secondary-light text-sm md:text-base line-clamp-2 max-w-3xl leading-relaxed">
                       {job.description}
                     </p>
                   </div>
-                  <div className="shrink-0 relative z-10 mt-4 md:mt-0">
-                    <Link href={`/careers/${job.slug}`} className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-surface/50 border border-gray-200 text-secondary font-bold hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 shadow-[inset_0_-2px_0_0_rgba(0,0,0,0.05)] hover:shadow-[0_8px_20px_rgba(14,165,233,0.3)] group-hover/btn relative group/btn">
+                  <div className="shrink-0 relative z-10 mt-2 md:mt-0 w-full md:w-auto">
+                    <Link href={`/careers/${job.slug}`} className="flex w-full md:inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-surface/80 border border-gray-200 text-secondary font-bold hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 shadow-[inset_0_-2px_0_0_rgba(0,0,0,0.05)] hover:shadow-[0_8px_20px_rgba(14,165,233,0.3)] group-hover/btn relative group/btn">
                       View Details
                       <ArrowRight size={18} className="transform group-hover/btn:translate-x-1 transition-transform" />
                     </Link>
