@@ -50,13 +50,13 @@ export default function Navbar() {
 
       {/* Main Navbar */}
       <nav
-        className={`w-full transition-all duration-300 border-b border-gray-100/50 shadow-sm ${
+        className={`relative z-30 w-full transition-all duration-300 border-b border-gray-100/50 shadow-sm ${
           isScrolled ? "bg-white shadow-md py-3" : "bg-white py-3"
         }`}
       >
         <div className="container flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 z-50 relative w-56 h-16">
+          <Link href="/" className="flex items-center gap-2 relative w-56 h-16">
             <Image 
               src="/logo.jpg" 
               alt="Visha IT Solutions Logo" 
