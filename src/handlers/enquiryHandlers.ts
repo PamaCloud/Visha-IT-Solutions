@@ -23,14 +23,18 @@ export async function submitQuoteEnquiry(formData: FormData) {
       };
     }
 
-    // Save to database
-    const enquiry = await enquiryRepository.createEnquiry({
-      ...validatedFields.data,
-      type: "project",
-    });
+    try {
+      // Save to database
+      const enquiry = await enquiryRepository.createEnquiry({
+        ...validatedFields.data,
+        type: "project",
+      });
 
-    // Send email asynchronously without blocking the response
-    emailService.sendAdminNotification("New Project Quote Request", enquiry).catch(console.error);
+      // Send email asynchronously without blocking the response
+      emailService.sendAdminNotification("New Project Quote Request", enquiry).catch(console.error);
+    } catch (dbError) {
+      console.error("Failed to save to database or send email:", dbError);
+    }
 
     return {
       success: true,
@@ -59,12 +63,16 @@ export async function submitContactEnquiry(formData: FormData) {
       };
     }
 
-    const enquiry = await enquiryRepository.createEnquiry({
-      ...validatedFields.data,
-      type: "contact",
-    });
+    try {
+      const enquiry = await enquiryRepository.createEnquiry({
+        ...validatedFields.data,
+        type: "contact",
+      });
 
-    emailService.sendAdminNotification("New General Contact", enquiry).catch(console.error);
+      emailService.sendAdminNotification("New General Contact", enquiry).catch(console.error);
+    } catch (dbError) {
+      console.error("Failed to save to database or send email (ignoring to allow WhatsApp redirect):", dbError);
+    }
 
     return {
       success: true,
