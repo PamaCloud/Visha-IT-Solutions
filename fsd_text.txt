@@ -1,0 +1,241 @@
+FUNCTIONAL SPECIFICATION DOCUMENT
+Visha IT Solutions – Corporate Website
+Version 1.0 | Prepared for Website Development
+Reference homepage design generated for the developer. Use this as the visual direction, not as a source of factual business statistics.
+1. Project Overview
+Build a modern, responsive corporate website for Visha IT Solutions. The website must present the company as a professional technology and talent solutions business and generate enquiries for four core services: E-Commerce, Digital Marketing, Recruitment, and Training.
+2. Primary Website Goals
+Build trust and a professional online presence.
+Generate project enquiries and quote requests.
+Generate recruitment/hiring enquiries.
+Promote training programs and collect candidate enquiries.
+Clearly explain the four core services.
+Provide easy contact through form, email, phone and WhatsApp if supplied.
+Be fast, mobile-friendly, SEO-ready and easy to maintain.
+3. Target Users
+Business owners and companies looking for e-commerce or digital marketing services.
+Companies requiring recruitment or staffing support.
+Students and job seekers interested in training programs.
+Existing clients looking for support or additional services.
+4. Sitemap
+Home
+About Us
+Services
+  ├─ E-Commerce
+  ├─ Digital Marketing
+  ├─ Recruitment
+  └─ Training
+Projects / Portfolio
+Training Programs
+Careers
+Contact Us
+Privacy Policy
+Terms & Conditions
+5. Header / Navigation
+Desktop header:
+Top information bar: official email, phone and permitted business/virtual-office address.
+Logo: Visha IT Solutions.
+Navigation: Home, About Us, Services, Training, Careers, Contact Us.
+Primary CTA button: Get a Project Quote.
+Sticky header on scroll.
+Mobile:
+Hamburger menu.
+Logo visible.
+Get a Project Quote CTA accessible from menu.
+Tap-to-call and tap-to-email actions.
+6. Home Page Functional Specification
+6.1 Hero Section
+Headline: Technology. Talent. Solutions.
+Short company description focused on E-Commerce, Digital Marketing, Recruitment and Training.
+Primary CTA: Get a Project Quote.
+Secondary CTA: Our Services.
+Right-side visual/office image or approved brand visual.
+Service highlights may appear as floating cards: E-Commerce Solutions, Digital Marketing, Recruitment Services, Training & Development.
+6.2 About Preview
+Short 3–5 line company introduction.
+4 trust/value points: Client Focused, Quality Driven, Result Oriented, Trusted Partner.
+CTA: Learn More.
+6.3 Services Section
+Show four service cards:
+E-Commerce – website/store development, online store setup, payment integration and support.
+Digital Marketing – SEO, social media, Google/Meta advertising, content and lead generation.
+Recruitment – IT/non-IT recruitment, staffing and hiring support.
+Training – IT, digital marketing, job-oriented and real-time project training.
+Each card must have: icon, title, 2–3 line description, Learn More CTA.
+6.4 Trust / Statistics
+A statistics strip may be included, but all numbers must be supplied and approved by Visha IT Solutions. Do NOT publish placeholder numbers such as 100+ clients, 250+ projects, etc. unless the company confirms them.
+6.5 Project CTA
+Headline: Have a Project in Mind?
+Supporting text: Let's build something great together!
+CTA: Get a Free Project Quote.
+CTA opens the quote/enquiry form.
+6.6 Footer
+Visha IT Solutions logo and short description.
+Quick Links.
+Services links.
+Contact details.
+Social media icons only for accounts actually owned by Visha IT Solutions.
+Copyright year should be dynamic/current, not hard-coded.
+7. About Us Page
+Company introduction.
+Mission.
+Vision.
+Why choose Visha IT Solutions.
+Service overview.
+Optional founder/team section if approved.
+CTA to contact the company.
+8. Services Pages
+Each service must have its own SEO-friendly detail page.
+8.1 E-Commerce
+E-commerce website development.
+Online store setup.
+Product/catalog management.
+Payment gateway integration.
+Order/customer management.
+Maintenance and support.
+CTA: Get a Project Quote.
+8.2 Digital Marketing
+SEO.
+Social media marketing.
+Google Ads.
+Meta Ads.
+Content marketing.
+Lead generation.
+Analytics/reporting.
+CTA: Discuss Your Marketing Requirement.
+8.3 Recruitment
+IT recruitment.
+Non-IT recruitment.
+Contract staffing.
+Bulk hiring.
+Candidate sourcing and screening.
+Employer enquiry form.
+CTA: Hire Talent.
+8.4 Training
+List active training programs.
+Program duration.
+Eligibility.
+Mode: online/offline/hybrid as applicable.
+Curriculum overview.
+Project/practical training details.
+Enrolment/interest form.
+CTA: Join Training.
+9. Get a Project Quote Form
+The primary lead-generation form should contain:
+Full Name – required
+Company Name – optional/required as decided
+Business Email – required
+Phone Number – required
+Service Required – dropdown: E-Commerce, Digital Marketing, Recruitment, Training, Other
+Project/Requirement Description – required
+Budget Range – optional
+Preferred Contact Method – Email / Phone / WhatsApp
+Consent checkbox for privacy policy.
+Submit button: Get a Free Project Quote.
+After submission:
+Validate required fields and email/phone format.
+Show success message: Thank you. Our team will contact you shortly.
+Send notification to the official company email.
+Store enquiry in admin/database if backend is implemented.
+Prevent spam using CAPTCHA or equivalent protection.
+Do not expose submitted data publicly.
+10. Contact Us Page
+Company name: Visha IT Solutions.
+Official business email: use the confirmed company domain email.
+Phone: use the confirmed business number.
+Address: display the NestVault virtual-office address only as permitted by the virtual-office agreement.
+Google Maps link/embed only if the address is approved for public display.
+Contact form.
+Optional WhatsApp CTA.
+11. Careers
+List current openings.
+Job title, location, experience, employment type and short description.
+Apply Now button.
+Resume upload form.
+Candidate acknowledgement email.
+Admin notification for each application.
+12. Projects / Portfolio
+Show only genuine completed projects or clearly label demo/internal projects.
+Project cards: title, category, technologies, short description and outcome.
+Optional project detail page.
+Do not publish client logos, names, screenshots or results without permission.
+13. Admin / Content Management
+Preferred: CMS or simple admin panel so the business team can update:
+Services.
+Training programs.
+Career openings.
+Projects/portfolio.
+Contact information.
+Homepage text.
+Blog/news if added later.
+14. Technical Requirements
+Responsive design for desktop, tablet and mobile.
+Modern semantic HTML5/CSS3/JavaScript.
+Developer may use React/Next.js or another agreed framework; choose based on maintainability and hosting requirements.
+Backend/API required for forms, resume uploads and admin functions.
+HTTPS/SSL mandatory.
+Secure server-side validation.
+Rate limiting/spam protection for public forms.
+Secure file upload restrictions for resumes.
+Database backups if a database is used.
+No hard-coded secrets or API keys in frontend code.
+15. SEO Requirements
+Unique title and meta description for every page.
+Clean URLs.
+H1/H2 heading structure.
+Open Graph/social sharing metadata.
+XML sitemap.
+Robots.txt.
+Canonical URLs.
+Local SEO for Hyderabad where appropriate.
+Google Search Console and Analytics setup after ownership/access is provided.
+Fast-loading optimized images with alt text.
+16. Design Requirements
+Overall style: modern, clean, corporate and trustworthy.
+Primary visual direction: blue/white with dark navy accents.
+Rounded cards, clean icons and generous spacing.
+Use the supplied reference screenshot as the visual direction.
+Use the official Visha IT Solutions logo and brand assets once supplied.
+Typography must be readable and consistent.
+Animations should be subtle and not reduce performance.
+Accessibility: keyboard navigation, visible focus states, sufficient contrast, alt text and accessible form labels.
+17. Content & Business Rules
+Do not invent clients, projects, reviews, employee counts, placement counts or revenue figures.
+All claims such as '100+ clients' or '250+ projects' require written business approval before publishing.
+Use the final official domain/email after domain registration.
+Use the exact virtual-office address allowed by the NestVault agreement.
+Privacy Policy and Terms must be reviewed/approved before launch.
+18. Suggested CTA Labels
+Get a Free Project Quote
+Our Services
+Hire Talent
+Join Training
+Discuss Your Requirement
+Contact Us
+19. Acceptance Criteria
+All pages work on Chrome, Edge, Safari and current mobile browsers.
+Website is fully responsive.
+All navigation and CTAs work.
+Project quote form successfully validates and sends/stores enquiries.
+Career application form accepts permitted resume formats and notifies admin.
+No broken links or console errors in production.
+HTTPS enabled.
+Basic SEO checks pass.
+Page speed is optimized.
+Admin/content update process is documented.
+Final website content and contact details are approved by Visha IT Solutions before launch.
+20. Developer Deliverables
+Responsive production website.
+Source code repository.
+Deployment to agreed hosting/server.
+Domain/DNS configuration support.
+SSL configuration.
+Database/backend setup if required.
+Admin/CMS access if included.
+Form email configuration.
+Basic SEO configuration.
+Testing report.
+Deployment/maintenance documentation.
+21. Final Navigation
+Home | About Us | Services | Training | Projects | Careers | Contact Us | Get a Project Quote
+Note to Developer: The supplied screenshot is a visual reference. Build the website as a functional, responsive production site, not as a single image. All business facts, contact details, statistics, logos and legal content must be supplied or approved by Visha IT Solutions.
