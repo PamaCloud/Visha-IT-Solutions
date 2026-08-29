@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Phone, Mail, MapPin } from "lucide-react";
+import { Menu, X, Phone, Mail, MapPin, Home, Info, Briefcase, BookOpen, Folder, Users, MessageSquare, Bug } from "lucide-react";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,13 +20,13 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "About Us", href: "/about" },
-    { name: "Services", href: "/services" },
-    { name: "Training", href: "/training" },
-    { name: "Projects", href: "/projects" },
-    { name: "Careers", href: "/careers" },
-    { name: "Contact Us", href: "/contact" },
+    { name: "Home", href: "/", icon: Home, section: "OVERVIEW" },
+    { name: "About Us", href: "/about", icon: Info, section: "COMPANY" },
+    { name: "Services", href: "/services", icon: Briefcase, section: "COMPANY" },
+    { name: "Training", href: "/training", icon: BookOpen, section: "COMPANY" },
+    { name: "Projects", href: "/projects", icon: Folder, section: "COMPANY" },
+    { name: "Careers", href: "/careers", icon: Users, section: "SUPPORT" },
+    { name: "Contact Us", href: "/contact", icon: MessageSquare, section: "SUPPORT" },
   ];
 
   return (
@@ -97,66 +97,84 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/40 backdrop-blur-md z-40 transition-opacity duration-300 lg:hidden ${
+          mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+      ></div>
+
+      {/* Mobile Sidebar */}
       <div
-        className={`fixed inset-0 bg-[#0a0f1c]/98 backdrop-blur-3xl z-40 transform transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden flex flex-col pt-28 pb-10 px-6 overflow-y-auto ${
-          mobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
+        className={`fixed top-0 right-0 bottom-0 w-[80%] max-w-sm bg-white z-50 transform transition-transform duration-300 ease-in-out lg:hidden flex flex-col shadow-2xl ${
+          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Background Decorative elements */}
-        <div className="absolute top-0 right-0 w-[80%] h-[300px] bg-primary/20 rounded-full blur-[120px] -z-10"></div>
-        <div className="absolute bottom-0 left-0 w-[80%] h-[300px] bg-blue-600/10 rounded-full blur-[100px] -z-10"></div>
-
-        <div className="flex flex-col gap-2 mb-8">
-          <p className="text-white/40 text-xs font-bold tracking-[0.2em] uppercase mb-4 px-4">Navigation</p>
-          {navLinks.map((link, idx) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                style={{ transitionDelay: `${mobileMenuOpen ? idx * 50 : 0}ms` }}
-                className={`flex items-center justify-between p-4 rounded-2xl transition-all duration-300 transform ${
-                  mobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
-                } ${
-                  isActive 
-                    ? "bg-primary/10 text-primary border border-primary/20" 
-                    : "text-white/70 hover:bg-white/5 hover:text-white border border-transparent"
-                }`}
-              >
-                <span className="text-2xl font-display font-bold">{link.name}</span>
-                {isActive && <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(14,165,233,0.8)]"></div>}
-              </Link>
-            );
-          })}
+        {/* Sidebar Header */}
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+          <span className="font-display font-bold text-lg text-secondary">Menu</span>
+          <button 
+            onClick={() => setMobileMenuOpen(false)} 
+            className="text-gray-500 hover:text-gray-800 bg-gray-50 p-2 rounded-full transition-colors"
+          >
+            <X size={20} />
+          </button>
+        </div>
+        
+        {/* Sidebar Links */}
+        <div className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-8">
+          {["OVERVIEW", "COMPANY", "SUPPORT"].map((sectionName) => (
+            <div key={sectionName}>
+              <p className="text-[10px] font-bold text-gray-400 tracking-[0.2em] mb-3 px-3 uppercase">
+                {sectionName}
+              </p>
+              <div className="flex flex-col gap-1">
+                {navLinks
+                  .filter((link) => link.section === sectionName)
+                  .map((link) => {
+                    const isActive = pathname === link.href;
+                    const Icon = link.icon;
+                    return (
+                      <Link
+                        key={link.name}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`flex items-center gap-4 px-3 py-3.5 rounded-xl transition-all duration-200 text-sm font-semibold ${
+                          isActive 
+                            ? "bg-primary/10 text-primary" 
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        }`}
+                      >
+                        <Icon size={18} className={isActive ? "text-primary" : "text-gray-400"} />
+                        {link.name}
+                      </Link>
+                    );
+                  })}
+              </div>
+            </div>
+          ))}
         </div>
 
-        <div className="mt-auto">
-          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8"></div>
-          
-          <div className="flex flex-col gap-4 px-2 mb-8 text-white/60 text-sm font-medium">
-            <a href="mailto:contact@vishait.com" className="flex items-center gap-4 hover:text-white transition-colors">
-              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-primary">
-                <Mail size={18} />
-              </div>
-              contact@vishait.com
-            </a>
-            <a href="tel:+917036592351" className="flex items-center gap-4 hover:text-white transition-colors">
-              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-primary">
-                <Phone size={18} />
-              </div>
-              +91 7036592351
-            </a>
-          </div>
-
+        {/* Sidebar Footer */}
+        <div className="mt-auto px-6 py-6 border-t border-gray-100 bg-gray-50/50 flex flex-col gap-4">
           <Link
             href="/get-a-quote"
             onClick={() => setMobileMenuOpen(false)}
-            className="w-full py-4 bg-primary text-white text-center font-bold text-lg rounded-xl hover:bg-primary-dark transition-all duration-300 shadow-[0_8px_20px_rgba(14,165,233,0.3)] shadow-[inset_0_-2px_0_0_rgba(0,0,0,0.1)] block"
+            className="w-full py-3.5 bg-primary text-white text-center font-bold text-sm rounded-xl hover:bg-primary-dark transition-all duration-300 shadow-sm"
           >
             Get a Project Quote
           </Link>
+          
+          <div className="flex items-center justify-between text-xs text-gray-500 font-medium">
+            <span className="flex flex-col">
+              <span>SYSTEM VERSION</span>
+              <span className="text-gray-400 font-normal">v1.0.0</span>
+            </span>
+            <a href="mailto:contact@vishait.com" className="flex items-center gap-2 hover:text-primary transition-colors border border-gray-200 bg-white px-3 py-1.5 rounded-lg">
+              <Bug size={14} /> Report Bug
+            </a>
+          </div>
         </div>
       </div>
     </header>

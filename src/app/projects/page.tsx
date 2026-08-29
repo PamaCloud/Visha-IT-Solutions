@@ -57,7 +57,7 @@ export default async function ProjectsPage() {
   }
 
   return (
-    <div className="min-h-screen pt-28 pb-20 relative overflow-hidden bg-surface">
+    <div className="min-h-screen pb-20 relative overflow-hidden bg-surface">
       {/* Decorative Background */}
       <div className="absolute top-0 right-0 w-full h-[600px] bg-gradient-to-bl from-primary/10 via-blue-50/50 to-surface -z-10"></div>
       <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[100px] -z-10"></div>

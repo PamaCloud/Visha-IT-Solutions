@@ -58,7 +58,7 @@ export default async function ServicesPage() {
   }
 
   return (
-    <div className="min-h-screen pt-28 pb-20 relative overflow-hidden bg-surface">
+    <div className="min-h-screen pb-20 relative overflow-hidden bg-surface">
       {/* Premium Background Elements */}
       <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-br from-primary/10 via-blue-50 to-surface -z-10"></div>
       <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[100px] -z-10"></div>

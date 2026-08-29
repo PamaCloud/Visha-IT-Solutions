@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Visha IT Solutions - Technology. Talent. Solutions.",
   description:
     "Empowering businesses with modern technology, innovative digital marketing, top-tier recruitment, and industry-leading training programs.",
-  keywords: "IT solutions, Digital Marketing, Recruitment, Professional Training, E-Commerce Development",
+  keywords: ["IT solutions", "Digital Marketing", "Recruitment", "Professional Training", "E-Commerce Development"],
 };
 
 export default function RootLayout({

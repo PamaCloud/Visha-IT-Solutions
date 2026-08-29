@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen pt-32 pb-24 relative overflow-hidden bg-surface">
+    <div className="min-h-screen pb-24 relative overflow-hidden bg-surface">
       {/* Premium Background Elements */}
       <div className="absolute top-0 left-0 w-[50%] h-[500px] bg-gradient-to-br from-primary/10 via-blue-50/50 to-surface rounded-br-full blur-[100px] -z-10"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[100px] -z-10"></div>

@@ -52,7 +52,7 @@ export default async function TrainingPage() {
   }
 
   return (
-    <div className="min-h-screen pt-28 pb-20 relative overflow-hidden bg-surface">
+    <div className="min-h-screen pb-20 relative overflow-hidden bg-surface">
       {/* Premium Background Elements */}
       <div className="absolute top-0 right-0 w-[50%] h-[500px] bg-gradient-to-bl from-blue-500/10 via-primary/5 to-surface rounded-bl-full blur-[100px] -z-10"></div>
       
