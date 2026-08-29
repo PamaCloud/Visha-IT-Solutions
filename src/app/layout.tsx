@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} ${playfair.variable} ${outfit.variable} font-sans antialiased flex flex-col min-h-screen pt-24 lg:pt-32`}>
+      <body className={`${inter.variable} ${playfair.variable} ${outfit.variable} font-sans antialiased flex flex-col min-h-screen pt-24 lg:pt-32 bg-surface`}>
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />

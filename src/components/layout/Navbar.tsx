@@ -50,7 +50,7 @@ export default function Navbar() {
 
       {/* Main Navbar */}
       <nav
-        className={`w-full transition-all duration-300 border-b border-gray-100/50 ${
+        className={`w-full transition-all duration-300 border-b border-gray-100/50 shadow-sm ${
           isScrolled ? "bg-white shadow-md py-3" : "bg-white py-3"
         }`}
       >
