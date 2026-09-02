@@ -111,7 +111,7 @@ export default async function ServicesPage() {
                     </p>
                     
                     <Link href={`/services/${service.slug}`} className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-surface/80 border border-gray-100 text-secondary text-sm font-bold hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md group-hover:border-primary/20 relative z-10 group/btn">
-                      Learn More
+                      {service.ctaText || "Learn More"}
                       <ArrowRight size={16} className="transform group-hover/btn:translate-x-1 transition-transform" />
                     </Link>
                   </div>

@@ -6,6 +6,8 @@ export interface IService extends Document {
   shortDescription: string;
   description: string;
   icon?: string;
+  features?: string[];
+  ctaText?: string;
   isActive: boolean;
   order: number;
   createdAt: Date;
@@ -19,6 +21,8 @@ const ServiceSchema: Schema = new Schema(
     shortDescription: { type: String, required: true },
     description: { type: String, required: true },
     icon: { type: String },
+    features: [{ type: String }],
+    ctaText: { type: String },
     isActive: { type: Boolean, default: true },
     order: { type: Number, default: 0 },
   },

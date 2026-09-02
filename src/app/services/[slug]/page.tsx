@@ -24,6 +24,8 @@ const getMockService = (slug: string) => {
     title: formattedTitle,
     shortDescription: `Comprehensive ${formattedTitle} solutions designed to accelerate your business growth.`,
     description: `We deliver top-tier ${formattedTitle} services tailored specifically for modern enterprises. Our approach blends cutting-edge technology with deep industry expertise to ensure you achieve your strategic goals.\n\nWhether you are looking to scale your operations, enhance your digital presence, or streamline your workflows, our dedicated team of professionals is equipped to deliver exceptional results. We partner with you at every stage of the lifecycle, from initial consultation and strategic planning to execution and continuous support.\n\nKey Benefits:\n- Tailored strategies aligned with your business objectives\n- Access to a team of seasoned industry experts\n- Proven methodologies that guarantee quality and efficiency\n- 24/7 dedicated support and maintenance`,
+    features: ['Strategy & Consulting', 'Custom Implementation', 'Ongoing Support', 'Analytics & Reporting'],
+    ctaText: 'Get Started →'
   };
 };
 
@@ -91,6 +93,25 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               </div>
             </SlideUp>
 
+            {service.features && service.features.length > 0 && (
+              <SlideUp delay={0.15}>
+                <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white">
+                  <h3 className="text-xl font-bold font-display text-secondary mb-6 flex items-center gap-3">
+                    <span className="w-1.5 h-6 bg-primary rounded-full inline-block"></span>
+                    Key Offerings
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {service.features.map((feature: string, idx: number) => (
+                      <div key={idx} className="flex items-start gap-3 bg-surface/50 p-4 rounded-xl border border-gray-100/80">
+                        <CheckCircle2 className="text-primary shrink-0 mt-0.5" size={18} />
+                        <span className="text-sm font-medium text-secondary">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </SlideUp>
+            )}
+
             <SlideUp delay={0.2}>
               <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white">
                 <h3 className="text-xl font-bold font-display text-secondary mb-6 flex items-center gap-3">
@@ -145,7 +166,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   </p>
                   
                   <Link href="/get-a-quote" className="inline-flex items-center justify-center gap-2 w-full py-3 bg-white text-primary font-bold text-sm rounded-xl hover:bg-gray-50 transition-all shadow-[0_4px_10px_rgba(0,0,0,0.1)] group/btn">
-                    Get a Quote
+                    {service.ctaText ? service.ctaText.replace('→', '').trim() : 'Get a Quote'}
                     <ArrowRight size={16} className="transform group-hover/btn:translate-x-1 transition-transform" />
                   </Link>
                 </div>
