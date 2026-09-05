@@ -31,14 +31,16 @@ export default function AboutPage() {
       <section className="relative w-full h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden pt-20 sm:pt-24">
         {/* Background Image */}
         <Image 
-          src="/about-hero.jpg" 
+          src="/about-hero-v2.jpg" 
           alt="Visha IT Solutions Corporate Office"
           fill
           priority
+          quality={100}
+          unoptimized
           className="object-cover"
         />
-        {/* Glassy Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/70 via-[#0f172a]/50 to-[#0f172a]/90 backdrop-blur-[2px]"></div>
+        {/* Glassy Gradient Overlay - Removed blur for crystal clear image */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/70 via-[#0f172a]/50 to-[#0f172a]/90"></div>
         
         <div className="container relative z-10 text-center px-4">
           <FadeIn>
