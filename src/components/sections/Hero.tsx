@@ -7,10 +7,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 const heroTitles = [
-  "Custom Software",
-  "HRMS Platforms",
-  "AI Development",
-  "Healthcare IT",
+  "Technology & Talent",
+  "Recruitment & Staffing",
+  "Talent Acquisition",
+  "Payroll & HR Services",
+  "Digital Marketing",
+  "E-Commerce Solutions",
+  "Training Programs",
 ];
 
 export default function Hero() {
@@ -85,7 +88,7 @@ export default function Hero() {
 
           {/* Subtitle */}
           <p className="text-sm sm:text-xl max-w-2xl mx-auto text-white/90 font-medium leading-relaxed mb-8 sm:mb-10 px-4 sm:px-0">
-            We build scalable web apps, HRMS platforms, AI tools, and enterprise solutions for startups and companies across India.
+            Empowering organizations with world-class recruitment, compliant HR & payroll infrastructure, high-converting digital marketing, robust e-commerce, and hands-on career training.
           </p>
 
           {/* CTA Buttons (Abhivorn: accent-bg primary + glass outline secondary) */}

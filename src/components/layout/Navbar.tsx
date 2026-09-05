@@ -37,7 +37,11 @@ export default function Navbar() {
     >
       <nav className="container flex items-center justify-between h-16 lg:h-20">
         {/* Logo */}
-        <Link href="/" className="flex items-center flex-shrink-0 group">
+        <Link
+          href="/"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="flex items-center flex-shrink-0 group"
+        >
           <div className="relative w-44 sm:w-48 h-10 sm:h-11">
             <Image
               src="/logo-dark.png"
@@ -58,6 +62,11 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
+                onClick={() => {
+                  if (link.href === "/" || pathname === link.href) {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                   isActive
                     ? "bg-[hsl(195,100%,25%)]/10 text-[hsl(195,100%,25%)] font-semibold shadow-xs"
