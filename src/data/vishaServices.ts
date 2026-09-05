@@ -1,3 +1,21 @@
+export interface ServiceDeliverable {
+  title: string;
+  description: string;
+  points: string[];
+}
+
+export interface ServiceBenefit {
+  title: string;
+  description: string;
+  iconName: string;
+}
+
+export interface ServiceStep {
+  step: string;
+  title: string;
+  description: string;
+}
+
 export interface VishaServiceItem {
   id: string;
   slug: string;
@@ -11,6 +29,9 @@ export interface VishaServiceItem {
   ctaLink: string;
   image: string;
   badge?: string;
+  deliverables?: ServiceDeliverable[];
+  benefits?: ServiceBenefit[];
+  steps?: ServiceStep[];
 }
 
 export const VISHA_SERVICES: VishaServiceItem[] = [
