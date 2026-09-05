@@ -1,24 +1,32 @@
 import { serviceRepository } from "@/repositories/serviceRepository";
+import { VISHA_SERVICES, VishaServiceItem } from "@/data/vishaServices";
 
 export class ServiceService {
-  async getActiveServices() {
+  async getActiveServices(): Promise<any[]> {
     try {
       const services = await serviceRepository.getAllActiveServices();
-      // Transform to plain objects for Server Components to avoid serialization issues
-      return JSON.parse(JSON.stringify(services));
+      if (services && services.length >= 4) {
+        return JSON.parse(JSON.stringify(services));
+      }
+      return VISHA_SERVICES;
     } catch (error) {
-      console.error("Error fetching active services:", error);
-      return [];
+      console.warn("MongoDB connection failed or empty, using VISHA_SERVICES data:", error);
+      return VISHA_SERVICES;
     }
   }
 
-  async getService(slug: string) {
+  async getService(slug: string): Promise<any | null> {
     try {
       const service = await serviceRepository.getServiceBySlug(slug);
-      return service ? JSON.parse(JSON.stringify(service)) : null;
+      if (service) {
+        return JSON.parse(JSON.stringify(service));
+      }
+      const match = VISHA_SERVICES.find((s) => s.slug === slug || s.id === slug);
+      return match || null;
     } catch (error) {
-      console.error(`Error fetching service ${slug}:`, error);
-      return null;
+      console.warn(`MongoDB fetch failed for service ${slug}, checking VISHA_SERVICES:`, error);
+      const match = VISHA_SERVICES.find((s) => s.slug === slug || s.id === slug);
+      return match || null;
     }
   }
 }

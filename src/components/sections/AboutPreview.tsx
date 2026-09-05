@@ -1,108 +1,106 @@
+"use client";
+
 import Link from "next/link";
-import { Users, ShieldCheck, Target, ArrowRight } from "lucide-react";
-import SlideUp from "@/components/animations/SlideUp";
-import FadeIn from "@/components/animations/FadeIn";
+import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import AnimatedCounter from "@/components/animations/AnimatedCounter";
+
+const slowFadeIn = {
+  initial: { opacity: 0, y: 50, filter: "blur(20px)" },
+  whileInView: { opacity: 1, y: 0, filter: "blur(0px)" },
+  viewport: { once: true, margin: "100px" },
+  transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+};
+
+const metrics = [
+  { value: 50,   suffix: "+",  decimals: 0, label: "Enterprise Clients" },
+  { value: 10,   suffix: "+",  decimals: 0, label: "Years Experience"   },
+  { value: 200,  suffix: "+",  decimals: 0, label: "Projects Delivered" },
+  { value: 99.8, suffix: "%",  decimals: 1, label: "System Uptime"      },
+];
+
+const whyUs = [
+  { title: "Client Focused",    description: "Our experts craft unique and tailored IT strategies that you won't find off-the-shelf." },
+  { title: "Quality Driven",    description: "From code to deployment, we maintain the highest standards of software engineering."   },
+  { title: "Result Oriented",   description: "We are here anytime you need us — before, during, or after your project delivery."     },
+  { title: "MSME Registered",   description: "Recognized and registered, operating with full compliance and professional integrity." },
+];
 
 export default function AboutPreview() {
-  const features = [
-    {
-      title: "Client Focused",
-      description: "Our experts craft unique and tailored IT strategies that you won't find off-the-shelf.",
-      icon: Users,
-    },
-    {
-      title: "Quality Driven",
-      description: "From code to deployment, we maintain the highest standards of software engineering.",
-      icon: ShieldCheck,
-    },
-    {
-      title: "Result Oriented",
-      description: "We are here anytime you need us, before, during, or after your project delivery.",
-      icon: Target,
-    },
-  ];
-
   return (
-    <section className="py-24 md:py-32 bg-surface relative overflow-hidden">
-      {/* Decorative background element */}
-      <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 rounded-l-full blur-3xl -z-10"></div>
-      
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-20 items-center">
-          
-          {/* Left Side: Typography */}
-          <div className="lg:w-1/2">
-            <FadeIn>
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-[2px] bg-primary"></div>
-                <h2 className="text-primary font-semibold tracking-[0.2em] uppercase text-sm">
-                  EXCELLENCE IN IT
-                </h2>
-              </div>
-            </FadeIn>
-            
-            <SlideUp delay={0.1}>
-              <h3 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-secondary leading-[1.15] tracking-tight mb-8">
-                Engineered for Growth. <br />
-                <span className="font-serif italic font-medium text-primary-dark">Built for Excellence.</span>
-              </h3>
-            </SlideUp>
-            
-            <SlideUp delay={0.2}>
-              <p className="text-lg md:text-xl text-secondary-light mb-10 leading-relaxed">
-                From robust enterprise architecture to seamless user experiences, we bring you cutting-edge technology solutions with unmatched local expertise and 24/7 support.
-              </p>
-            </SlideUp>
-
-            {/* Quick Stats mimicking the small icons in reference */}
-            <SlideUp delay={0.3}>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-8 border-t border-gray-200/60">
-                <div className="flex flex-col gap-2">
-                  <span className="text-3xl md:text-4xl font-bold font-display text-primary">50+</span>
-                  <span className="text-xs md:text-sm font-medium text-secondary-light uppercase tracking-wider">Enterprise Clients</span>
+    <>
+      {/* ── Metrics Section (Abhivorn style: white bg, divide-x border) ── */}
+      <section className="py-20 bg-white border-b border-gray-100">
+        <div className="container">
+          <motion.div
+            {...slowFadeIn}
+            className="grid grid-cols-2 md:grid-cols-4 gap-10 divide-x divide-gray-200"
+          >
+            {metrics.map((metric, index) => (
+              <div key={metric.label} className={`text-center ${index === 0 ? "" : "pl-6 md:pl-10"}`}>
+                <div className="text-4xl md:text-5xl font-bold text-[hsl(210,29%,24%)] mb-3 tracking-tighter">
+                  <AnimatedCounter value={metric.value} suffix={metric.suffix} decimals={metric.decimals} />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <span className="text-3xl md:text-4xl font-bold font-display text-primary">10+</span>
-                  <span className="text-xs md:text-sm font-medium text-secondary-light uppercase tracking-wider">Years Experience</span>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <span className="text-3xl md:text-4xl font-bold font-display text-primary">200+</span>
-                  <span className="text-xs md:text-sm font-medium text-secondary-light uppercase tracking-wider">Projects Delivered</span>
+                <div className="text-xs font-bold text-[hsl(207,14%,50%)] uppercase tracking-widest">
+                  {metric.label}
                 </div>
               </div>
-            </SlideUp>
-          </div>
-          
-          {/* Right Side: Features List */}
-          <div className="lg:w-1/2 flex flex-col gap-8 w-full">
-            {features.map((feature, idx) => (
-              <SlideUp key={idx} delay={0.2 + (idx * 0.1)}>
-                <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 group flex gap-6 items-start">
-                  <div className="shrink-0 w-14 h-14 bg-primary-light/50 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
-                    <feature.icon className="text-primary group-hover:text-white transition-colors" size={24} strokeWidth={2} />
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-bold font-display text-secondary mb-3">{feature.title}</h4>
-                    <p className="text-secondary-light leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-              </SlideUp>
             ))}
-            
-            <SlideUp delay={0.5}>
-              <div className="pt-4 flex justify-end">
-                <Link href="/about" className="group inline-flex items-center gap-2 text-primary font-bold hover:text-primary-dark transition-colors text-lg">
-                  Discover our story 
-                  <ArrowRight size={20} className="transform group-hover:translate-x-2 transition-transform" />
-                </Link>
-              </div>
-            </SlideUp>
-          </div>
-          
+          </motion.div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* ── Why Choose Us (Abhivorn: muted bg, numbered white cards) ── */}
+      <section className="section-padding bg-[hsl(210,40%,96%)]/30 border-y border-gray-100">
+        <div className="container">
+          <motion.div
+            {...slowFadeIn}
+            className="text-center mb-20"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-[hsl(210,29%,24%)] mb-5 tracking-tight">
+              Why Visha IT Solutions?
+            </h2>
+            <p className="text-lg text-[hsl(207,14%,50%)] max-w-2xl mx-auto font-light">
+              We combine technical excellence with business acumen to deliver solutions that drive measurable results.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {whyUs.map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 50, filter: "blur(20px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true, margin: "100px" }}
+                transition={{ duration: 1.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 hover:border-[hsl(195,100%,25%)]/20 hover:shadow-md transition-all duration-300"
+              >
+                <div className="text-sm font-mono font-bold text-[hsl(195,100%,25%)]/70 mb-4 sm:mb-6">
+                  0{index + 1}
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-[hsl(210,29%,24%)] mb-2 sm:mb-3">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-[hsl(210,29%,24%)]/70 leading-relaxed font-medium">
+                  {item.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            {...slowFadeIn}
+            className="text-center mt-12"
+          >
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-2 text-[hsl(195,100%,25%)] font-bold hover:text-[hsl(195,100%,35%)] transition-colors link-underline"
+            >
+              Discover our story <ArrowRight size={18} />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+    </>
   );
 }

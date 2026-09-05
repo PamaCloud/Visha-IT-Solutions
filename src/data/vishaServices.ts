@@ -1,0 +1,181 @@
+export interface VishaServiceItem {
+  id: string;
+  slug: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  iconName: "Users" | "UserCheck" | "FileSpreadsheet" | "Megaphone" | "ShoppingCart" | "GraduationCap";
+  subServices: string[];
+  features: string[];
+  ctaText: string;
+  ctaLink: string;
+  image: string;
+  badge?: string;
+}
+
+export const VISHA_SERVICES: VishaServiceItem[] = [
+  {
+    id: "recruitment-and-staffing",
+    slug: "recruitment-and-staffing",
+    title: "Recruitment & Staffing",
+    shortDescription: "Strategic technical and non-technical talent acquisition, flexible contract staffing, and bulk hiring designed for high-growth enterprises.",
+    description: "Finding and placing the right talent is essential for scaling modern business operations. At Visha IT Solutions, our specialized recruitment and staffing services streamline candidate discovery and evaluation, connecting top-tier talent with ambitious companies across India and globally.",
+    iconName: "Users",
+    subServices: [
+      "IT Recruitment",
+      "Non-IT Recruitment",
+      "Permanent Staffing",
+      "Contract Staffing",
+      "Contract-to-Hire",
+      "Bulk Hiring",
+      "Remote / Hybrid Hiring",
+    ],
+    features: [
+      "Specialized Tech & Domain Screenings",
+      "Pre-vetted Talent Bench with 48h Turnaround",
+      "Contract, Permanent & Executive Search",
+      "Seamless Onboarding & Documentation",
+    ],
+    ctaText: "Hire Talent →",
+    ctaLink: "/contact?service=recruitment-and-staffing",
+    image: "/services/recruitment-and-staffing.jpg",
+    badge: "Core Service",
+  },
+  {
+    id: "talent-acquisition",
+    slug: "talent-acquisition",
+    title: "Talent Acquisition",
+    shortDescription: "Proactive workforce planning, candidate screening, employer branding, and specialized pipelines that fuel long-term organizational success.",
+    description: "Talent acquisition is more than filling open roles; it is a strategic discipline that shapes the future of your company. We partner closely with leadership teams to design end-to-end talent sourcing pipelines, build recognizable employer branding, and identify specialized niche professionals.",
+    iconName: "UserCheck",
+    subServices: [
+      "Workforce Planning",
+      "Talent Sourcing",
+      "Candidate Screening",
+      "Talent Pipeline Development",
+      "Employer Branding",
+      "Specialized Hiring",
+    ],
+    features: [
+      "Strategic Workforce Forecasting",
+      "Multi-Channel Active Candidate Sourcing",
+      "Rigorous Technical & Cultural Fitment",
+      "Employer Value Proposition (EVP) Strategy",
+    ],
+    ctaText: "Build Your Talent Pipeline →",
+    ctaLink: "/contact?service=talent-acquisition",
+    image: "/services/talent-acquisition.jpg",
+    badge: "Strategic",
+  },
+  {
+    id: "payroll-and-hr-services",
+    slug: "payroll-and-hr-services",
+    title: "Payroll & HR Services",
+    shortDescription: "End-to-end payroll processing, attendance and leave automation, salary management, and 100% compliant HR operations.",
+    description: "Eliminate administrative bottlenecks and guarantee error-free compensation with our comprehensive payroll and HR services. We handle salary disbursement calculations, statutory compliances, tax deductions, and employee records with complete security and confidentiality.",
+    iconName: "FileSpreadsheet",
+    subServices: [
+      "Payroll Processing",
+      "Salary & Payslip Management",
+      "Attendance & Leave Management",
+      "Employee Documentation",
+      "HR Operations",
+      "Payroll Reports",
+      "Compliance Support",
+    ],
+    features: [
+      "Automated Monthly Salary Disbursements",
+      "Statutory PF, ESI & Tax Compliance",
+      "Self-service Digital Payslips & Portal",
+      "Standardized HR Policies & Documentation",
+    ],
+    ctaText: "Get Payroll Support →",
+    ctaLink: "/contact?service=payroll-and-hr-services",
+    image: "/services/payroll-and-hr-services.jpg",
+    badge: "Enterprise",
+  },
+  {
+    id: "digital-marketing",
+    slug: "digital-marketing",
+    title: "Digital Marketing",
+    shortDescription: "High-impact SEO, multi-channel performance advertising, social media growth, and conversion-optimized lead generation funnels.",
+    description: "Accelerate your brand reach and generate qualified inbound leads through data-driven digital marketing campaigns. Our performance specialists engineer multi-touchpoint marketing engines spanning organic search, high-ROI Google and Meta ad campaigns, and compelling creative content.",
+    iconName: "Megaphone",
+    subServices: [
+      "Digital Marketing Strategy",
+      "SEO (Search Engine Optimization)",
+      "Social Media Marketing",
+      "Google Ads (PPC)",
+      "Meta Ads (Facebook & Instagram)",
+      "Content & Creative Production",
+      "Lead Generation Funnels",
+      "Analytics & Reporting",
+    ],
+    features: [
+      "First-Page Search Engine Optimization",
+      "High-Converting Paid Ad Campaigns",
+      "Engaging Social Brand Storytelling",
+      "Transparent Real-Time Performance Analytics",
+    ],
+    ctaText: "Grow Your Business →",
+    ctaLink: "/contact?service=digital-marketing",
+    image: "/services/digital-marketing.jpg",
+    badge: "High Growth",
+  },
+  {
+    id: "ecommerce-solutions",
+    slug: "ecommerce-solutions",
+    title: "E-Commerce Solutions",
+    shortDescription: "Modern online store development, seamless payment integrations, catalogue architecture, and end-to-end inventory management.",
+    description: "Launch, scale, and optimize enterprise e-commerce platforms that deliver friction-free shopping experiences. We engineer high-speed digital storefronts with secure payment gateways, automated inventory synchronization, and intuitive admin dashboards built to maximize average order value.",
+    iconName: "ShoppingCart",
+    subServices: [
+      "E-Commerce Website Development",
+      "Online Store Setup",
+      "Product Catalogue Management",
+      "Payment Gateway Integration",
+      "Order & Inventory Management",
+      "E-Commerce Marketing",
+      "Customer Support Integration",
+      "E-Commerce Analytics",
+    ],
+    features: [
+      "Custom Headless & Modular Storefronts",
+      "Multi-Currency & Secure Payment Gateways",
+      "Automated Inventory & Order Tracking",
+      "Mobile-First Responsive Conversion Architecture",
+    ],
+    ctaText: "Build Your Online Store →",
+    ctaLink: "/contact?service=ecommerce-solutions",
+    image: "/services/e-commerce-solutions.jpg",
+    badge: "Flagship",
+  },
+  {
+    id: "training-and-career-development",
+    slug: "training-and-career-development",
+    title: "Training & Career Development",
+    shortDescription: "Industry-aligned IT and digital marketing training programs with real-time practical projects, resume building, and placement support.",
+    description: "Bridge the gap between academic education and modern industry demands with our hands-on training programs. Mentored by senior industry practitioners, our courses provide immersive project-based learning, interview grooming, and career mentorship for students and corporate teams.",
+    iconName: "GraduationCap",
+    subServices: [
+      "IT Training",
+      "Digital Marketing Training",
+      "Professional Skills Training",
+      "Practical Project Training",
+      "Resume Building",
+      "Interview Preparation",
+      "Career Guidance",
+      "Corporate Training",
+    ],
+    features: [
+      "100% Practical & Real-Time Project Mentorship",
+      "Industry-Recognized Certifications",
+      "Dedicated Mock Interviews & Resume Grooming",
+      "Placement Assistance & Corporate Tie-ups",
+    ],
+    ctaText: "Join Training Programs →",
+    ctaLink: "/training",
+    image: "/services/training-and-career-development.jpg",
+    badge: "Career Ready",
+  },
+];

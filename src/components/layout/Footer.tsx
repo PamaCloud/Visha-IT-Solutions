@@ -1,133 +1,135 @@
 import Link from "next/link";
-import { MapPin, Phone, Mail, ChevronRight } from "lucide-react";
-import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa";
+import { MapPin, Phone, Mail } from "lucide-react";
+import { FaLinkedin, FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#0a0f1c] text-white pt-20 pb-8 border-t border-gray-800">
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 mb-16">
-          
-          {/* Brand & Social */}
-          <div className="flex flex-col">
-            <Link href="/" className="inline-flex w-[60px] h-[60px] bg-[#131b2f] p-1.5 rounded-xl border border-white/5 shadow-sm items-center justify-center hover:bg-[#1a243d] transition-colors mb-6">
-              <img 
-                src="/logo.jpg" 
-                alt="Visha IT Solutions" 
-                className="w-full h-full object-cover rounded-full bg-white shadow-inner"
+    /* Exact Abhivorn Footer: bg-primary (hsl 195 100% 25%) deep teal, white text */
+    <footer className="bg-[hsl(195,100%,25%)] text-white pt-20 pb-8">
+      <div className="container">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-16">
+
+          {/* Brand (Abhivorn: lg:col-span-2) */}
+          <div className="lg:col-span-2 space-y-6">
+            <Link href="/" className="inline-block group">
+              <img
+                src="/logo.jpg"
+                alt="Visha IT Solutions"
+                width={160}
+                height={40}
+                className="h-10 w-auto brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
               />
             </Link>
-            <p className="text-gray-300/90 mb-8 leading-relaxed text-sm pr-4">
-              We help you find the perfect tech solutions to live, work, and grow. Your digital transformation is just a step away.
+            <p className="text-white/60 text-sm leading-relaxed max-w-sm">
+              Enterprise-grade IT solutions for modern businesses. Building the future of digital innovation through cutting-edge architectures and top-tier talent.
             </p>
-            <div className="flex gap-4 mt-auto">
-              <a href="#" className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all duration-300 text-gray-400 hover:!text-black" aria-label="Facebook">
-                <FaFacebook size={16} />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all duration-300 text-gray-400 hover:!text-black" aria-label="Twitter">
-                <FaTwitter size={16} />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all duration-300 text-gray-400 hover:!text-black" aria-label="LinkedIn">
-                <FaLinkedin size={16} />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center hover:bg-white hover:text-black hover:border-white transition-all duration-300 text-gray-400 hover:!text-black" aria-label="Instagram">
-                <FaInstagram size={16} />
-              </a>
+            {/* Social links (Abhivorn: w-8 h-8 rounded-full bg-white/5, hover → accent) */}
+            <div className="flex gap-4 pt-2">
+              {[
+                { icon: FaLinkedin, href: "#", label: "LinkedIn" },
+                { icon: FaInstagram, href: "#", label: "Instagram" },
+              ].map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-[hsl(195,100%,50%)] hover:text-white transition-all duration-300"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="flex flex-col">
-            <h4 className="text-[13px] font-bold uppercase tracking-wider text-white flex items-center gap-2 mb-6 pt-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-              Quick Links
-            </h4>
-            <ul className="flex flex-col gap-3.5 text-sm">
-              <li className="flex items-center gap-3 group">
-                <ChevronRight size={14} className="text-primary shrink-0 transition-transform group-hover:translate-x-1" />
-                <Link href="/" className="text-gray-300 hover:text-white transition-colors">Home</Link>
-              </li>
-              <li className="flex items-center gap-3 group">
-                <ChevronRight size={14} className="text-primary shrink-0 transition-transform group-hover:translate-x-1" />
-                <Link href="/about" className="text-gray-300 hover:text-white transition-colors">About Us</Link>
-              </li>
-              <li className="flex items-center gap-3 group">
-                <ChevronRight size={14} className="text-primary shrink-0 transition-transform group-hover:translate-x-1" />
-                <Link href="/projects" className="text-gray-300 hover:text-white transition-colors">Projects</Link>
-              </li>
-              <li className="flex items-center gap-3 group">
-                <ChevronRight size={14} className="text-primary shrink-0 transition-transform group-hover:translate-x-1" />
-                <Link href="/services" className="text-gray-300 hover:text-white transition-colors">Services</Link>
-              </li>
-              <li className="flex items-center gap-3 group">
-                <ChevronRight size={14} className="text-primary shrink-0 transition-transform group-hover:translate-x-1" />
-                <Link href="/contact" className="text-gray-300 hover:text-white transition-colors">Contact Us</Link>
-              </li>
-            </ul>
-          </div>
-
           {/* Services */}
-          <div className="flex flex-col">
-            <h4 className="text-[13px] font-bold uppercase tracking-wider text-white flex items-center gap-2 mb-6 pt-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-              Our Services
-            </h4>
-            <ul className="flex flex-col gap-3.5 text-sm">
-              <li className="flex items-center gap-3 group">
-                <ChevronRight size={14} className="text-primary shrink-0 transition-transform group-hover:translate-x-1" />
-                <Link href="/services/ecommerce-development" className="text-gray-300 hover:text-white transition-colors truncate">E-Commerce</Link>
-              </li>
-              <li className="flex items-center gap-3 group">
-                <ChevronRight size={14} className="text-primary shrink-0 transition-transform group-hover:translate-x-1" />
-                <Link href="/services/digital-marketing" className="text-gray-300 hover:text-white transition-colors truncate">Digital Marketing</Link>
-              </li>
-              <li className="flex items-center gap-3 group">
-                <ChevronRight size={14} className="text-primary shrink-0 transition-transform group-hover:translate-x-1" />
-                <Link href="/services/it-recruitment" className="text-gray-300 hover:text-white transition-colors truncate">IT Recruitment</Link>
-              </li>
-              <li className="flex items-center gap-3 group">
-                <ChevronRight size={14} className="text-primary shrink-0 transition-transform group-hover:translate-x-1" />
-                <Link href="/training" className="text-gray-300 hover:text-white transition-colors truncate">Training</Link>
-              </li>
+          <div>
+            <h4 className="text-xs font-bold tracking-widest uppercase text-white/90 mb-6">Services</h4>
+            <ul className="space-y-3">
+              {[
+                { name: "Recruitment & Staffing",        href: "/services/recruitment-and-staffing" },
+                { name: "Talent Acquisition",             href: "/services/talent-acquisition" },
+                { name: "Payroll & HR Services",         href: "/services/payroll-and-hr-services" },
+                { name: "Digital Marketing",              href: "/services/digital-marketing" },
+                { name: "E-Commerce Solutions",          href: "/services/ecommerce-solutions" },
+                { name: "Training & Career Dev",         href: "/services/training-and-career-development" },
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="text-white/60 hover:text-[hsl(195,100%,50%)] transition-colors text-sm"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Contact Details */}
-          <div className="flex flex-col">
-            <h4 className="text-[13px] font-bold uppercase tracking-wider text-white flex items-center gap-2 mb-6 pt-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-              Contact Us
-            </h4>
-            <ul className="flex flex-col gap-3.5 text-sm">
-              <li className="flex items-start gap-3">
-                <MapPin size={16} className="text-primary shrink-0 mt-0.5" />
-                <span className="text-white leading-relaxed">Hyderabad, India</span>
+          {/* Company */}
+          <div>
+            <h4 className="text-xs font-bold tracking-widest uppercase text-white/90 mb-6">Overview</h4>
+            <ul className="space-y-4">
+              {[
+                { name: "About Us",  href: "/about"    },
+                { name: "Services",  href: "/services" },
+                { name: "Projects",  href: "/projects" },
+                { name: "Careers",   href: "/careers"  },
+                { name: "Contact",   href: "/contact"  },
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="text-white/60 hover:text-[hsl(195,100%,50%)] transition-colors text-sm"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="text-xs font-bold tracking-widest uppercase text-white/90 mb-6">Contact Us</h4>
+            <ul className="space-y-4">
+              <li>
+                <a
+                  href="mailto:contact@vishait.com"
+                  className="flex items-start gap-3 text-white/60 hover:text-[hsl(195,100%,50%)] transition-colors text-sm"
+                >
+                  <Mail className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <span>contact@vishait.com</span>
+                </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone size={16} className="text-primary shrink-0" />
-                <a href="tel:+919999999999" className="text-white hover:text-gray-300 transition-colors">+91 9999999999</a>
+              <li>
+                <a
+                  href="tel:+919999999999"
+                  className="flex items-start gap-3 text-white/60 hover:text-[hsl(195,100%,50%)] transition-colors text-sm"
+                >
+                  <Phone className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <span>+91 9999999999</span>
+                </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail size={16} className="text-primary shrink-0" />
-                <a href="mailto:contact@vishait.com" className="text-white hover:text-gray-300 transition-colors truncate">contact@vishait.com</a>
+              <li>
+                <span className="flex items-start gap-3 text-white/60 text-sm">
+                  <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <span>Hyderabad, Telangana, India</span>
+                </span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800/80 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-gray-400">
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
           <p>&copy; {currentYear} Visha IT Solutions. All rights reserved.</p>
-          <div className="flex flex-wrap justify-center gap-6">
-            <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="/terms-and-conditions" className="text-gray-400 hover:text-white transition-colors">
-              Terms & Conditions
-            </Link>
-            <p className="hidden md:block border-l border-gray-800 pl-6 text-gray-500">Designed with 🤍 for Excellence</p>
+          <div className="flex gap-6">
+            <Link href="/privacy-policy" className="hover:text-white/70 transition-colors">Privacy Policy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-white/70 transition-colors">Terms &amp; Conditions</Link>
           </div>
         </div>
       </div>

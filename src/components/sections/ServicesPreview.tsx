@@ -1,90 +1,136 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Settings, Code, Megaphone, Users, GraduationCap, Server } from "lucide-react";
-import { serviceService } from "@/services/serviceService";
+import {
+  ArrowRight,
+  Users,
+  UserCheck,
+  FileSpreadsheet,
+  Megaphone,
+  ShoppingCart,
+  GraduationCap,
+  CheckCircle2,
+} from "lucide-react";
 import SlideUp from "@/components/animations/SlideUp";
 import FadeIn from "@/components/animations/FadeIn";
+import { VISHA_SERVICES, VishaServiceItem } from "@/data/vishaServices";
 
 const iconMap: Record<string, any> = {
-  "Code": Code,
-  "Megaphone": Megaphone,
-  "Users": Users,
-  "GraduationCap": GraduationCap,
-  "Server": Server,
+  Users,
+  UserCheck,
+  FileSpreadsheet,
+  Megaphone,
+  ShoppingCart,
+  GraduationCap,
 };
 
-export default async function ServicesPreview() {
-  const services = await serviceService.getActiveServices();
+export default function ServicesPreview() {
+  const services: VishaServiceItem[] = VISHA_SERVICES;
 
   return (
-    <section className="py-24 bg-surface relative overflow-hidden">
-      <div className="container relative z-10">
-        <FadeIn className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl md:text-5xl font-display font-bold text-secondary tracking-tight mb-4">
-              Core Capabilities
-            </h2>
-            <p className="text-lg text-secondary-light">
-              End-to-end digital solutions driving innovation and measurable growth.
-            </p>
-          </div>
-          <Link href="/services" className="btn btn-primary text-sm px-6 rounded-full whitespace-nowrap hidden md:inline-flex shadow-lg">
-            View all services
-          </Link>
+    <section className="section-padding bg-white relative overflow-hidden" id="services">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <FadeIn className="text-center max-w-3xl mx-auto mb-16">
+          <div className="section-label justify-center mb-3">Our Core Expertise</div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[hsl(210,29%,24%)] mb-5 tracking-tight">
+            Comprehensive <span className="gradient-text">Technology & Talent</span> Solutions
+          </h2>
+          <p className="text-base sm:text-lg text-[hsl(207,14%,50%)] leading-relaxed">
+            From modern staffing and HR operations to high-growth e-commerce platforms and performance marketing, we deliver end-to-end solutions for forward-thinking enterprises.
+          </p>
         </FadeIn>
 
-        {services.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-            {services.map((service: any, index: number) => {
-              const IconComponent = service.icon && iconMap[service.icon] ? iconMap[service.icon] : Settings;
-              
-              return (
-                <SlideUp key={service._id} delay={index * 0.1}>
-                  <Link href={`/services/${service.slug}`} className="group block h-[450px] relative rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                    
-                    {/* Background Image mapped by slug */}
-                    <Image 
-                      src={`/services/${service.slug}.jpg`} 
+        {/* 6 Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service, index) => {
+            const IconComponent = iconMap[service.iconName] || Users;
+
+            return (
+              <SlideUp key={service.id} delay={index * 0.1}>
+                <div className="group bg-white rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-xl transition-all duration-500 flex flex-col h-full overflow-hidden">
+                  {/* Service Image Header */}
+                  <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100">
+                    <Image
+                      src={service.image}
                       alt={service.title}
                       fill
-                      className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
-                    
-                    {/* Dark gradient overlay for text readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/40 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
 
-                    {/* Icon at top right */}
-                    <div className="absolute top-6 right-6">
-                      <div className="w-12 h-12 bg-white/10 backdrop-blur-md text-white rounded-full flex items-center justify-center border border-white/20 group-hover:bg-white group-hover:text-primary transition-colors duration-500">
-                        <IconComponent size={20} />
-                      </div>
+                    {/* Badge */}
+                    {service.badge && (
+                      <span className="absolute top-4 left-4 text-xs font-semibold px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[hsl(195,100%,25%)] shadow-sm">
+                        {service.badge}
+                      </span>
+                    )}
+
+                    {/* Floating Icon */}
+                    <div className="absolute bottom-4 right-4 w-11 h-11 rounded-xl bg-white/95 backdrop-blur-md text-[hsl(195,100%,25%)] shadow-md flex items-center justify-center group-hover:bg-[hsl(195,100%,25%)] group-hover:text-white transition-colors duration-300">
+                      <IconComponent className="h-5 w-5" />
                     </div>
+                  </div>
 
-                    {/* Content at bottom */}
-                    <div className="absolute bottom-0 left-0 w-full p-8">
-                      <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                        <h4 className="text-2xl font-bold font-display text-white mb-3">{service.title}</h4>
-                        <p className="text-white/70 text-sm line-clamp-2 leading-relaxed font-medium">
-                          {service.shortDescription}
+                  {/* Content Area */}
+                  <div className="p-6 sm:p-7 flex flex-col flex-grow">
+                    <h3 className="text-xl sm:text-2xl font-bold text-[hsl(210,29%,24%)] mb-2 tracking-tight group-hover:text-[hsl(195,100%,25%)] transition-colors">
+                      {service.title}
+                    </h3>
+
+                    <p className="text-sm text-[hsl(207,14%,50%)] mb-5 leading-relaxed">
+                      {service.shortDescription}
+                    </p>
+
+                    {/* Sub-services Pills / Offerings */}
+                    <div className="mb-6 pt-4 border-t border-gray-100 flex-grow">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5">
+                        Key Capabilities
+                      </p>
+                      <ul className="space-y-1.5">
+                        {service.subServices.slice(0, 4).map((sub, sIdx) => (
+                          <li key={sIdx} className="flex items-center gap-2 text-xs font-medium text-slate-600">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[hsl(195,100%,40%)] shrink-0" />
+                            <span>{sub}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      {service.subServices.length > 4 && (
+                        <p className="text-[11px] font-semibold text-[hsl(195,100%,35%)] mt-2">
+                          + {service.subServices.length - 4} more specialized offerings
                         </p>
-                      </div>
+                      )}
                     </div>
-                  </Link>
-                </SlideUp>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center p-12 bg-white rounded-3xl shadow-sm border border-gray-100">
-            <h4 className="text-xl font-medium text-secondary-light">New services coming soon.</h4>
-          </div>
-        )}
-        
-        <div className="mt-8 text-center md:hidden">
-          <Link href="/services" className="btn btn-primary text-sm px-6 rounded-full shadow-lg">
-            View all services
-          </Link>
+
+                    {/* Custom Requested CTA Button */}
+                    <Link
+                      href={`/services/${service.slug}`}
+                      className="mt-auto flex items-center justify-center gap-2 w-full h-11 rounded-xl border border-slate-200 text-[hsl(210,29%,24%)] text-sm font-semibold hover:bg-[hsl(195,100%,25%)] hover:text-white hover:border-[hsl(195,100%,25%)] transition-all duration-300 group/btn shadow-2xs"
+                    >
+                      <span>{service.ctaText}</span>
+                      <ArrowRight size={14} className="transform group-hover/btn:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
+                </div>
+              </SlideUp>
+            );
+          })}
         </div>
+
+        {/* Bottom Contact Banner */}
+        <FadeIn className="text-center mt-16 pt-8 border-t border-gray-100">
+          <div className="inline-flex flex-wrap items-center justify-center gap-4 bg-slate-50 border border-slate-200/80 rounded-2xl px-6 py-4">
+            <span className="text-sm font-medium text-slate-700">
+              Need a customized enterprise solution or specialized staffing plan?
+            </span>
+            <Link
+              href="/get-a-quote"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[hsl(195,100%,25%)] hover:text-[hsl(195,100%,40%)] hover:underline"
+            >
+              Get a Project Quote <ArrowRight size={14} />
+            </Link>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

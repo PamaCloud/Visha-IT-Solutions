@@ -34,12 +34,12 @@ export default function FloatingWidgets() {
       {/* Scroll To Top Button */}
       <button
         onClick={scrollToTop}
-        className={`w-10 h-10 bg-white text-secondary rounded-full flex items-center justify-center shadow-lg border border-gray-100 hover:bg-gray-50 hover:text-primary transition-all duration-300 transform ${
+        className={`w-10 h-10 bg-white text-[hsl(210,29%,24%)] rounded-full flex items-center justify-center shadow-lg border border-gray-100 hover:bg-[hsl(195,100%,50%)] hover:text-white hover:border-[hsl(195,100%,50%)] transition-all duration-300 transform ${
           showScroll ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
         }`}
         aria-label="Scroll to top"
       >
-        <ArrowUp size={20} />
+        <ArrowUp size={18} />
       </button>
 
       {/* WhatsApp Button (Vibrating) */}
