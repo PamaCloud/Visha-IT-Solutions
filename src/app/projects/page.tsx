@@ -62,7 +62,7 @@ export default async function ProjectsPage() {
       <div className="absolute top-0 right-0 w-full h-[600px] bg-gradient-to-bl from-primary/10 via-blue-50/50 to-surface -z-10"></div>
       <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[100px] -z-10"></div>
       
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 lg:pt-36">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <FadeIn>
             <div className="flex items-center justify-center gap-3 mb-4">

@@ -28,7 +28,7 @@ export default function AboutPage() {
   return (
     <div className="bg-surface min-h-screen">
       {/* Hero Section */}
-      <section className="relative w-full h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+      <section className="relative w-full h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden pt-20 sm:pt-24">
         {/* Background Image */}
         <Image 
           src="/about-hero.jpg" 

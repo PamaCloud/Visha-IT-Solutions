@@ -37,13 +37,14 @@ export default function Navbar() {
     >
       <nav className="container flex items-center justify-between h-16 lg:h-20">
         {/* Logo */}
-        <Link href="/" className="flex items-center flex-shrink-0">
-          <div className="relative w-36 h-10">
+        <Link href="/" className="flex items-center flex-shrink-0 group">
+          <div className="relative w-44 sm:w-48 h-10 sm:h-11">
             <Image
-              src="/logo.jpg"
+              src="/logo-dark.png"
               alt="Visha IT Solutions"
               fill
-              className="object-contain object-left"
+              sizes="(max-width: 640px) 176px, 192px"
+              className="object-contain object-left group-hover:opacity-90 transition-opacity"
               priority
             />
           </div>

@@ -14,6 +14,14 @@ export const metadata: Metadata = {
   description:
     "Empowering businesses with modern technology, innovative digital marketing, top-tier recruitment, and industry-leading training programs.",
   keywords: ["IT solutions", "Digital Marketing", "Recruitment", "Professional Training", "E-Commerce Development"],
+  icons: {
+    icon: [
+      { url: "/favicon.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({

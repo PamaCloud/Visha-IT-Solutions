@@ -42,7 +42,7 @@ export default async function ServiceDetailPage({
   return (
     <div className="bg-white min-h-screen pb-20">
       {/* Hero Section */}
-      <div className="relative pt-16 pb-20 overflow-hidden bg-gradient-to-br from-[hsl(195,100%,25%)] via-[#007090] to-[hsl(195,100%,35%)] text-white">
+      <div className="relative pt-28 sm:pt-32 lg:pt-36 pb-20 sm:pb-24 overflow-hidden bg-gradient-to-br from-[hsl(195,100%,25%)] via-[#007090] to-[hsl(195,100%,35%)] text-white">
         <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-white/5 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 left-10 w-[20rem] h-[20rem] bg-[hsl(195,100%,50%)]/15 rounded-full blur-[80px] pointer-events-none" />
 

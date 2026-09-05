@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { FaLinkedin, FaInstagram } from "react-icons/fa";
 
@@ -14,13 +15,15 @@ export default function Footer() {
           {/* Brand (Abhivorn: lg:col-span-2) */}
           <div className="lg:col-span-2 space-y-6">
             <Link href="/" className="inline-block group">
-              <img
-                src="/logo.jpg"
-                alt="Visha IT Solutions"
-                width={160}
-                height={40}
-                className="h-10 w-auto brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
-              />
+              <div className="relative w-44 sm:w-48 h-10 sm:h-11">
+                <Image
+                  src="/logo-white.png"
+                  alt="Visha IT Solutions"
+                  fill
+                  sizes="(max-width: 640px) 176px, 192px"
+                  className="object-contain object-left group-hover:opacity-90 transition-opacity"
+                />
+              </div>
             </Link>
             <p className="text-white/60 text-sm leading-relaxed max-w-sm">
               Enterprise-grade IT solutions for modern businesses. Building the future of digital innovation through cutting-edge architectures and top-tier talent.

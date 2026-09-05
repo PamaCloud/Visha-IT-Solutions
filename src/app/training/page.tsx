@@ -56,7 +56,7 @@ export default async function TrainingPage() {
       {/* Premium Background Elements */}
       <div className="absolute top-0 right-0 w-[50%] h-[500px] bg-gradient-to-bl from-blue-500/10 via-primary/5 to-surface rounded-bl-full blur-[100px] -z-10"></div>
       
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 lg:pt-36">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <FadeIn>
             <div className="flex items-center justify-center gap-3 mb-4">

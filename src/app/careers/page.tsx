@@ -19,7 +19,7 @@ export default async function CareersPage() {
       <div className="absolute top-0 right-0 w-[50%] h-[500px] bg-gradient-to-bl from-primary/10 via-blue-50/50 to-surface rounded-bl-full blur-[100px] -z-10"></div>
       <div className="absolute top-[20%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[100px] -z-10"></div>
       
-      <div className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 lg:pt-36">
         <div className="text-center max-w-3xl mx-auto mb-20">
           <FadeIn>
             <div className="flex items-center justify-center gap-4 mb-6">

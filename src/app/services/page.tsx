@@ -36,7 +36,7 @@ export default function ServicesPage() {
   return (
     <div className="min-h-screen pb-24 bg-white">
       {/* Header Banner */}
-      <div className="relative pt-16 pb-20 bg-gradient-to-br from-[hsl(195,100%,25%)] via-[#007090] to-[hsl(195,100%,35%)] text-white overflow-hidden">
+      <div className="relative pt-28 sm:pt-32 lg:pt-36 pb-24 bg-gradient-to-br from-[hsl(195,100%,25%)] via-[#007090] to-[hsl(195,100%,35%)] text-white overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-[hsl(195,100%,50%)]/15 rounded-full blur-2xl pointer-events-none" />
 

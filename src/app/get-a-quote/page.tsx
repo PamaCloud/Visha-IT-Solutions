@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function GetAQuotePage() {
   return (
-    <div className="bg-surface min-h-[calc(100vh-200px)] py-12 lg:py-20">
+    <div className="bg-surface min-h-[calc(100vh-200px)] pt-28 sm:pt-32 lg:pt-36 pb-20">
       <div className="container max-w-5xl">
         <div className="flex flex-col lg:flex-row gap-12">
           

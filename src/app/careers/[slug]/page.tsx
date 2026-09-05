@@ -60,7 +60,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
                 </div>
               </div>
               <div className="w-16 h-16 bg-surface rounded-xl flex items-center justify-center border border-gray-100 p-2 shrink-0">
-                <img src="/logo.jpg" alt="Visha IT Solutions" className="w-full h-full object-contain rounded-md" />
+                <img src="/favicon.png" alt="Visha IT Solutions" className="w-full h-full object-contain rounded-md" />
               </div>
             </div>
 
