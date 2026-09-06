@@ -6,13 +6,23 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { VISHA_SERVICES } from "@/data/vishaServices";
+import { VISHA_TRAINING_PROGRAMS } from "@/data/vishaTraining";
+import { VISHA_PROJECTS } from "@/data/vishaProjects";
 
-const navLinks = [
+type DropdownType = "services" | "training" | "projects" | null;
+
+interface NavItem {
+  name: string;
+  href: string;
+  dropdownType?: "services" | "training" | "projects";
+}
+
+const navLinks: NavItem[] = [
   { name: "Home", href: "/" },
   { name: "About Us", href: "/about" },
-  { name: "Services", href: "/services", hasDropdown: true },
-  { name: "Training", href: "/training" },
-  { name: "Projects", href: "/projects" },
+  { name: "Services", href: "/services", dropdownType: "services" },
+  { name: "Training", href: "/training", dropdownType: "training" },
+  { name: "Projects", href: "/projects", dropdownType: "projects" },
   { name: "Careers", href: "/careers" },
   { name: "Contact Us", href: "/contact" },
 ];
@@ -20,9 +30,9 @@ const navLinks = [
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [activeDropdown, setActiveDropdown] = useState<DropdownType>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<DropdownType>(null);
+  const navContainerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -34,17 +44,41 @@ export default function Navbar() {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setServicesDropdownOpen(false);
+      if (navContainerRef.current && !navContainerRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Split the 6 services into two columns of 3
-  const col1 = VISHA_SERVICES.slice(0, 3);
-  const col2 = VISHA_SERVICES.slice(3, 6);
+  // Close dropdown on pathname change
+  useEffect(() => {
+    setActiveDropdown(null);
+    setMobileOpen(false);
+  }, [pathname]);
+
+  const getDropdownData = (type: "services" | "training" | "projects") => {
+    if (type === "services") {
+      return {
+        baseHref: "/services",
+        col1: VISHA_SERVICES.slice(0, 3),
+        col2: VISHA_SERVICES.slice(3, 6),
+      };
+    }
+    if (type === "training") {
+      return {
+        baseHref: "/training",
+        col1: VISHA_TRAINING_PROGRAMS.slice(0, 3),
+        col2: VISHA_TRAINING_PROGRAMS.slice(3, 6),
+      };
+    }
+    return {
+      baseHref: "/projects",
+      col1: VISHA_PROJECTS.slice(0, 3),
+      col2: VISHA_PROJECTS.slice(3, 6),
+    };
+  };
 
   return (
     <header
@@ -73,67 +107,76 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Links with Abhivorn-Style 2-Column Services Dropdown */}
-        <div className="hidden lg:flex items-center gap-1.5 py-1">
+        {/* Desktop Links with 2-Column Floating Cards for Services, Training & Projects */}
+        <div ref={navContainerRef} className="hidden lg:flex items-center gap-1.5 py-1">
           {navLinks.map((link) => {
-            const isServices = link.hasDropdown;
-            const isActive = pathname === link.href || (isServices && pathname.startsWith("/services"));
+            const hasDropdown = !!link.dropdownType;
+            const isActive =
+              pathname === link.href || (hasDropdown && pathname.startsWith(link.href));
+            const isCurrentOpen = activeDropdown === link.dropdownType;
 
-            if (isServices) {
+            if (hasDropdown && link.dropdownType) {
+              const { baseHref, col1, col2 } = getDropdownData(link.dropdownType);
+
               return (
                 <div
                   key={link.name}
-                  ref={dropdownRef}
                   className="relative"
-                  onMouseEnter={() => setServicesDropdownOpen(true)}
-                  onMouseLeave={() => setServicesDropdownOpen(false)}
+                  onMouseEnter={() => setActiveDropdown(link.dropdownType!)}
+                  onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <button
-                    onClick={() => setServicesDropdownOpen((prev) => !prev)}
+                    onClick={() =>
+                      setActiveDropdown((prev) =>
+                        prev === link.dropdownType ? null : link.dropdownType!
+                      )
+                    }
                     className={`px-4 py-2 rounded-full text-sm font-medium inline-flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${
-                      isActive || servicesDropdownOpen
+                      isActive || isCurrentOpen
                         ? "bg-[hsl(195,100%,25%)]/10 text-[hsl(195,100%,25%)] font-semibold"
                         : "text-slate-600 hover:text-[hsl(195,100%,25%)] hover:bg-slate-100/80"
                     }`}
                   >
-                    <span>Services</span>
+                    <span>{link.name}</span>
                     <ChevronDown
                       size={15}
                       className={`transition-transform duration-200 ${
-                        servicesDropdownOpen ? "rotate-180 text-[hsl(195,100%,25%)]" : "text-slate-400"
+                        isCurrentOpen
+                          ? "rotate-180 text-[hsl(195,100%,25%)]"
+                          : "text-slate-400"
                       }`}
                     />
                   </button>
 
-                  {/* 2-Column Floating Services Card Dropdown */}
-                  {servicesDropdownOpen && (
+                  {/* 2-Column Floating Card Dropdown */}
+                  {isCurrentOpen && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
                       <div className="w-[560px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-200">
                         <div className="grid grid-cols-2 gap-x-6 gap-y-1">
                           {/* Column 1 */}
                           <div className="space-y-1">
-                            {col1.map((svc) => (
+                            {col1.map((item) => (
                               <Link
-                                key={svc.id}
-                                href={`/services/${svc.slug}`}
-                                onClick={() => setServicesDropdownOpen(false)}
+                                key={item.id}
+                                href={`${baseHref}/${item.slug}`}
+                                onClick={() => setActiveDropdown(null)}
                                 className="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors"
                               >
-                                {svc.title}
+                                {item.title}
                               </Link>
                             ))}
                           </div>
 
                           {/* Column 2 */}
                           <div className="space-y-1">
-                            {col2.map((svc) => (
+                            {col2.map((item) => (
                               <Link
-                                key={svc.id}
-                                href={`/services/${svc.slug}`}
-                                onClick={() => setServicesDropdownOpen(false)}
+                                key={item.id}
+                                href={`${baseHref}/${item.slug}`}
+                                onClick={() => setActiveDropdown(null)}
                                 className="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors"
                               >
-                                {svc.title}
+                                {item.title}
                               </Link>
                             ))}
                           </div>
@@ -191,31 +234,50 @@ export default function Navbar() {
         <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg">
           <div className="container py-4 space-y-1">
             {navLinks.map((link) => {
-              if (link.hasDropdown) {
+              if (link.dropdownType) {
+                const isExpanded = mobileExpanded === link.dropdownType;
+                let items: { id: string; slug: string; title: string }[] = [];
+                let baseHref = "";
+
+                if (link.dropdownType === "services") {
+                  items = VISHA_SERVICES;
+                  baseHref = "/services";
+                } else if (link.dropdownType === "training") {
+                  items = VISHA_TRAINING_PROGRAMS;
+                  baseHref = "/training";
+                } else if (link.dropdownType === "projects") {
+                  items = VISHA_PROJECTS;
+                  baseHref = "/projects";
+                }
+
                 return (
                   <div key={link.name} className="border-b border-gray-50 pb-2">
                     <button
-                      onClick={() => setMobileServicesOpen((prev) => !prev)}
+                      onClick={() =>
+                        setMobileExpanded((prev) =>
+                          prev === link.dropdownType ? null : link.dropdownType!
+                        )
+                      }
                       className="w-full flex items-center justify-between py-3 text-sm font-semibold text-[hsl(210,29%,24%)]"
                     >
                       <span>{link.name}</span>
                       <ChevronDown
                         size={16}
                         className={`transition-transform duration-200 ${
-                          mobileServicesOpen ? "rotate-180 text-[hsl(195,100%,25%)]" : ""
+                          isExpanded ? "rotate-180 text-[hsl(195,100%,25%)]" : ""
                         }`}
                       />
                     </button>
-                    {mobileServicesOpen && (
+                    {isExpanded && (
                       <div className="pl-4 space-y-2 pb-2">
-                        {VISHA_SERVICES.map((svc) => (
+                        {items.map((item) => (
                           <Link
-                            key={svc.id}
-                            href={`/services/${svc.slug}`}
+                            key={item.id}
+                            href={`${baseHref}/${item.slug}`}
                             onClick={() => setMobileOpen(false)}
                             className="block py-1.5 text-xs font-medium text-slate-600 hover:text-[hsl(195,100%,25%)]"
                           >
-                            {svc.title}
+                            {item.title}
                           </Link>
                         ))}
                       </div>

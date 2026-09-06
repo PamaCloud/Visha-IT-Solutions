@@ -43,6 +43,22 @@ const MOCK_PROJECTS = [
     clientName: "FastTrack Logistics",
     shortDescription: "End-to-end enterprise resource planning for supply chain management.",
     imageUrl: "/projects/erp.jpg"
+  },
+  {
+    _id: "mock-proj-5",
+    slug: "corporate-hr-portal",
+    title: "Corporate HR Portal",
+    clientName: "Enterprise Solutions LLC",
+    shortDescription: "Internal HR management system for tracking employee performance, attendance, and leave.",
+    imageUrl: "/projects/erp.jpg"
+  },
+  {
+    _id: "mock-proj-6",
+    slug: "ai-customer-support-bot",
+    title: "AI Support Bot & Analytics",
+    clientName: "OmniTech Global",
+    shortDescription: "Intelligent customer service automation bot with sentiment analysis and live ticketing.",
+    imageUrl: "/projects/fintech.jpg"
   }
 ];
 

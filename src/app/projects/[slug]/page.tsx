@@ -6,9 +6,9 @@ import { Metadata } from "next";
 import SlideUp from "@/components/animations/SlideUp";
 import FadeIn from "@/components/animations/FadeIn";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const project = await publicContentService.getProject(params.slug);
-  if (!project) return { title: "Project Not Found" };
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> | { slug: string } }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const project = (await publicContentService.getProject(resolvedParams.slug)) || getMockProject(resolvedParams.slug);
   
   return {
     title: `${project.title} - Case Study - Visha IT Solutions`,
@@ -171,10 +171,10 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                     <p className="text-secondary-light/90 italic text-sm leading-relaxed mb-4">"Visha IT Solutions completely transformed our business logic. Their dedication and technical expertise are unmatched."</p>
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">
-                        {project.clientName.charAt(0)}
+                        {(project.clientName || "Client").charAt(0)}
                       </div>
                       <div>
-                        <h5 className="font-bold text-secondary text-xs">{project.clientName}</h5>
+                        <h5 className="font-bold text-secondary text-xs">{project.clientName || "Enterprise Client"}</h5>
                         <span className="text-primary text-[10px] uppercase tracking-wider font-bold">Verified Client</span>
                       </div>
                     </div>

@@ -38,6 +38,33 @@ const MOCK_PROGRAMS = [
     mode: "Online",
     duration: "3 Months",
     level: "Intermediate"
+  },
+  {
+    _id: "mock4",
+    slug: "python-data-engineering",
+    title: "Python & Data Engineering",
+    shortDescription: "Master Python programming, automated data pipelines, and analytics tools.",
+    mode: "Hybrid",
+    duration: "4 Months",
+    level: "Intermediate"
+  },
+  {
+    _id: "mock5",
+    slug: "ai-machine-learning",
+    title: "AI & Machine Learning",
+    shortDescription: "Practical machine learning algorithms, deep neural networks, and generative AI.",
+    mode: "Online",
+    duration: "6 Months",
+    level: "Advanced"
+  },
+  {
+    _id: "mock6",
+    slug: "digital-marketing-mastery",
+    title: "Digital Marketing Mastery",
+    shortDescription: "Comprehensive SEO, Google Ads, social media strategy, and data-driven marketing.",
+    mode: "Hybrid",
+    duration: "3 Months",
+    level: "Beginner to Advanced"
   }
 ];
 
