@@ -342,9 +342,10 @@ export default function AdminTrainingPage() {
         />
       </div>
 
-      {/* Courses Table */}
+      {/* Courses View: Desktop Table + Mobile Cards */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop Table (hidden on mobile) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-gray-50/80 text-[11px] font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">
@@ -422,6 +423,91 @@ export default function AdminTrainingPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Dedicated Mobile Cards View (Visible only on mobile < md) */}
+        <div className="block md:hidden divide-y divide-gray-100">
+          {loading ? (
+            <div className="py-12 text-center text-gray-400">
+              <Loader2 size={24} className="animate-spin text-[#00779e] mx-auto mb-2" />
+              Loading courses...
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="py-12 text-center text-gray-400 text-xs px-4">
+              No training courses found. Click &quot;Add New Course&quot; to create one.
+            </div>
+          ) : (
+            filtered.map((course) => (
+              <div key={course._id} className="p-4 space-y-3 bg-white hover:bg-slate-50/50 transition-colors">
+                {/* Header: Title + Status Pill */}
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-slate-900 text-sm leading-tight">
+                      {course.title}
+                    </h3>
+                    {course.badge && (
+                      <span className="inline-block mt-1 px-2 py-0.5 rounded bg-sky-50 text-[#00779e] text-[10px] font-bold border border-sky-100">
+                        {course.badge}
+                      </span>
+                    )}
+                  </div>
+
+                  <span
+                    className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      course.isActive
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        : "bg-gray-100 text-gray-500 border border-gray-200"
+                    }`}
+                  >
+                    {course.isActive ? "Active" : "Inactive"}
+                  </span>
+                </div>
+
+                {/* Quick Info Badges */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-50 text-[#00779e] text-[10px] font-bold border border-sky-100">
+                    <BookOpen size={11} />
+                    <span>{course.modules?.length || 0} Modules</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-medium">
+                    <Clock size={11} />
+                    <span>{course.duration}</span>
+                  </span>
+                  <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-medium">
+                    {course.mode}
+                  </span>
+                </div>
+
+                {/* Description */}
+                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                  {course.shortDescription || course.description}
+                </p>
+
+                {/* Action Buttons */}
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                  <div className="text-[11px] text-slate-400">
+                    {course.level || "Professional Masterclass"}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => openEditModal(course)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#004f6e] hover:bg-[#003d55] text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer"
+                    >
+                      <Edit2 size={12} />
+                      <span>Edit Curriculum</span>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(course._id, course.title)}
+                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                      title="Delete Course"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

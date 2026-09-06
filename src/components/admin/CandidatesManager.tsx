@@ -334,9 +334,10 @@ export default function CandidatesManager() {
         </div>
       </div>
 
-      {/* Candidates Table View */}
+      {/* Candidates View: Desktop Table + Mobile Cards */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop Table (hidden on mobile) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-100">
@@ -367,7 +368,6 @@ export default function CandidatesManager() {
                 filteredCandidates.map((candidate) => {
                   const statusInfo =
                     STATUS_CONFIG[candidate.status] || STATUS_CONFIG["New"];
-                  const StatusIcon = statusInfo.icon;
 
                   return (
                     <tr
@@ -460,6 +460,113 @@ export default function CandidatesManager() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Dedicated Mobile Cards View (Visible only on mobile & tablets < md) */}
+        <div className="block md:hidden divide-y divide-slate-100">
+          {loading ? (
+            <div className="py-12 text-center text-slate-400">
+              <Loader2 size={24} className="animate-spin text-[#00779e] mx-auto mb-2" />
+              Loading applications...
+            </div>
+          ) : filteredCandidates.length === 0 ? (
+            <div className="py-12 text-center text-slate-400 text-xs px-4">
+              No candidate applications match your filter.
+            </div>
+          ) : (
+            filteredCandidates.map((candidate) => {
+              const statusInfo =
+                STATUS_CONFIG[candidate.status] || STATUS_CONFIG["New"];
+
+              return (
+                <div key={candidate._id} className="p-4 space-y-3 bg-white hover:bg-slate-50/50 transition-colors">
+                  {/* Card Header: Name + Applied Date + Delete Button */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <h3 className="font-bold text-slate-900 text-sm leading-tight truncate">
+                        {candidate.fullName}
+                      </h3>
+                      <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                        {candidate.email}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      <span className="text-[10px] text-slate-400 font-medium px-2 py-0.5 bg-slate-100 rounded-md">
+                        {formatDate(candidate.createdAt)}
+                      </span>
+                      <button
+                        onClick={() =>
+                          handleDeleteCandidate(candidate._id, candidate.fullName)
+                        }
+                        disabled={deletingId === candidate._id}
+                        title="Delete Applicant"
+                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Position & Experience Badges */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-md bg-sky-50 text-[#004f6e] border border-sky-100 text-[11px] font-semibold">
+                      {candidate.position || "Applicant"}
+                    </span>
+                    <span className="text-[11px] text-slate-500 font-medium">
+                      Exp: {candidate.experienceLevel || "Fresher"}
+                    </span>
+                  </div>
+
+                  {/* Phone with Direct Call */}
+                  {candidate.phone && (
+                    <div className="flex items-center justify-between pt-1 border-t border-slate-100/80">
+                      <div className="font-mono text-xs font-semibold text-slate-700">
+                        {candidate.phone}
+                      </div>
+                      <a
+                        href={`tel:${candidate.phone}`}
+                        className="text-[11px] font-bold text-[#00779e] hover:underline"
+                      >
+                        Call Candidate &rarr;
+                      </a>
+                    </div>
+                  )}
+
+                  {/* Card Bottom: Inline Status Dropdown + View Details Button */}
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                    <div className="flex-1 max-w-[170px]">
+                      <select
+                        value={candidate.status || "New"}
+                        onChange={(e) =>
+                          handleInlineStatusChange(
+                            candidate._id,
+                            e.target.value as CandidateApplication["status"]
+                          )
+                        }
+                        className={`w-full text-[11px] font-bold px-2.5 py-1.5 rounded-xl border transition-all cursor-pointer focus:outline-none ${statusInfo.bg} ${statusInfo.text} ${statusInfo.border}`}
+                      >
+                        <option value="New">New</option>
+                        <option value="Under Review">Under Review</option>
+                        <option value="Shortlisted">Shortlisted</option>
+                        <option value="Interview Scheduled">Interview Scheduled</option>
+                        <option value="Hired">Hired</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    </div>
+
+                    <button
+                      onClick={() => openCandidateModal(candidate)}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-[#004f6e] to-[#0096c7] text-white text-xs font-semibold rounded-xl shadow-xs hover:from-[#003d55] hover:to-[#007ba3] transition-all cursor-pointer shrink-0"
+                    >
+                      <Eye size={13} />
+                      <span>Details</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
 

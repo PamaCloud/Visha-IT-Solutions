@@ -143,9 +143,9 @@ export default function AdminLayoutShell({
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col antialiased">
       {/* ── Top Header Bar (Matching Image 2) ─────────────────────────────── */}
-      <header className="sticky top-0 z-30 bg-white border-b border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] h-[72px] flex items-center px-4 sm:px-8 lg:px-12">
+      <header className="sticky top-0 z-30 bg-white border-b border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] h-[62px] sm:h-[72px] flex items-center px-3.5 sm:px-8 lg:px-12">
         {/* Left: Mobile Menu Toggle & Brand Logo */}
-        <div className="flex items-center gap-4 sm:gap-6 pl-1 sm:pl-4">
+        <div className="flex items-center gap-3 sm:gap-6 pl-0.5 sm:pl-4">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
@@ -155,12 +155,12 @@ export default function AdminLayoutShell({
             <Menu size={22} />
           </button>
 
-          <Link href="/admin/dashboard" className="relative w-48 sm:w-56 lg:w-64 h-11 sm:h-12 lg:h-13 block">
+          <Link href="/admin/dashboard" className="relative w-40 sm:w-56 lg:w-64 h-9 sm:h-12 lg:h-13 block">
             <Image
               src="/logo-dark.png"
               alt="Visha IT Solutions"
               fill
-              sizes="(max-width: 640px) 192px, (max-width: 1024px) 224px, 256px"
+              sizes="(max-width: 640px) 160px, (max-width: 1024px) 224px, 256px"
               className="object-contain object-left"
               priority
             />
@@ -293,7 +293,7 @@ export default function AdminLayoutShell({
         )}
 
         {/* Main Content Area */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 min-w-0 overflow-y-auto">
+        <main className="flex-1 p-3 sm:p-6 lg:p-8 min-w-0 overflow-y-auto">
           {children}
         </main>
       </div>

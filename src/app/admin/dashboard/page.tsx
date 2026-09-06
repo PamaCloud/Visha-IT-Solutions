@@ -110,65 +110,65 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── 3 Metrics Cards Row (Matching Image 3) ───────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
         {/* Card 1: TOTAL ASSETS */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all">
           <div className="flex items-start justify-between">
-            <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+            <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-slate-400 uppercase">
               TOTAL ASSETS
             </span>
-            <div className="w-8 h-8 rounded-lg bg-[#fff1ec] text-[#e05638] flex items-center justify-center border border-orange-100">
+            <div className="w-8 h-8 rounded-lg bg-[#fff1ec] text-[#e05638] flex items-center justify-center border border-orange-100 shrink-0">
               <ImageIcon size={15} />
             </div>
           </div>
-          <div className="mt-4">
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <div className="mt-3 sm:mt-4">
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               {totalAssetsCount}
             </h3>
-            <p className="text-xs text-slate-400 mt-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block" />
+            <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block shrink-0" />
               Active media files across the site
             </p>
           </div>
         </div>
 
         {/* Card 2: DYNAMIC ROUTES */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all">
           <div className="flex items-start justify-between">
-            <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+            <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-slate-400 uppercase">
               DYNAMIC ROUTES
             </span>
-            <div className="w-8 h-8 rounded-lg bg-[#fff1ec] text-[#e05638] flex items-center justify-center border border-orange-100">
+            <div className="w-8 h-8 rounded-lg bg-[#fff1ec] text-[#e05638] flex items-center justify-center border border-orange-100 shrink-0">
               <FileText size={15} />
             </div>
           </div>
-          <div className="mt-4">
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <div className="mt-3 sm:mt-4">
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
               {dynamicRoutesCount}
             </h3>
-            <p className="text-xs text-slate-400 mt-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block" />
+            <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block shrink-0" />
               CMS-connected application pages
             </p>
           </div>
         </div>
 
         {/* Card 3: SYSTEM STATUS */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all sm:col-span-2 lg:col-span-1">
           <div className="flex items-start justify-between">
-            <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+            <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-slate-400 uppercase">
               SYSTEM STATUS
             </span>
-            <div className="text-emerald-500 flex items-center justify-center">
+            <div className="text-emerald-500 flex items-center justify-center shrink-0">
               <CheckCircle2 size={18} className="text-emerald-500" />
             </div>
           </div>
-          <div className="mt-4">
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          <div className="mt-3 sm:mt-4">
+            <h3 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Live &amp; Synced
             </h3>
-            <p className="text-xs text-emerald-600 font-medium mt-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
+            <p className="text-[11px] sm:text-xs text-emerald-600 font-medium mt-1.5 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse shrink-0" />
               Database connection healthy
             </p>
           </div>
@@ -177,7 +177,7 @@ export default async function DashboardPage() {
 
       {/* ── Recent Content Updates (Matching Image 3) ─────────────────────── */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-[0_2px_15px_rgba(0,0,0,0.02)] overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
+        <div className="p-4 sm:p-6 border-b border-slate-100">
           <h2 className="text-base font-bold text-slate-900">
             Recent Content Updates
           </h2>
@@ -186,7 +186,8 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Desktop Table View (hidden on mobile) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50/70 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
@@ -246,6 +247,43 @@ export default async function DashboardPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Dedicated Mobile Cards List (Visible only on mobile < md) */}
+        <div className="block md:hidden divide-y divide-slate-100">
+          {recentUpdates.map((item) => (
+            <div key={item.id} className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-slate-100 border border-slate-200/80 shrink-0">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="48px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="font-bold text-slate-900 text-xs truncate">
+                    {item.title}
+                  </h4>
+                  <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium text-[9px] uppercase tracking-wider">
+                    {item.location}
+                  </span>
+                  <p className="text-[10px] text-slate-400 mt-0.5">
+                    {item.timestamp}
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                href={item.actionUrl}
+                className="shrink-0 px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[#004f6e] text-[11px] font-bold rounded-xl transition-all"
+              >
+                Edit &rarr;
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
     </div>

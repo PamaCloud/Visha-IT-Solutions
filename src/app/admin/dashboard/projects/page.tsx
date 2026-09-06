@@ -280,9 +280,10 @@ export default function AdminProjectsPage() {
         />
       </div>
 
-      {/* Projects Table */}
+      {/* Projects View: Desktop Table + Mobile Cards */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop Table (hidden on mobile) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-gray-50/80 text-[11px] font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">
@@ -366,6 +367,91 @@ export default function AdminProjectsPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Dedicated Mobile Cards View (Visible only on mobile < md) */}
+        <div className="block md:hidden divide-y divide-gray-100">
+          {loading ? (
+            <div className="py-12 text-center text-gray-400">
+              <Loader2 size={24} className="animate-spin text-[#00779e] mx-auto mb-2" />
+              Loading projects...
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="py-12 text-center text-gray-400 text-xs px-4">
+              No projects found. Click &quot;Add New Project&quot; to create one.
+            </div>
+          ) : (
+            filtered.map((project) => (
+              <div key={project._id} className="p-4 space-y-3 bg-white hover:bg-slate-50/50 transition-colors">
+                {/* Header: Title + Status Pill */}
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-slate-900 text-sm leading-tight">
+                      {project.title}
+                    </h3>
+                    <p className="text-[11px] text-slate-500 mt-0.5">
+                      {project.clientName || "Enterprise Client"}
+                    </p>
+                  </div>
+
+                  <span
+                    className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      project.isActive
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        : "bg-gray-100 text-gray-500 border border-gray-200"
+                    }`}
+                  >
+                    {project.isActive ? "Active" : "Inactive"}
+                  </span>
+                </div>
+
+                {/* Category & Badges */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                  <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-semibold">
+                    {project.category}
+                  </span>
+                  {project.badge && (
+                    <span className="px-2 py-0.5 rounded-md bg-sky-50 text-[#00779e] text-[10px] font-bold border border-sky-100">
+                      {project.badge}
+                    </span>
+                  )}
+                  <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-medium">
+                    {project.deliverables?.length || 0} Deliverables
+                  </span>
+                </div>
+
+                {/* Outcome */}
+                {project.outcome && (
+                  <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                    {project.outcome}
+                  </p>
+                )}
+
+                {/* Actions Footer */}
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                  <span className="text-[11px] font-mono text-slate-400">
+                    /{project.slug}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => openEditModal(project)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#004f6e] hover:bg-[#003d55] text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer"
+                    >
+                      <Edit2 size={12} />
+                      <span>Edit Project</span>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(project._id, project.title)}
+                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                      title="Delete Project"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

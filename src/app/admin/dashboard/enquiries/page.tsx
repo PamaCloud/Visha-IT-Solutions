@@ -181,12 +181,13 @@ export default function AdminEnquiriesPage() {
         </div>
       </div>
 
-      {/* Enquiries Grid Table */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* Enquiries View: Desktop Table + Mobile Cards */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden">
+        {/* Desktop Table (hidden on mobile) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-slate-50/80 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+              <tr className="bg-slate-50/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-100">
                 <th className="py-3.5 px-5">Lead / Client</th>
                 <th className="py-3.5 px-5">Phone Number</th>
                 <th className="py-3.5 px-5 hidden lg:table-cell">Profile / Inquiry</th>
@@ -336,6 +337,132 @@ export default function AdminEnquiriesPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Dedicated Mobile Cards View (Visible only on mobile < md) */}
+        <div className="block md:hidden divide-y divide-slate-100">
+          {loading ? (
+            <div className="py-12 text-center text-slate-400">
+              <RefreshCw size={22} className="animate-spin text-[#00779e] mx-auto mb-2" />
+              Loading enquiries...
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="py-12 text-center text-slate-400 text-xs px-4">
+              No matching enquiries or quote requests found.
+            </div>
+          ) : (
+            filtered.map((item) => {
+              const cleanPhone = item.phone?.replace(/[^0-9]/g, "") || "";
+              const hasPhone = Boolean(item.phone && item.phone.trim() !== "");
+
+              return (
+                <div key={item._id} className="p-4 space-y-3 bg-white hover:bg-slate-50/50 transition-colors">
+                  {/* Header: Lead Name + Date + Delete */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <h3 className="font-bold text-slate-900 text-sm leading-tight">
+                        {item.fullName}
+                      </h3>
+                      {item.companyName && (
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          {item.companyName}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      <span className="text-[10px] text-slate-400 font-medium px-2 py-0.5 bg-slate-100 rounded-md">
+                        {new Date(item.createdAt).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                        })}
+                      </span>
+                      <button
+                        onClick={() => handleDelete(item._id, item.fullName)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                        title="Delete Enquiry"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Service badge */}
+                  {item.serviceRequired && (
+                    <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-sky-50 text-[#004f6e] border border-sky-100 text-[10px] font-semibold">
+                      {item.serviceRequired}
+                    </div>
+                  )}
+
+                  {/* Phone + Action Call / WhatsApp */}
+                  {hasPhone && (
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                      <div className="font-mono text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <Phone size={12} className="text-emerald-600" />
+                        <span>{item.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <a
+                          href={`tel:${item.phone}`}
+                          className="px-2.5 py-1 bg-white border border-slate-200 text-[#004f6e] text-[11px] font-bold rounded-lg hover:bg-slate-50 shadow-2xs"
+                        >
+                          Call
+                        </a>
+                        <a
+                          href={`https://wa.me/${cleanPhone.startsWith("91") ? cleanPhone : "91" + cleanPhone}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-2.5 py-1 bg-emerald-600 text-white text-[11px] font-bold rounded-lg hover:bg-emerald-700 shadow-2xs flex items-center gap-1"
+                        >
+                          <MessageCircle size={11} />
+                          <span>Chat</span>
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Description excerpt */}
+                  {item.description && (
+                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                      &quot;{item.description}&quot;
+                    </p>
+                  )}
+
+                  {/* Status Dropdown + View Details */}
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                    <div className="flex-1 max-w-[150px]">
+                      <select
+                        value={item.status}
+                        onChange={(e) => handleStatusChange(item._id, e.target.value)}
+                        className={`w-full text-[11px] font-bold px-2.5 py-1.5 rounded-xl border transition-all cursor-pointer ${
+                          item.status === "new"
+                            ? "bg-amber-50 text-amber-700 border-amber-200"
+                            : item.status === "in-progress"
+                            ? "bg-sky-50 text-[#00779e] border-sky-200"
+                            : item.status === "resolved"
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                            : "bg-slate-100 text-slate-500 border-slate-200"
+                        }`}
+                      >
+                        <option value="new">New Lead</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="archived">Archived</option>
+                      </select>
+                    </div>
+
+                    <button
+                      onClick={() => setSelectedEnquiry(item)}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#004f6e] hover:bg-[#003d55] text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer shrink-0"
+                    >
+                      <Eye size={12} />
+                      <span>Details</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
 
