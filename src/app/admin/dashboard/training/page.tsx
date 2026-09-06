@@ -19,6 +19,8 @@ import {
   ListPlus
 } from "lucide-react";
 
+import { VISHA_TRAINING_PROGRAMS } from "@/data/vishaTraining";
+
 interface CourseModule {
   title: string;
   badge: string;
@@ -86,7 +88,17 @@ export default function AdminTrainingPage() {
       const res = await fetch("/api/admin/training");
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
-        setCourses(json.data);
+        const enriched = json.data.map((c: any) => {
+          const fallback = VISHA_TRAINING_PROGRAMS.find((v) => v.slug === c.slug);
+          return {
+            ...c,
+            modules: Array.isArray(c.modules) && c.modules.length > 0 ? c.modules : (fallback?.modules || []),
+            technologies: Array.isArray(c.technologies) && c.technologies.length > 0 ? c.technologies : (fallback?.technologies || []),
+            careerRoles: Array.isArray(c.careerRoles) && c.careerRoles.length > 0 ? c.careerRoles : (fallback?.careerRoles || []),
+            badge: c.badge || fallback?.badge || "Most Popular",
+          };
+        });
+        setCourses(enriched);
       }
     } catch (err) {
       console.error(err);
@@ -106,15 +118,15 @@ export default function AdminTrainingPage() {
       order: courses.length + 1,
       modules: [
         {
-          title: "Module 1: Core Fundamentals",
+          title: "Module 1: Core Architecture & Foundations",
           badge: "Weeks 1 - 4",
-          description: "Introduction to language syntax, architecture, and developer workflow tools.",
-          points: ["Syntax & Core Language Features", "Object Oriented Design & Patterns", "Git Version Control"],
+          description: "Introduction to language syntax, object modeling, and developer workflow tools.",
+          points: ["Syntax & Core Language Features", "Object-Oriented Design & Patterns", "Git Version Control"],
         },
         {
-          title: "Module 2: Server Architecture & APIs",
+          title: "Module 2: Server Services, APIs & Databases",
           badge: "Weeks 5 - 8",
-          description: "Building production microservices, secure RESTful endpoints, and database models.",
+          description: "Building production microservices, secure RESTful endpoints, and relational database schemas.",
           points: ["REST API Architecture", "Database Schema & Optimization", "Authentication & Security"],
         },
       ],
@@ -124,21 +136,32 @@ export default function AdminTrainingPage() {
 
   const openEditModal = (course: TrainingItem) => {
     setEditingCourse(course);
+    const fallback = VISHA_TRAINING_PROGRAMS.find((v) => v.slug === course.slug);
+    const resolvedModules = Array.isArray(course.modules) && course.modules.length > 0
+      ? course.modules
+      : (fallback?.modules || []);
+
     setFormData({
       title: course.title,
       slug: course.slug,
-      badge: course.badge || "Most Popular",
-      shortDescription: course.shortDescription || "",
-      description: course.description || "",
-      duration: course.duration || "6 Months",
-      mode: course.mode || "Hybrid",
-      level: course.level || "Beginner to Enterprise",
-      fee: course.fee || "",
-      image: course.image || "/services/training-and-career-development.jpg",
-      technologies: Array.isArray(course.technologies) ? course.technologies.join(", ") : "",
-      careerRoles: Array.isArray(course.careerRoles) ? course.careerRoles.join(", ") : "",
-      syllabus: Array.isArray(course.syllabus) ? course.syllabus.join(", ") : (course.curriculum || ""),
-      modules: Array.isArray(course.modules) && course.modules.length > 0 ? course.modules : [],
+      badge: course.badge || fallback?.badge || "Most Popular",
+      shortDescription: course.shortDescription || fallback?.shortDescription || "",
+      description: course.description || fallback?.description || "",
+      duration: course.duration || fallback?.duration || "6 Months",
+      mode: course.mode || fallback?.mode || "Hybrid",
+      level: course.level || fallback?.level || "Beginner to Enterprise",
+      fee: course.fee || "INR 35,000",
+      image: course.image || fallback?.image || "/services/training-and-career-development.jpg",
+      technologies: Array.isArray(course.technologies) && course.technologies.length > 0
+        ? course.technologies.join(", ")
+        : (fallback?.technologies?.join(", ") || ""),
+      careerRoles: Array.isArray(course.careerRoles) && course.careerRoles.length > 0
+        ? course.careerRoles.join(", ")
+        : (fallback?.careerRoles?.join(", ") || ""),
+      syllabus: Array.isArray(course.syllabus) && course.syllabus.length > 0
+        ? course.syllabus.join(", ")
+        : (fallback?.syllabus?.join(", ") || course.curriculum || ""),
+      modules: resolvedModules,
       status: course.status || "upcoming",
       isActive: course.isActive,
       order: course.order || 0,
@@ -402,10 +425,10 @@ export default function AdminTrainingPage() {
         </div>
       </div>
 
-      {/* Dynamic Add / Edit Course Modal */}
+      {/* Dynamic Add / Edit Course Modal - Extra Wide */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[94vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="w-[96vw] max-w-6xl xl:max-w-7xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[95vh]">
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80 shrink-0">
               <div className="flex items-center gap-3">
