@@ -368,3 +368,10 @@
 .group:hover .shutter-bg {
   animation: shutter-down 2s linear infinite;
 }
+
+/* Hide navbar, footer, and floating widgets on 404 page */
+body.not-found-active header,
+body.not-found-active footer,
+body.not-found-active .fixed.bottom-6 {
+  display: none !important;
+}

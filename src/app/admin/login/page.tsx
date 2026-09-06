@@ -49,27 +49,26 @@ export default function AdminLoginPage() {
       {/* Main Card */}
       <div className="w-full max-w-[460px] bg-white rounded-3xl shadow-[0_12px_45px_-10px_rgba(0,119,182,0.12)] border border-sky-100/80 p-8 sm:p-10 relative z-10">
         
-        {/* Back Button */}
-        <div className="mb-4">
+        {/* Brand Header: Perfectly Centered & Organised */}
+        <div className="flex flex-col items-center text-center mb-7">
+          {/* Centered Back Button */}
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-slate-600 bg-sky-50/60 border border-sky-100 hover:bg-sky-100/70 hover:text-[#004f6e] transition-all cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 mb-5 rounded-full text-xs font-medium text-slate-600 bg-sky-50/70 border border-sky-100 hover:bg-sky-100 hover:text-[#004f6e] transition-all cursor-pointer shadow-xs"
           >
             <ArrowLeft size={13} />
             Back to Website
           </button>
-        </div>
 
-        {/* Brand Logo & Header */}
-        <div className="flex flex-col items-center text-center mb-6">
-          <div className="relative w-48 h-12 mb-3">
+          {/* Centered Brand Logo */}
+          <div className="relative w-44 h-12 mb-3">
             <Image
               src="/logo-dark.png"
               alt="Visha IT Solutions"
               fill
-              sizes="192px"
-              className="object-contain"
+              sizes="176px"
+              className="object-contain object-center"
               priority
             />
           </div>

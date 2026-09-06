@@ -13,7 +13,7 @@ export default function ConditionalLayout({
   const pathname = usePathname();
 
   const isExcluded =
-    pathname?.startsWith("/admin") || pathname?.startsWith("/login");
+    pathname?.startsWith("/admin") || pathname?.startsWith("/login") || pathname === "/404";
 
   if (isExcluded) {
     return <main className="min-h-screen w-full flex flex-col">{children}</main>;
