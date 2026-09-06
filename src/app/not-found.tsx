@@ -8,7 +8,8 @@ import { Home, ArrowRight, RefreshCw, Compass, Sparkles } from "lucide-react";
 
 export default function NotFound() {
   const router = useRouter();
-  const [countdown, setCountdown] = useState(10);
+  const TOTAL_SECONDS = 60; // 1 minute countdown
+  const [countdown, setCountdown] = useState(TOTAL_SECONDS);
   const [isPaused, setIsPaused] = useState(false);
 
   // Hide global navbar/footer/floating widgets when 404 is active
@@ -35,7 +36,7 @@ export default function NotFound() {
     return () => clearInterval(timer);
   }, [countdown, isPaused, router]);
 
-  const progressPercent = Math.max(0, Math.min(100, ((10 - countdown) / 10) * 100));
+  const progressPercent = Math.max(0, Math.min(100, ((TOTAL_SECONDS - countdown) / TOTAL_SECONDS) * 100));
 
   return (
     <div className="fixed inset-0 z-[999] min-h-screen w-full bg-[#f8fbfe] flex flex-col justify-center items-center p-4 sm:p-6 overflow-y-auto selection:bg-[#00779e]/20">
@@ -106,7 +107,7 @@ export default function NotFound() {
               Auto-redirecting to Home
             </span>
             <span className="font-semibold text-[#004f6e] font-mono">
-              {countdown}s
+              {countdown === 60 ? "1 min (60s)" : `${countdown}s`}
             </span>
           </div>
 
