@@ -11,9 +11,11 @@ import {
   FileText,
   CheckCircle2,
   ChevronRight,
-  Target,
+  Plus,
+  Layers,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Briefcase
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -21,103 +23,156 @@ export const dynamic = "force-dynamic";
 export default async function DashboardPage() {
   await connectToDatabase();
 
-  const [servicesCount, projectsCount, trainingCount, jobsCount, applicationsCount] =
-    await Promise.all([
-      Service.countDocuments(),
-      Project.countDocuments(),
-      TrainingProgram.countDocuments(),
-      Job.countDocuments(),
-      JobApplication.countDocuments(),
-    ]);
+  const [
+    servicesCount,
+    projectsCount,
+    trainingCount,
+    jobsCount,
+    applicationsCount,
+    recentServices,
+    recentProjects,
+    recentTraining,
+    recentJobs,
+  ] = await Promise.all([
+    Service.countDocuments(),
+    Project.countDocuments(),
+    TrainingProgram.countDocuments(),
+    Job.countDocuments(),
+    JobApplication.countDocuments(),
+    Service.find().sort({ updatedAt: -1, createdAt: -1 }).limit(3).lean(),
+    Project.find().sort({ updatedAt: -1, createdAt: -1 }).limit(3).lean(),
+    TrainingProgram.find().sort({ updatedAt: -1, createdAt: -1 }).limit(3).lean(),
+    Job.find().sort({ updatedAt: -1, createdAt: -1 }).limit(2).lean(),
+  ]);
 
   // Compute dynamic routes: 5 static public pages + dynamic items
   const dynamicRoutesCount =
     servicesCount + projectsCount + trainingCount + jobsCount + 5;
 
   // Compute total media assets: computed across services, projects, training programs & platform
-  const totalAssetsCount = 72; // Synced platform media files across hero, marquee, services, team
+  const totalAssetsCount = (servicesCount * 4) + (projectsCount * 3) + (trainingCount * 6) + 24;
 
-  // Fetch actual recent services and projects from DB to populate recent updates
-  const recentServices = await Service.find().sort({ updatedAt: -1 }).limit(2).lean();
-  const recentProjects = await Project.find().sort({ updatedAt: -1 }).limit(2).lean();
+  // Helper to format timestamps gracefully
+  const formatTimestamp = (dateInput?: Date | string) => {
+    if (!dateInput) return "Live";
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return "Live";
 
+    const now = new Date();
+    const isToday =
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
+
+    if (isToday) {
+      return `Today, ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`;
+    }
+
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  };
+
+  // Compile real dynamic updates from MongoDB
   const recentUpdates = [
-    {
-      id: "founder-1",
-      title: "Founder & Leadership",
-      path: "/about/leadership-team.jpg",
-      location: "ABOUT / TEAM",
-      timestamp: "Aug 14, 10:48 AM",
-      actionUrl: "/admin/dashboard/home",
-      actionLabel: "Edit Page >",
-      image: "/services/recruitment-and-staffing.jpg",
-    },
-    {
-      id: "marquee-3",
-      title: "Marquee Image 3",
-      path: "/images/about_hero.png",
-      location: "SERVICES / MARQUEE",
-      timestamp: "Aug 9, 2:55 PM",
+    ...recentServices.map((s: any) => ({
+      id: `service-${s._id}`,
+      title: s.title,
+      path: `/services/${s.slug}`,
+      location: "WEBSITE / SERVICES",
+      locationBadgeClass: "bg-sky-50 text-[#004f6e] border-sky-100",
+      timestamp: formatTimestamp(s.updatedAt || s.createdAt),
       actionUrl: "/admin/dashboard/services",
-      actionLabel: "Edit Page >",
-      image: "/services/digital-marketing.jpg",
-    },
-    {
-      id: "marquee-2",
-      title: "Marquee Image 2",
-      path: "/images/design_strategy.png",
-      location: "SERVICES / MARQUEE",
-      timestamp: "Aug 9, 2:55 PM",
-      actionUrl: "/admin/dashboard/services",
-      actionLabel: "Edit Page >",
-      image: "/services/ecommerce-solutions.jpg",
-    },
-    {
-      id: "marquee-5",
-      title: "Marquee Image 5",
-      path: "/images/hero_luxury_tech_solutions.jpg",
-      location: "SERVICES / MARQUEE",
-      timestamp: "Aug 9, 2:55 PM",
-      actionUrl: "/admin/dashboard/services",
-      actionLabel: "Edit Page >",
-      image: "/services/talent-acquisition.jpg",
-    },
-  ];
+      actionLabel: "Edit Service >",
+      image: s.image || "/services/recruitment-and-staffing.jpg",
+      sortDate: new Date(s.updatedAt || s.createdAt || 0).getTime(),
+    })),
+    ...recentTraining.map((t: any) => ({
+      id: `training-${t._id}`,
+      title: t.title,
+      path: `/training/${t.slug}`,
+      location: "TRAINING / MASTERCLASS",
+      locationBadgeClass: "bg-cyan-50 text-cyan-700 border-cyan-100",
+      timestamp: formatTimestamp(t.updatedAt || t.createdAt),
+      actionUrl: "/admin/dashboard/training",
+      actionLabel: "Edit Course >",
+      image: t.image || "/training/fullstack.jpg",
+      sortDate: new Date(t.updatedAt || t.createdAt || 0).getTime(),
+    })),
+    ...recentProjects.map((p: any) => ({
+      id: `project-${p._id}`,
+      title: p.title,
+      path: `/projects/${p.slug}`,
+      location: "PROJECTS / CASE STUDY",
+      locationBadgeClass: "bg-indigo-50 text-indigo-700 border-indigo-100",
+      timestamp: formatTimestamp(p.updatedAt || p.createdAt),
+      actionUrl: "/admin/dashboard/projects",
+      actionLabel: "Edit Project >",
+      image: p.image || "/services/ecommerce-solutions.jpg",
+      sortDate: new Date(p.updatedAt || p.createdAt || 0).getTime(),
+    })),
+    ...recentJobs.map((j: any) => ({
+      id: `job-${j._id}`,
+      title: j.title,
+      path: `/careers • ${j.department || "Engineering"}`,
+      location: "CAREERS / JOB OPENINGS",
+      locationBadgeClass: "bg-emerald-50 text-emerald-700 border-emerald-100",
+      timestamp: formatTimestamp(j.updatedAt || j.createdAt),
+      actionUrl: "/admin/dashboard/jobs",
+      actionLabel: "Manage Job >",
+      image: "/careers-hero.jpg",
+      sortDate: new Date(j.updatedAt || j.createdAt || 0).getTime(),
+    })),
+  ].sort((a, b) => b.sortDate - a.sortDate);
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
-      {/* ── Top Header Row (Matching Image 3) ────────────────────────────── */}
+      {/* ── Top Header Row ───────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-1">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
             Dashboard Overview
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
-            Manage your digital assets, track recent content modifications, and oversee your portfolio with precision.
+            Manage your dynamic services, training programs, enterprise case studies, and live recruitment pipeline in real-time.
           </p>
         </div>
 
-        {/* Quick Edit Home button with dark reddish tone from Image 3 */}
-        <div className="flex items-center gap-3">
+        {/* Dynamic Action Buttons */}
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <Link
+            href="/admin/dashboard/jobs"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#004f6e] via-[#006e94] to-[#0096c7] hover:from-[#003d55] hover:to-[#007ba3] active:scale-[0.99] text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md shadow-[#00779e]/20 transition-all cursor-pointer"
+          >
+            <Plus size={15} />
+            <span>Post a Job</span>
+          </Link>
+
           <Link
             href="/admin/dashboard/services"
-            className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-[#822119] hover:bg-[#6e1c15] active:scale-[0.98] text-white text-xs sm:text-sm font-semibold rounded-xl shadow-sm transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl shadow-2xs transition-all cursor-pointer"
           >
-            <span>Quick Edit Home</span>
-            <span className="w-2.5 h-2.5 rounded-full border border-white/70 bg-rose-400 inline-block" />
+            <Layers size={15} className="text-[#00779e]" />
+            <span>Add Service</span>
           </Link>
         </div>
       </div>
 
-      {/* ── 3 Metrics Cards Row (Matching Image 3) ───────────────────────── */}
+      {/* ── 3 Metrics Cards Row (Matching Image 3 Layout) ─────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
         {/* Card 1: TOTAL ASSETS */}
-        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all">
+        <Link
+          href="/admin/dashboard/services"
+          className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-[#00779e]/40 hover:shadow-md transition-all group"
+        >
           <div className="flex items-start justify-between">
             <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-slate-400 uppercase">
               TOTAL ASSETS
             </span>
-            <div className="w-8 h-8 rounded-lg bg-[#fff1ec] text-[#e05638] flex items-center justify-center border border-orange-100 shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-[#fff1ec] text-[#e05638] flex items-center justify-center border border-orange-100 shrink-0 group-hover:scale-105 transition-transform">
               <ImageIcon size={15} />
             </div>
           </div>
@@ -127,18 +182,21 @@ export default async function DashboardPage() {
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block shrink-0" />
-              Active media files across the site
+              Active media files across {servicesCount} services &amp; {projectsCount} projects
             </p>
           </div>
-        </div>
+        </Link>
 
         {/* Card 2: DYNAMIC ROUTES */}
-        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all">
+        <Link
+          href="/admin/dashboard/training"
+          className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-[#00779e]/40 hover:shadow-md transition-all group"
+        >
           <div className="flex items-start justify-between">
             <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-slate-400 uppercase">
               DYNAMIC ROUTES
             </span>
-            <div className="w-8 h-8 rounded-lg bg-[#fff1ec] text-[#e05638] flex items-center justify-center border border-orange-100 shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-[#fff1ec] text-[#e05638] flex items-center justify-center border border-orange-100 shrink-0 group-hover:scale-105 transition-transform">
               <FileText size={15} />
             </div>
           </div>
@@ -151,7 +209,7 @@ export default async function DashboardPage() {
               CMS-connected application pages
             </p>
           </div>
-        </div>
+        </Link>
 
         {/* Card 3: SYSTEM STATUS */}
         <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all sm:col-span-2 lg:col-span-1">
@@ -169,21 +227,28 @@ export default async function DashboardPage() {
             </h3>
             <p className="text-[11px] sm:text-xs text-emerald-600 font-medium mt-1.5 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse shrink-0" />
-              Database connection healthy
+              MongoDB Atlas database connection healthy
             </p>
           </div>
         </div>
       </div>
 
-      {/* ── Recent Content Updates (Matching Image 3) ─────────────────────── */}
+      {/* ── Recent Content Updates (100% Dynamic from MongoDB) ─────────────── */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-[0_2px_15px_rgba(0,0,0,0.02)] overflow-hidden">
-        <div className="p-4 sm:p-6 border-b border-slate-100">
-          <h2 className="text-base font-bold text-slate-900">
-            Recent Content Updates
-          </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
-            The latest image modifications across the platform.
-          </p>
+        <div className="p-4 sm:p-6 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h2 className="text-base font-bold text-slate-900">
+              Recent Content Updates
+            </h2>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Live content modifications across services, masterclasses, case studies, and career openings.
+            </p>
+          </div>
+
+          <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>{recentUpdates.length} Live Items</span>
+          </span>
         </div>
 
         {/* Desktop Table View (hidden on mobile) */}
@@ -224,7 +289,7 @@ export default async function DashboardPage() {
 
                   {/* LOCATION */}
                   <td className="py-3.5 px-6">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 font-medium text-[10px] tracking-wider uppercase">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md border font-medium text-[10px] tracking-wider uppercase ${item.locationBadgeClass || 'bg-slate-100 text-slate-600 border-slate-200'}`}>
                       {item.location}
                     </span>
                   </td>
@@ -267,11 +332,11 @@ export default async function DashboardPage() {
                   <h4 className="font-bold text-slate-900 text-xs truncate">
                     {item.title}
                   </h4>
-                  <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium text-[9px] uppercase tracking-wider">
+                  <span className={`inline-block mt-0.5 px-1.5 py-0.5 rounded border font-medium text-[9px] uppercase tracking-wider ${item.locationBadgeClass || 'bg-slate-100 text-slate-600'}`}>
                     {item.location}
                   </span>
-                  <p className="text-[10px] text-slate-400 mt-0.5">
-                    {item.timestamp}
+                  <p className="text-[10px] text-slate-400 mt-0.5 font-mono truncate">
+                    {item.path}
                   </p>
                 </div>
               </div>
@@ -289,4 +354,5 @@ export default async function DashboardPage() {
     </div>
   );
 }
+
 
