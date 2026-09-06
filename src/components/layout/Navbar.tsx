@@ -148,40 +148,75 @@ export default function Navbar() {
                     />
                   </button>
 
-                  {/* 2-Column Floating Card Dropdown */}
+                  {/* Floating Card Dropdown */}
                   {isCurrentOpen && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                      <div className="w-[560px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-200">
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-1">
-                          {/* Column 1 */}
-                          <div className="space-y-1">
-                            {col1.map((item) => (
+                      {link.dropdownType === "training" ? (
+                        <div className="w-[580px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-200">
+                          <div className="flex flex-col gap-3">
+                            {/* Above Row: 1 Course in the Middle */}
+                            <div className="flex justify-center">
                               <Link
-                                key={item.id}
-                                href={`${baseHref}/${item.slug}`}
+                                href="/training/python-full-stack"
                                 onClick={() => setActiveDropdown(null)}
-                                className="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors"
+                                className="w-full max-w-sm px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block"
                               >
-                                {item.title}
+                                Python Full Stack Development
                               </Link>
-                            ))}
-                          </div>
+                            </div>
 
-                          {/* Column 2 */}
-                          <div className="space-y-1">
-                            {col2.map((item) => (
+                            {/* One Row: 2 Courses side-by-side */}
+                            <div className="grid grid-cols-2 gap-3">
                               <Link
-                                key={item.id}
-                                href={`${baseHref}/${item.slug}`}
+                                href="/training/mern-stack-development"
                                 onClick={() => setActiveDropdown(null)}
-                                className="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors"
+                                className="px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block"
                               >
-                                {item.title}
+                                MERN Stack Development
                               </Link>
-                            ))}
+                              <Link
+                                href="/training/dotnet-full-stack"
+                                onClick={() => setActiveDropdown(null)}
+                                className="px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block"
+                              >
+                                .NET Full Stack Development
+                              </Link>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="w-[560px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-200">
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+                            {/* Column 1 */}
+                            <div className="space-y-1">
+                              {col1.map((item) => (
+                                <Link
+                                  key={item.id}
+                                  href={`${baseHref}/${item.slug}`}
+                                  onClick={() => setActiveDropdown(null)}
+                                  className="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors"
+                                >
+                                  {item.title}
+                                </Link>
+                              ))}
+                            </div>
+
+                            {/* Column 2 */}
+                            <div className="space-y-1">
+                              {col2.map((item) => (
+                                <Link
+                                  key={item.id}
+                                  href={`${baseHref}/${item.slug}`}
+                                  onClick={() => setActiveDropdown(null)}
+                                  className="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors"
+                                >
+                                  {item.title}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -213,9 +248,10 @@ export default function Navbar() {
         <div className="hidden lg:block">
           <Link
             href="/get-a-quote"
+            data-quote-trigger="true"
             className="inline-flex items-center justify-center text-sm font-semibold px-6 py-2.5 rounded-full bg-gradient-to-r from-[hsl(195,100%,25%)] to-[hsl(195,100%,42%)] hover:from-[hsl(195,100%,20%)] hover:to-[hsl(195,100%,36%)] text-white shadow-[0_4px_14px_rgba(0,105,148,0.22)] hover:shadow-[0_6px_20px_rgba(0,105,148,0.32)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
           >
-            Book a Demo
+            Get a Quote
           </Link>
         </div>
 
@@ -305,10 +341,11 @@ export default function Navbar() {
             <div className="pt-4">
               <Link
                 href="/get-a-quote"
+                data-quote-trigger="true"
                 onClick={() => setMobileOpen(false)}
                 className="btn-primary w-full justify-center text-sm py-3"
               >
-                Book a Demo
+                Get a Quote
               </Link>
             </div>
           </div>
