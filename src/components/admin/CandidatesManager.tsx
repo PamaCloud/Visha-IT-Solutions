@@ -165,6 +165,27 @@ export default function CandidatesManager() {
     setSaveSuccessMsg("");
   };
 
+  const handleInlineStatusChange = async (
+    id: string,
+    newStatus: CandidateApplication["status"]
+  ) => {
+    // Optimistic UI update
+    setCandidates((prev) =>
+      prev.map((c) => (c._id === id ? { ...c, status: newStatus } : c))
+    );
+
+    try {
+      await fetch(`/api/admin/applications/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+    } catch (err) {
+      console.error("Failed to update candidate status:", err);
+      fetchCandidates();
+    }
+  };
+
   const handleUpdateStatusAndNotes = async () => {
     if (!selectedCandidate) return;
     setSavingNotes(true);
@@ -390,14 +411,25 @@ export default function CandidatesManager() {
                         </a>
                       </td>
 
-                      {/* Status */}
+                      {/* Status Dropdown within the row */}
                       <td className="py-3.5 px-4 text-center">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${statusInfo.bg} ${statusInfo.text} ${statusInfo.border}`}
+                        <select
+                          value={candidate.status || "New"}
+                          onChange={(e) =>
+                            handleInlineStatusChange(
+                              candidate._id,
+                              e.target.value as CandidateApplication["status"]
+                            )
+                          }
+                          className={`text-[11px] font-bold px-3 py-1 rounded-full border transition-all cursor-pointer focus:outline-none ${statusInfo.bg} ${statusInfo.text} ${statusInfo.border}`}
                         >
-                          <StatusIcon size={11} />
-                          {statusInfo.label}
-                        </span>
+                          <option value="New">New</option>
+                          <option value="Under Review">Under Review</option>
+                          <option value="Shortlisted">Shortlisted</option>
+                          <option value="Interview Scheduled">Interview Scheduled</option>
+                          <option value="Hired">Hired</option>
+                          <option value="Rejected">Rejected</option>
+                        </select>
                       </td>
 
                       {/* Action */}
