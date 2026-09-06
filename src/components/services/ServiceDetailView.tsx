@@ -141,6 +141,22 @@ export default function ServiceDetailView({ service }: { service: VishaServiceIt
   const firstPart = titleWords.slice(0, -1).join(" ") || titleWords[0];
   const lastPart = titleWords.length > 1 ? titleWords[titleWords.length - 1] : "";
 
+  const defaultServiceImages: Record<string, string> = {
+    "recruitment-and-staffing": "/services/recruitment-and-staffing.jpg",
+    "talent-acquisition": "/services/talent-acquisition.jpg",
+    "payroll-and-hr-services": "/services/payroll-and-hr-services.jpg",
+    "digital-marketing": "/services/digital-marketing.jpg",
+    "ecommerce-solutions": "/services/ecommerce-solutions.jpg",
+    "training-and-career-development": "/services/training-and-career-development.jpg",
+  };
+
+  const safeImage =
+    service.image && typeof service.image === "string" && service.image.trim() !== ""
+      ? service.image
+      : defaultServiceImages[service.slug] ||
+        defaultServiceImages[service.id] ||
+        "/services/recruitment-and-staffing.jpg";
+
   return (
     <div className="bg-slate-50/50 min-h-screen pb-24 text-slate-900">
       {/* ── 1. Hero Section (Abhivorn Screenshot 1) ─────────────── */}
@@ -187,14 +203,16 @@ export default function ServiceDetailView({ service }: { service: VishaServiceIt
             {/* Right Hero Image (Arched Glassy Card) */}
             <div className="lg:col-span-6">
               <div className="relative h-[340px] sm:h-[420px] w-full rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 bg-slate-900 group">
-                <Image
-                  src={service.image}
-                  alt={service.title}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
+                {safeImage ? (
+                  <Image
+                    src={safeImage}
+                    alt={service.title}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                ) : null}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
                 {service.badge && (
                   <span className="absolute top-6 left-6 text-xs font-bold px-4 py-1.5 rounded-full bg-white/95 text-[hsl(195,100%,25%)] shadow-md backdrop-blur-md">

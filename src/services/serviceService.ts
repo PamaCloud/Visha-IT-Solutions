@@ -16,17 +16,27 @@ export class ServiceService {
   }
 
   async getService(slug: string): Promise<any | null> {
+    const staticMatch = VISHA_SERVICES.find((s) => s.slug === slug || s.id === slug);
     try {
       const service = await serviceRepository.getServiceBySlug(slug);
       if (service) {
-        return JSON.parse(JSON.stringify(service));
+        const parsed = JSON.parse(JSON.stringify(service));
+        if (staticMatch) {
+          return {
+            ...staticMatch,
+            ...parsed,
+            image:
+              parsed.image && typeof parsed.image === "string" && parsed.image.trim() !== ""
+                ? parsed.image
+                : staticMatch.image,
+          };
+        }
+        return parsed;
       }
-      const match = VISHA_SERVICES.find((s) => s.slug === slug || s.id === slug);
-      return match || null;
+      return staticMatch || null;
     } catch (error) {
       console.warn(`MongoDB fetch failed for service ${slug}, checking VISHA_SERVICES:`, error);
-      const match = VISHA_SERVICES.find((s) => s.slug === slug || s.id === slug);
-      return match || null;
+      return staticMatch || null;
     }
   }
 }
