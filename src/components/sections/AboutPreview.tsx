@@ -8,7 +8,7 @@ import AnimatedCounter from "@/components/animations/AnimatedCounter";
 const slowFadeIn = {
   initial: { opacity: 0, y: 50, filter: "blur(20px)" },
   whileInView: { opacity: 1, y: 0, filter: "blur(0px)" },
-  viewport: { once: true, margin: "100px" },
+  viewport: { once: true, margin: "-50px" },
   transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 };
 
@@ -30,11 +30,11 @@ export default function AboutPreview() {
   return (
     <>
       {/* ── Metrics Section (Abhivorn style: white bg, divide-x border) ── */}
-      <section className="py-20 bg-white border-b border-gray-100">
+      <section className="py-16 sm:py-20 bg-white border-b border-gray-100">
         <div className="container">
           <motion.div
             {...slowFadeIn}
-            className="grid grid-cols-2 md:grid-cols-4 gap-10 divide-x divide-gray-200"
+            className="grid grid-cols-2 md:grid-cols-4 gap-y-10 md:gap-y-0 gap-x-6 md:gap-x-10 divide-x divide-gray-200"
           >
             {metrics.map((metric, index) => (
               <div key={metric.label} className={`text-center ${index === 0 ? "" : "pl-6 md:pl-10"}`}>
@@ -51,11 +51,11 @@ export default function AboutPreview() {
       </section>
 
       {/* ── Why Choose Us (Abhivorn: muted bg, numbered white cards) ── */}
-      <section className="section-padding bg-[hsl(210,40%,96%)]/30 border-y border-gray-100">
+      <section className="py-16 sm:py-24 bg-[hsl(210,40%,96%)]/30 border-y border-gray-100">
         <div className="container">
           <motion.div
             {...slowFadeIn}
-            className="text-center mb-20"
+            className="text-center mb-12 sm:mb-20"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-[hsl(210,29%,24%)] mb-5 tracking-tight">
               Why Visha IT Solutions?
@@ -71,7 +71,7 @@ export default function AboutPreview() {
                 key={item.title}
                 initial={{ opacity: 0, y: 50, filter: "blur(20px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "100px" }}
+                viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 1.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 hover:border-[hsl(195,100%,25%)]/20 hover:shadow-md transition-all duration-300"
               >

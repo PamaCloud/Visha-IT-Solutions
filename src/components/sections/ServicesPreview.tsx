@@ -69,10 +69,10 @@ export default function ServicesPreview() {
   }, [isPaused, nextSlide]);
 
   return (
-    <section className="section-padding bg-slate-50/50 relative overflow-hidden" id="services">
+    <section className="py-16 sm:py-24 bg-slate-50/50 relative overflow-hidden" id="services">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4 sm:gap-6">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[hsl(195,100%,25%)]/8 text-[hsl(195,100%,25%)] text-xs font-semibold uppercase tracking-wider mb-3">
               Our Core Expertise
@@ -131,7 +131,7 @@ export default function ServicesPreview() {
                 >
                   <div className="group bg-white rounded-3xl border border-slate-200/80 hover:border-slate-300 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full overflow-hidden">
                     {/* Realistic Corporate Cover Image */}
-                    <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-100">
+                    <div className="relative aspect-[4/3] sm:aspect-auto sm:h-56 w-full overflow-hidden bg-slate-100">
                       <Image
                         src={service.image}
                         alt={service.title}

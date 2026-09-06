@@ -6,7 +6,7 @@ import { Search, PenTool, Code, ShieldCheck, Rocket, Headset } from "lucide-reac
 const slowFadeIn = {
   initial: { opacity: 0, y: 50, filter: "blur(20px)" },
   whileInView: { opacity: 1, y: 0, filter: "blur(0px)" },
-  viewport: { once: true, margin: "100px" },
+  viewport: { once: true, margin: "-50px" },
   transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 };
 
@@ -21,12 +21,12 @@ const steps = [
 
 export default function TrustSection() {
   return (
-    <section className="section-padding bg-white">
+    <section className="py-16 sm:py-24 bg-white">
       <div className="container">
         {/* Section Header */}
         <motion.div
           {...slowFadeIn}
-          className="text-center mb-20"
+          className="text-center mb-12 sm:mb-20"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-[hsl(210,29%,24%)] mb-5 tracking-tight">
             Our Proven Process
@@ -37,13 +37,13 @@ export default function TrustSection() {
         </motion.div>
 
         {/* Process steps grid (exact Abhivorn pattern) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-20 gap-x-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 sm:gap-y-20 gap-x-12">
           {steps.map((p, index) => (
             <motion.div
               key={p.step}
               initial={{ opacity: 0, y: 50, filter: "blur(20px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true, margin: "100px" }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 1.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="relative flex flex-col items-center text-center group"
             >

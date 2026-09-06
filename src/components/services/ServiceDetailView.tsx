@@ -160,7 +160,7 @@ export default function ServiceDetailView({ service }: { service: VishaServiceIt
   return (
     <div className="bg-slate-50/50 min-h-screen pb-24 text-slate-900">
       {/* ── 1. Hero Section (Abhivorn Screenshot 1) ─────────────── */}
-      <section className="pt-28 sm:pt-36 pb-16 sm:pb-20">
+      <section className="pt-24 sm:pt-36 pb-16 sm:pb-20">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             {/* Left Hero Content */}
@@ -202,7 +202,7 @@ export default function ServiceDetailView({ service }: { service: VishaServiceIt
 
             {/* Right Hero Image (Arched Glassy Card) */}
             <div className="lg:col-span-6">
-              <div className="relative h-[340px] sm:h-[420px] w-full rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 bg-slate-900 group">
+              <div className="relative aspect-[4/3] sm:aspect-auto sm:h-[420px] w-full rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 bg-slate-900 group">
                 {safeImage ? (
                   <Image
                     src={safeImage}
@@ -260,7 +260,7 @@ export default function ServiceDetailView({ service }: { service: VishaServiceIt
 
             {/* Right Large White Content Card */}
             <div className="lg:col-span-8">
-              <div className="bg-white rounded-[2.5rem] p-8 sm:p-12 border border-slate-100 shadow-[0_15px_40px_rgba(0,0,0,0.05)] transition-all">
+              <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-12 border border-slate-100 shadow-[0_15px_40px_rgba(0,0,0,0.05)] transition-all">
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-4 tracking-tight">
                   {activeDeliverable.title}
                 </h3>
@@ -305,7 +305,7 @@ export default function ServiceDetailView({ service }: { service: VishaServiceIt
               return (
                 <div
                   key={idx}
-                  className="bg-white rounded-[2.5rem] p-8 sm:p-9 border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
+                  className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-9 border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-cyan-50 border border-cyan-100 text-cyan-600 flex items-center justify-center mb-6">
                     <IconComp size={22} />
@@ -357,7 +357,7 @@ export default function ServiceDetailView({ service }: { service: VishaServiceIt
             ].map((st, sIdx) => (
               <div
                 key={sIdx}
-                className="bg-white rounded-[2.5rem] p-9 sm:p-10 border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
+                className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
               >
                 {/* Large Subtle Watermark Number */}
                 <span className="text-7xl font-black text-slate-100/90 absolute top-4 right-6 select-none pointer-events-none">
@@ -383,7 +383,7 @@ export default function ServiceDetailView({ service }: { service: VishaServiceIt
 
       {/* ── 5. Bottom CTA Banner (Abhivorn Screenshot 5) ─────────── */}
       <section className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-        <div className="rounded-[2.5rem] bg-gradient-to-r from-[hsl(195,100%,25%)] via-[#007ba7] to-[hsl(195,100%,35%)] text-white p-12 sm:p-18 text-center shadow-2xl relative overflow-hidden">
+        <div className="rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-r from-[hsl(195,100%,25%)] via-[#007ba7] to-[hsl(195,100%,35%)] text-white p-8 sm:p-18 text-center shadow-2xl relative overflow-hidden">
           {/* Subtle glowing ambient spots */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-600/30 rounded-full blur-3xl pointer-events-none" />

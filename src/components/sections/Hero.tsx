@@ -143,7 +143,7 @@ export default function Hero() {
           </div>
 
           {/* Main Headline with Stable Synchronous Crossfade */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white mb-4 sm:mb-6 leading-[1.1] tracking-tight drop-shadow-2xl">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-white mb-4 sm:mb-6 leading-[1.15] sm:leading-[1.1] tracking-tight drop-shadow-2xl px-2 sm:px-0">
             Enterprise Grade{" "}
             <br />
             <div className="relative min-h-[1.25em] flex items-center justify-center mt-1 sm:mt-2">
@@ -163,7 +163,7 @@ export default function Hero() {
           </h1>
 
           {/* Dynamic Service Tagline */}
-          <div className="min-h-[4.5rem] sm:min-h-[4rem] flex items-center justify-center mb-8 sm:mb-10 px-4">
+          <div className="min-h-[5.5rem] sm:min-h-[4rem] flex items-center justify-center mb-6 sm:mb-10 px-2 sm:px-4">
             <div className="relative w-full max-w-2xl min-h-[3rem] flex items-center justify-center">
               <AnimatePresence>
                 <motion.p
@@ -172,7 +172,7 @@ export default function Hero() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.6 }}
-                  className="absolute inset-x-0 text-base sm:text-xl text-white/95 font-normal leading-relaxed drop-shadow-lg text-center"
+                  className="absolute inset-x-0 text-sm sm:text-lg lg:text-xl text-white/95 font-normal leading-relaxed drop-shadow-lg text-center"
                 >
                   {current.tagline}
                 </motion.p>
@@ -181,7 +181,7 @@ export default function Hero() {
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-6 sm:px-0 mb-10">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4 sm:px-0 mb-8 sm:mb-10">
             <Link
               href={current.ctaLink}
               className="btn-primary h-12 px-7 sm:h-14 sm:px-9 text-sm sm:text-base w-full sm:w-auto shadow-[0_0_35px_-8px_rgba(6,182,212,0.85)] inline-flex items-center justify-center gap-2 group/cta"
