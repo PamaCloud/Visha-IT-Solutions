@@ -21,7 +21,7 @@ import {
 import { Metadata } from "next";
 import SlideUp from "@/components/animations/SlideUp";
 import FadeIn from "@/components/animations/FadeIn";
-import { VISHA_TRAINING_PROGRAMS, VishaTrainingItem } from "@/data/vishaTraining";
+import { VISHA_TRAINING_PROGRAMS, ALL_TRAINING_PROGRAMS, VishaTrainingItem } from "@/data/vishaTraining";
 import TrainingInteractiveTabs from "@/components/training/TrainingInteractiveTabs";
 
 export async function generateMetadata({
@@ -30,7 +30,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }> | { slug: string };
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const program = VISHA_TRAINING_PROGRAMS.find((p) => p.slug === resolvedParams.slug);
+  const program = ALL_TRAINING_PROGRAMS.find((p) => p.slug === resolvedParams.slug) ||
+    VISHA_TRAINING_PROGRAMS.find((p) => p.slug === resolvedParams.slug);
 
   if (!program) {
     const formatted = resolvedParams.slug
@@ -56,9 +57,9 @@ export default async function TrainingDetailPage({
 }) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-  let program: VishaTrainingItem | undefined = VISHA_TRAINING_PROGRAMS.find(
-    (p) => p.slug === slug
-  );
+  let program: VishaTrainingItem | undefined =
+    ALL_TRAINING_PROGRAMS.find((p) => p.slug === slug) ||
+    VISHA_TRAINING_PROGRAMS.find((p) => p.slug === slug);
 
   // Fallback if slug is not matched exactly
   if (!program) {
@@ -85,6 +86,49 @@ export default async function TrainingDetailPage({
         "RESTful API & Cloud Integration",
         "Enterprise Capstone Project Development",
         "Automated CI/CD & Production Deployment",
+      ],
+      modules: [
+        {
+          title: "Module 1: Language & Core Fundamentals",
+          badge: "Weeks 1 - 4",
+          description: `Deep dive into the core syntax, OOP paradigms, and modular structure of ${formattedTitle}.`,
+          points: [
+            "Language Foundations & Semantic Standards",
+            "Object-Oriented Programming & Design Patterns",
+            "Data Structures & Algorithmic Problem Solving",
+            "Git Version Control & Code Quality Practices",
+          ],
+        },
+        {
+          title: "Module 2: Frameworks & Asynchronous APIs",
+          badge: "Weeks 5 - 8",
+          description: "Building production-grade services, backend routing, and RESTful APIs.",
+          points: [
+            "Framework Architecture & Lifecycle",
+            "REST API Development & Validation",
+            "Authentication, Middleware & Security",
+          ],
+        },
+        {
+          title: "Module 3: Database & Cloud Infrastructure",
+          badge: "Weeks 9 - 12",
+          description: "Relational/NoSQL database integration, query optimization, and caching.",
+          points: [
+            "Database Schema Modeling & Transactions",
+            "In-Memory Caching & Performance Tuning",
+            "Cloud Storage & Asynchronous Worker Pipelines",
+          ],
+        },
+        {
+          title: "Module 4: Capstone & Production Deployment",
+          badge: "Weeks 13 - 16",
+          description: "Containerize with Docker and deploy to cloud platforms with CI/CD.",
+          points: [
+            "Full-Stack Enterprise Capstone Project",
+            "Docker Containerization & CI/CD Pipelines",
+            "Cloud Rollout & Placement Interview Preparation",
+          ],
+        },
       ],
       careerRoles: [
         "Software Development Engineer",
