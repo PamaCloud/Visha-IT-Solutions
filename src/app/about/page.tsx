@@ -28,7 +28,7 @@ export default function AboutPage() {
   return (
     <div className="bg-surface min-h-screen">
       {/* Hero Section */}
-      <section className="relative w-full h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden pt-20 sm:pt-24">
+      <section className="relative w-full h-[60vh] min-h-[400px] md:min-h-[500px] flex items-center justify-center overflow-hidden pt-20 sm:pt-24">
         {/* Background Image */}
         <Image 
           src="/about-hero-v2.jpg" 
@@ -44,12 +44,12 @@ export default function AboutPage() {
         
         <div className="container relative z-10 text-center px-4">
           <FadeIn>
-            <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 drop-shadow-lg">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold text-white mb-6 drop-shadow-lg px-2 sm:px-0">
               About <span className="text-primary-light">Visha IT</span>
             </h1>
           </FadeIn>
           <SlideUp delay={0.2}>
-            <p className="text-xl md:text-2xl text-blue-50 max-w-3xl mx-auto leading-relaxed font-medium drop-shadow-md">
+            <p className="text-lg sm:text-xl md:text-2xl text-blue-50 max-w-3xl mx-auto leading-relaxed font-medium drop-shadow-md">
               We are a leading IT solutions provider committed to transforming businesses through technology, innovation, and expertise.
             </p>
           </SlideUp>
@@ -57,9 +57,9 @@ export default function AboutPage() {
       </section>
 
       {/* Story Section */}
-      <section className="py-24 bg-white relative">
-        <div className="container">
-          <div className="flex flex-col lg:flex-row gap-20 items-center">
+      <section className="py-16 md:py-24 bg-white relative">
+        <div className="container px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row gap-12 md:gap-20 items-center">
             <div className="lg:w-1/2">
               <FadeIn>
                 <div className="flex items-center gap-2 mb-6">
@@ -93,10 +93,10 @@ export default function AboutPage() {
               </div>
             </div>
             
-            <div className="lg:w-1/2 grid grid-cols-2 gap-6 w-full">
+            <div className="lg:w-1/2 grid grid-cols-2 gap-4 sm:gap-6 w-full mt-8 lg:mt-0">
               {stats.map((stat, idx) => (
                 <SlideUp key={idx} delay={0.3 + (idx * 0.1)}>
-                  <div className="bg-surface p-8 rounded-[2rem] text-center border border-gray-100 shadow-sm hover:shadow-xl transition-shadow duration-300 group">
+                  <div className="bg-surface p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] text-center border border-gray-100 shadow-sm hover:shadow-xl transition-shadow duration-300 group">
                     <div className="text-4xl md:text-5xl font-extrabold font-display text-primary mb-3 group-hover:scale-110 transition-transform duration-300">{stat.value}</div>
                     <div className="text-secondary font-medium uppercase tracking-wide text-sm">{stat.label}</div>
                   </div>
@@ -108,14 +108,14 @@ export default function AboutPage() {
       </section>
 
       {/* Core Values */}
-      <section className="py-32 bg-secondary relative overflow-hidden">
+      <section className="py-16 md:py-32 bg-secondary relative overflow-hidden">
         {/* Subtle background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[120px] -z-0"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[120px] -z-0 pointer-events-none"></div>
         
-        <div className="container relative z-10">
+        <div className="container relative z-10 px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
             <FadeIn>
-              <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Our Core Values</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-4 sm:mb-6">Our Core Values</h2>
             </FadeIn>
             <SlideUp delay={0.1}>
               <p className="text-xl text-blue-100/80 leading-relaxed">
@@ -127,11 +127,11 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, idx) => (
               <SlideUp key={idx} delay={0.2 + (idx * 0.1)}>
-                <div className="bg-white/5 backdrop-blur-xl p-10 rounded-[2rem] border border-white/10 hover:bg-white/10 transition-all duration-300 h-full group">
-                  <div className="w-16 h-16 bg-primary/20 text-primary-light rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                    <value.icon size={32} />
+                <div className="bg-white/5 backdrop-blur-xl p-8 sm:p-10 rounded-[2rem] border border-white/10 hover:bg-white/10 transition-all duration-300 h-full group">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/20 text-primary-light rounded-2xl flex items-center justify-center mb-6 sm:mb-8 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                    <value.icon size={28} className="sm:w-8 sm:h-8" />
                   </div>
-                  <h3 className="text-2xl font-bold font-display text-white mb-4">{value.title}</h3>
+                  <h3 className="text-xl sm:text-2xl font-bold font-display text-white mb-3 sm:mb-4">{value.title}</h3>
                   <p className="text-blue-100/70 leading-relaxed">{value.description}</p>
                 </div>
               </SlideUp>
@@ -141,20 +141,20 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-32 bg-white text-center relative overflow-hidden">
-        <div className="container max-w-4xl relative z-10">
+      <section className="py-16 md:py-32 bg-white text-center relative overflow-hidden">
+        <div className="container max-w-4xl relative z-10 px-4 sm:px-6">
           <FadeIn>
-            <h2 className="text-4xl md:text-6xl font-display font-bold text-secondary mb-8">Ready to work with us?</h2>
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-display font-bold text-secondary mb-6 sm:mb-8">Ready to work with us?</h2>
           </FadeIn>
           <SlideUp delay={0.1}>
-            <p className="text-xl text-secondary-light mb-12 leading-relaxed">
+            <p className="text-base sm:text-xl text-secondary-light mb-10 sm:mb-12 leading-relaxed">
               Let's discuss how Visha IT Solutions can help you achieve your business goals and accelerate your digital transformation.
             </p>
           </SlideUp>
           <SlideUp delay={0.2}>
-            <div className="flex flex-col sm:flex-row justify-center gap-6">
-              <Link href="/contact" className="btn btn-primary px-10 py-4 text-lg shadow-xl hover:shadow-primary/30">Contact Us Today</Link>
-              <Link href="/services" className="btn btn-outline px-10 py-4 text-lg bg-surface hover:bg-gray-100 border-none shadow-md">Explore Our Services</Link>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 w-full max-w-md mx-auto sm:max-w-none">
+              <Link href="/contact" className="btn btn-primary px-8 sm:px-10 py-4 text-base sm:text-lg shadow-xl hover:shadow-primary/30 w-full sm:w-auto">Contact Us Today</Link>
+              <Link href="/services" className="btn btn-outline px-8 sm:px-10 py-4 text-base sm:text-lg bg-surface hover:bg-gray-100 border-none shadow-md w-full sm:w-auto">Explore Services</Link>
             </div>
           </SlideUp>
         </div>
