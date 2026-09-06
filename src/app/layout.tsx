@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingWidgets from "@/components/layout/FloatingWidgets";
 import ScrollToTopOnNavigate from "@/components/layout/ScrollToTopOnNavigate";
+import { QuoteDialogProvider } from "@/context/QuoteDialogContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
@@ -33,11 +34,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} ${playfair.variable} ${outfit.variable} font-sans antialiased flex flex-col min-h-screen bg-white`}>
-        <ScrollToTopOnNavigate />
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <FloatingWidgets />
+        <QuoteDialogProvider>
+          <ScrollToTopOnNavigate />
+          <Navbar />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+          <FloatingWidgets />
+        </QuoteDialogProvider>
       </body>
     </html>
   );
