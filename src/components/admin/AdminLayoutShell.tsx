@@ -143,71 +143,28 @@ export default function AdminLayoutShell({
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col antialiased">
       {/* ── Top Header Bar (Matching Image 2) ─────────────────────────────── */}
-      <header className="sticky top-0 z-30 bg-white border-b border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-30 bg-white border-b border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] h-[72px] flex items-center px-4 sm:px-8 lg:px-12">
         {/* Left: Mobile Menu Toggle & Brand Logo */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-4 sm:gap-6 pl-1 sm:pl-4">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
             className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
             aria-label="Open navigation menu"
           >
-            <Menu size={20} />
+            <Menu size={22} />
           </button>
 
-          <Link href="/admin/dashboard" className="relative w-36 sm:w-44 h-9 sm:h-10 block">
+          <Link href="/admin/dashboard" className="relative w-48 sm:w-56 lg:w-64 h-11 sm:h-12 lg:h-13 block">
             <Image
               src="/logo-dark.png"
               alt="Visha IT Solutions"
               fill
-              sizes="(max-width: 640px) 144px, 176px"
+              sizes="(max-width: 640px) 192px, (max-width: 1024px) 224px, 256px"
               className="object-contain object-left"
               priority
             />
           </Link>
-        </div>
-
-        {/* Right: Live Status, Profile Pill & Logout Button */}
-        <div className="flex items-center gap-2.5 sm:gap-4">
-          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/70 text-xs font-semibold">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Live &amp; Synced</span>
-          </div>
-
-          <Link
-            href="/"
-            target="_blank"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all"
-          >
-            <ExternalLink size={13} className="text-[#00779e]" />
-            <span>Live Site</span>
-          </Link>
-
-          {/* User Profile & Logout Button */}
-          <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#004f6e] to-[#0096c7] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
-                {userInitials}
-              </div>
-              <div className="hidden lg:block text-left">
-                <p className="text-xs font-semibold text-slate-800 leading-none truncate max-w-[140px]">
-                  {userEmail}
-                </p>
-                <p className="text-[9px] font-bold tracking-wider text-[#00779e] uppercase mt-0.5">
-                  ADMINISTRATOR
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setLogoutModalOpen(true)}
-              title="Sign Out"
-              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
-            >
-              <LogOut size={16} />
-            </button>
-          </div>
         </div>
       </header>
 
