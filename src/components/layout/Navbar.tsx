@@ -138,18 +138,6 @@ export default function Navbar() {
                             ))}
                           </div>
                         </div>
-
-                        {/* Bottom Link to All Services */}
-                        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                          <span className="text-slate-400 font-medium">Enterprise Grade Solutions</span>
-                          <Link
-                            href="/services"
-                            onClick={() => setServicesDropdownOpen(false)}
-                            className="font-semibold text-[hsl(195,100%,25%)] hover:underline"
-                          >
-                            View All Services →
-                          </Link>
-                        </div>
                       </div>
                     </div>
                   )}
