@@ -130,18 +130,10 @@ export function QuoteDialogProvider({ children }: { children: React.ReactNode })
 
           {/* Modal Container - Sleek, compact and comfortable fit */}
           <div className="relative z-10 w-full max-w-[465px] my-auto animate-in zoom-in-95 fade-in duration-200">
-            {/* Close Button */}
-            <button
-              onClick={closeQuoteDialog}
-              className="absolute -top-3 -right-3 z-20 w-8.5 h-8.5 rounded-full bg-white text-slate-600 shadow-md border border-slate-100 flex items-center justify-center hover:bg-slate-50 hover:text-slate-900 transition-all hover:scale-105 cursor-pointer"
-              aria-label="Close dialog"
-            >
-              <X size={17} />
-            </button>
-
-            {/* Classic Form Card */}
+            {/* Classic Form Card with elegant integrated inside close button */}
             <ClassicQuoteCard
               defaultInquiryType={defaultInquiry}
+              onClose={closeQuoteDialog}
               onSuccess={() => {
                 setTimeout(closeQuoteDialog, 2500);
               }}

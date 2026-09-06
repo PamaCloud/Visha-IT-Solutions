@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
       duration: body.duration || "6 Months",
       mode: body.mode || "Hybrid (Online + Lab)",
       level: body.level || "Beginner to Enterprise",
+      modules: Array.isArray(body.modules) ? body.modules : [],
       technologies: Array.isArray(body.technologies)
         ? body.technologies
         : (body.technologies || "").split(",").map((s: string) => s.trim()).filter(Boolean),

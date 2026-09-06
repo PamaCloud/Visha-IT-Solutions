@@ -19,9 +19,9 @@ const EnquirySchema: Schema = new Schema(
   {
     type: { type: String, enum: ["project", "contact", "training"], required: true },
     fullName: { type: String, required: true },
-    companyName: { type: String },
-    email: { type: String, required: true },
-    phone: { type: String },
+    companyName: { type: String, default: "" },
+    email: { type: String, default: "" },
+    phone: { type: String, default: "" },
     serviceRequired: { type: String },
     description: { type: String },
     budgetRange: { type: String },

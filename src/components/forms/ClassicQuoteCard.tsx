@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
+import { ChevronDown, CheckCircle2, Loader2, AlertCircle, X } from "lucide-react";
 import {
   PROFILE_TYPE_OPTIONS,
   INQUIRY_TYPE_OPTIONS,
@@ -12,12 +12,14 @@ import { submitQuoteEnquiry } from "@/handlers/enquiryHandlers";
 
 interface Props {
   onSuccess?: () => void;
+  onClose?: () => void;
   className?: string;
   defaultInquiryType?: string;
 }
 
 export default function ClassicQuoteCard({
   onSuccess,
+  onClose,
   className = "",
   defaultInquiryType = "",
 }: Props) {
@@ -147,18 +149,20 @@ export default function ClassicQuoteCard({
         return;
       }
 
-      // WhatsApp Message Hand-off
-      const text = `*New Advisory & Quote Request - Visha IT Solutions*%0A%0A*Name:* ${encodeURIComponent(
-        formData.fullName.trim()
-      )}%0A*Profile Type:* ${encodeURIComponent(
-        formData.profileType
-      )}%0A*Inquiry Type:* ${encodeURIComponent(
-        formData.inquiryType
-      )}%0A*Mobile:* +91 ${encodeURIComponent(
-        formData.mobileNumber
-      )}%0A*Email:* ${encodeURIComponent(formData.email.trim())}`;
+      // WhatsApp Message Hand-off with ALL details properly formatted and encoded
+      const fullMessage = [
+        "🌟 *New Advisory & Project Quote Request*",
+        "----------------------------------------",
+        `👤 *Client Name:* ${formData.fullName.trim()}`,
+        `🏢 *Profile Type:* ${formData.profileType}`,
+        `📌 *Inquiry Type:* ${formData.inquiryType}`,
+        `📱 *Mobile Number:* +91 ${formData.mobileNumber}`,
+        `✉️ *Email Address:* ${formData.email.trim() || "Not provided"}`,
+        "----------------------------------------",
+        "🌐 *Source:* Visha IT Solutions Website",
+      ].join("\n");
 
-      const whatsappUrl = `https://wa.me/917036592351?text=${text}`;
+      const whatsappUrl = `https://wa.me/917036592351?text=${encodeURIComponent(fullMessage)}`;
 
       if (typeof window !== "undefined") {
         window.open(whatsappUrl, "_blank");
@@ -180,8 +184,18 @@ export default function ClassicQuoteCard({
   if (isSuccess) {
     return (
       <div
-        className={`bg-white rounded-3xl border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-6 sm:p-8 text-center flex flex-col items-center justify-center min-h-[380px] ${className}`}
+        className={`relative bg-white rounded-3xl border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-6 sm:p-8 text-center flex flex-col items-center justify-center min-h-[380px] ${className}`}
       >
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-all cursor-pointer z-10"
+            aria-label="Close dialog"
+          >
+            <X size={16} strokeWidth={2.2} />
+          </button>
+        )}
         <div className="w-13 h-13 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 shadow-xs border border-emerald-100">
           <CheckCircle2 size={30} />
         </div>
@@ -227,16 +241,30 @@ export default function ClassicQuoteCard({
 
   return (
     <div
-      className={`bg-white rounded-3xl border border-slate-100/90 shadow-[0_16px_40px_rgba(0,0,0,0.08)] p-5 sm:p-6.5 w-full max-w-[465px] mx-auto ${className}`}
+      className={`relative bg-white rounded-3xl border border-slate-100/90 shadow-[0_16px_40px_rgba(0,0,0,0.08)] p-5 sm:p-6.5 w-full max-w-[465px] mx-auto ${className}`}
     >
-      {/* Form Header - Compact & refined */}
-      <div className="mb-4">
-        <h2 className="text-xl sm:text-[22px] font-black text-slate-900 tracking-tight leading-snug mb-1">
-          Get Advisory & Project Quote
-        </h2>
-        <p className="text-xs text-slate-500 font-normal leading-relaxed">
-          Share your details — our technical solutions expert will call you back.
-        </p>
+      {/* Form Header with inside Close Button */}
+      <div className="flex items-start justify-between gap-3 mb-4">
+        <div>
+          <h2 className="text-xl sm:text-[22px] font-black text-slate-900 tracking-tight leading-snug mb-1">
+            Get Advisory & Project Quote
+          </h2>
+          <p className="text-xs text-slate-500 font-normal leading-relaxed">
+            Share your details — our technical solutions expert will call you back.
+          </p>
+        </div>
+
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-800 flex items-center justify-center transition-all cursor-pointer shrink-0 mt-0.5"
+            aria-label="Close dialog"
+            title="Close"
+          >
+            <X size={16} strokeWidth={2.2} />
+          </button>
+        )}
       </div>
 
       {generalError && (
