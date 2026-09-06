@@ -85,7 +85,7 @@ export default async function TrainingDetailPage({
         duration: dbProg.duration || staticMatch?.duration || "6 Months",
         mode: dbProg.mode || staticMatch?.mode || "Hybrid (Online + Lab)",
         level: dbProg.level || staticMatch?.level || "Beginner to Enterprise",
-        image: dbProg.image || staticMatch?.image || "/training/fullstack.jpg",
+        image: dbProg.image || staticMatch?.image || "/services/training-and-career-development.jpg",
         technologies: (dbProg.technologies && dbProg.technologies.length > 0) ? dbProg.technologies : (staticMatch?.technologies || ["Core Engineering", "Frameworks", "Databases", "Cloud Architecture"]),
         syllabus: (dbProg.syllabus && dbProg.syllabus.length > 0) ? dbProg.syllabus : (staticMatch?.syllabus || (dbProg.curriculum ? dbProg.curriculum.split(",") : [
           "Language & Core Fundamentals",

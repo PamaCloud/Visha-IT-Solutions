@@ -76,6 +76,17 @@ export default async function DashboardPage() {
     });
   };
 
+  // Safe image resolver ensuring valid existing paths
+  const resolveImage = (img?: string, type?: string) => {
+    if (img && typeof img === "string" && img.startsWith("/") && !img.includes("digital-marketing-services")) {
+      return img;
+    }
+    if (type === "training") return "/services/training-and-career-development.jpg";
+    if (type === "project") return "/services/ecommerce-solutions.jpg";
+    if (type === "job") return "/careers-hero.jpg";
+    return "/services/recruitment-and-staffing.jpg";
+  };
+
   // Compile real dynamic updates from MongoDB
   const recentUpdates = [
     ...recentServices.map((s: any) => ({
@@ -87,7 +98,7 @@ export default async function DashboardPage() {
       timestamp: formatTimestamp(s.updatedAt || s.createdAt),
       actionUrl: "/admin/dashboard/services",
       actionLabel: "Edit Service >",
-      image: s.image || "/services/recruitment-and-staffing.jpg",
+      image: resolveImage(s.image, "service"),
       sortDate: new Date(s.updatedAt || s.createdAt || 0).getTime(),
     })),
     ...recentTraining.map((t: any) => ({
@@ -99,7 +110,7 @@ export default async function DashboardPage() {
       timestamp: formatTimestamp(t.updatedAt || t.createdAt),
       actionUrl: "/admin/dashboard/training",
       actionLabel: "Edit Course >",
-      image: t.image || "/training/fullstack.jpg",
+      image: resolveImage(t.image, "training"),
       sortDate: new Date(t.updatedAt || t.createdAt || 0).getTime(),
     })),
     ...recentProjects.map((p: any) => ({
@@ -111,7 +122,7 @@ export default async function DashboardPage() {
       timestamp: formatTimestamp(p.updatedAt || p.createdAt),
       actionUrl: "/admin/dashboard/projects",
       actionLabel: "Edit Project >",
-      image: p.image || "/services/ecommerce-solutions.jpg",
+      image: resolveImage(p.image, "project"),
       sortDate: new Date(p.updatedAt || p.createdAt || 0).getTime(),
     })),
     ...recentJobs.map((j: any) => ({
@@ -273,6 +284,7 @@ export default async function DashboardPage() {
                         src={item.image}
                         alt={item.title}
                         fill
+                        unoptimized
                         sizes="56px"
                         className="object-cover"
                       />
@@ -324,6 +336,7 @@ export default async function DashboardPage() {
                     src={item.image}
                     alt={item.title}
                     fill
+                    unoptimized
                     sizes="48px"
                     className="object-cover"
                   />
