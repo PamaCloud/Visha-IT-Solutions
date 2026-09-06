@@ -8,6 +8,7 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { VISHA_SERVICES } from "@/data/vishaServices";
 import { VISHA_TRAINING_PROGRAMS } from "@/data/vishaTraining";
 import { VISHA_PROJECTS } from "@/data/vishaProjects";
+import { useQuoteDialog } from "@/context/QuoteDialogContext";
 
 type DropdownType = "services" | "training" | "projects" | null;
 
@@ -28,6 +29,7 @@ const navLinks: NavItem[] = [
 ];
 
 export default function Navbar() {
+  const { openQuoteDialog } = useQuoteDialog();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<DropdownType>(null);
@@ -246,13 +248,13 @@ export default function Navbar() {
 
         {/* CTA Button */}
         <div className="hidden lg:block">
-          <Link
-            href="/get-a-quote"
-            data-quote-trigger="true"
-            className="inline-flex items-center justify-center text-sm font-semibold px-6 py-2.5 rounded-full bg-gradient-to-r from-[hsl(195,100%,25%)] to-[hsl(195,100%,42%)] hover:from-[hsl(195,100%,20%)] hover:to-[hsl(195,100%,36%)] text-white shadow-[0_4px_14px_rgba(0,105,148,0.22)] hover:shadow-[0_6px_20px_rgba(0,105,148,0.32)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+          <button
+            type="button"
+            onClick={() => openQuoteDialog()}
+            className="inline-flex items-center justify-center text-sm font-semibold px-6 py-2.5 rounded-full bg-gradient-to-r from-[hsl(195,100%,25%)] to-[hsl(195,100%,42%)] hover:from-[hsl(195,100%,20%)] hover:to-[hsl(195,100%,36%)] text-white shadow-[0_4px_14px_rgba(0,105,148,0.22)] hover:shadow-[0_6px_20px_rgba(0,105,148,0.32)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
           >
             Get a Quote
-          </Link>
+          </button>
         </div>
 
         {/* Mobile Hamburger */}
@@ -339,14 +341,16 @@ export default function Navbar() {
               );
             })}
             <div className="pt-4">
-              <Link
-                href="/get-a-quote"
-                data-quote-trigger="true"
-                onClick={() => setMobileOpen(false)}
-                className="btn-primary w-full justify-center text-sm py-3"
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  openQuoteDialog();
+                }}
+                className="btn-primary w-full justify-center text-sm py-3 cursor-pointer"
               >
                 Get a Quote
-              </Link>
+              </button>
             </div>
           </div>
         </div>

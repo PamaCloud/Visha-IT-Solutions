@@ -1,17 +1,13 @@
 "use server";
 
 import { quoteFormSchema } from "@/validators/quoteValidator";
+import { contactFormSchema } from "@/validators/contactValidator";
 import { enquiryRepository } from "@/repositories/enquiryRepository";
 import { emailService } from "@/services/emailService";
 
 export async function submitQuoteEnquiry(formData: FormData) {
   try {
     const data = Object.fromEntries(formData.entries());
-    
-    // Checkbox parsing
-    if (data.consent === "on" || data.consent === "true") {
-      data.consent = true as any;
-    }
 
     const validatedFields = quoteFormSchema.safeParse(data);
 
@@ -23,14 +19,21 @@ export async function submitQuoteEnquiry(formData: FormData) {
       };
     }
 
+    const { fullName, profileType, inquiryType, mobileNumber, email } = validatedFields.data;
+
     try {
       // Save to database
       const enquiry = await enquiryRepository.createEnquiry({
-        ...validatedFields.data,
+        fullName,
+        companyName: profileType,
+        serviceRequired: inquiryType,
+        phone: `+91 ${mobileNumber}`,
+        email,
+        description: `Profile Type: ${profileType} | Inquiry Type: ${inquiryType}`,
         type: "project",
       });
 
-      // Send email asynchronously without blocking the response
+      // Send email asynchronously without blocking response
       emailService.sendAdminNotification("New Project Quote Request", enquiry).catch(console.error);
     } catch (dbError) {
       console.error("Failed to save to database or send email:", dbError);
@@ -52,7 +55,6 @@ export async function submitQuoteEnquiry(formData: FormData) {
 export async function submitContactEnquiry(formData: FormData) {
   try {
     const data = Object.fromEntries(formData.entries());
-    const { contactFormSchema } = await import("@/validators/contactValidator");
     const validatedFields = contactFormSchema.safeParse(data);
 
     if (!validatedFields.success) {
@@ -63,13 +65,17 @@ export async function submitContactEnquiry(formData: FormData) {
       };
     }
 
+    const { fullName, email, subject, message } = validatedFields.data;
+
     try {
       const enquiry = await enquiryRepository.createEnquiry({
-        ...validatedFields.data,
+        fullName,
+        email,
+        description: `Subject: ${subject}\n\nMessage:\n${message}`,
         type: "contact",
       });
 
-      emailService.sendAdminNotification("New General Contact", enquiry).catch(console.error);
+      emailService.sendAdminNotification(`New General Contact: ${subject}`, enquiry).catch(console.error);
     } catch (dbError) {
       console.error("Failed to save to database or send email (ignoring to allow WhatsApp redirect):", dbError);
     }

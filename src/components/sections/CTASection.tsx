@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useQuoteDialog } from "@/context/QuoteDialogContext";
 
 const slowFadeIn = {
   initial: { opacity: 0, y: 50, filter: "blur(20px)" },
@@ -12,6 +12,8 @@ const slowFadeIn = {
 };
 
 export default function CTASection() {
+  const { openQuoteDialog } = useQuoteDialog();
+
   return (
     <section className="py-16 sm:py-24 bg-white px-4 sm:px-0">
       <div className="container">
@@ -35,12 +37,13 @@ export default function CTASection() {
             </p>
             {/* Abhivorn: white bg btn-primary + outline border-white/30 secondary */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 max-w-sm mx-auto sm:max-w-none">
-              <Link
-                href="/get-a-quote"
-                className="h-12 sm:h-14 px-8 text-sm sm:text-base font-bold bg-white text-[hsl(195,100%,25%)] hover:bg-white/90 rounded-full w-full sm:w-auto transition-transform hover:scale-105 shadow-lg inline-flex items-center justify-center gap-2"
+              <button
+                type="button"
+                onClick={() => openQuoteDialog("New Project")}
+                className="h-12 sm:h-14 px-8 text-sm sm:text-base font-bold bg-white text-[hsl(195,100%,25%)] hover:bg-white/90 rounded-full w-full sm:w-auto transition-transform hover:scale-105 shadow-lg inline-flex items-center justify-center gap-2 cursor-pointer"
               >
                 Start a Project
-              </Link>
+              </button>
               <Link
                 href="/contact"
                 className="h-12 sm:h-14 px-8 text-sm sm:text-base font-bold border border-white/30 text-white hover:bg-white/10 rounded-full w-full sm:w-auto backdrop-blur-sm transition-transform hover:scale-105 inline-flex items-center justify-center"

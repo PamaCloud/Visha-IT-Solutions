@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useQuoteDialog } from "@/context/QuoteDialogContext";
 
 interface HeroSlide {
   title: string;
@@ -67,6 +68,7 @@ const heroSlides: HeroSlide[] = [
 ];
 
 export default function Hero() {
+  const { openQuoteDialog } = useQuoteDialog();
   const [slideIndex, setSlideIndex] = useState(0);
 
   const nextSlide = useCallback(() => {
@@ -187,12 +189,13 @@ export default function Hero() {
               <span>{current.ctaText}</span>
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transform group-hover/cta:translate-x-1 transition-transform" />
             </Link>
-            <Link
-              href="/get-a-quote"
-              className="btn-glass h-12 px-7 sm:h-14 sm:px-9 text-sm sm:text-base w-full sm:w-auto inline-flex items-center justify-center bg-white/10 hover:bg-white/20 border-white/25 text-white"
+            <button
+              type="button"
+              onClick={() => openQuoteDialog("Consulting")}
+              className="btn-glass h-12 px-7 sm:h-14 sm:px-9 text-sm sm:text-base w-full sm:w-auto inline-flex items-center justify-center bg-white/10 hover:bg-white/20 border-white/25 text-white cursor-pointer"
             >
               Book a Demo
-            </Link>
+            </button>
           </div>
         </div>
       </div>
