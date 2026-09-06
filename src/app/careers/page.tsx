@@ -2,12 +2,15 @@ import { publicContentService } from "@/services/publicContentService";
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Clock, ArrowRight, UploadCloud, Sparkles, Zap, ShieldCheck, TrendingUp, Code2, Users, Briefcase } from "lucide-react";
+import CareerApplicationForm from "@/components/forms/CareerApplicationForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Careers - Visha IT Solutions",
   description: "Join our team of technology experts and shape the future of IT.",
 };
+
+export const dynamic = "force-dynamic";
 
 const benefits = [
   { title: "Industry-Leading Compensation", desc: "Competitive salaries paired with performance bonuses.", icon: TrendingUp },
@@ -159,9 +162,20 @@ export default async function CareersPage() {
                     {job.description}
                   </p>
                   
-                  <Link href={`/careers/${job.slug}`} className="inline-flex items-center gap-2 text-[hsl(195,100%,25%)] font-bold hover:text-[hsl(190,100%,45%)] transition-colors mt-auto text-sm group-hover:translate-x-1 duration-200">
-                    Learn More <ArrowRight size={16} />
-                  </Link>
+                  <div className="flex items-center justify-between gap-3 mt-auto pt-5 border-t border-slate-100">
+                    <Link
+                      href={`/careers/${job.slug}`}
+                      className="inline-flex items-center gap-1.5 text-slate-600 hover:text-[hsl(195,100%,25%)] font-bold transition-colors text-xs sm:text-sm group-hover:translate-x-0.5 duration-200"
+                    >
+                      Learn More <ArrowRight size={15} />
+                    </Link>
+                    <Link
+                      href={`/careers/${job.slug}/apply`}
+                      className="px-5 py-2.5 rounded-xl bg-[hsl(195,100%,25%)] hover:bg-[hsl(195,100%,20%)] text-white font-bold text-xs tracking-wide shadow-xs hover:shadow-md transition-all cursor-pointer inline-flex items-center justify-center"
+                    >
+                      Apply Now
+                    </Link>
+                  </div>
                 </div>
               ))}
             </div>
@@ -192,102 +206,11 @@ export default async function CareersPage() {
               </p>
             </div>
 
-            <form className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-6 relative z-10">
-              
-              {/* --- Left Column: Personal Information --- */}
-              <div className="space-y-6">
-                <h4 className="text-sm font-bold text-[hsl(195,100%,25%)] uppercase tracking-wider mb-2 border-b border-slate-100 pb-2">Personal Information</h4>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">First Name *</label>
-                    <input type="text" required placeholder="John" className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[hsl(190,100%,45%)] transition-all placeholder:text-slate-400 bg-slate-50/50 hover:bg-white" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Last Name *</label>
-                    <input type="text" required placeholder="Doe" className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[hsl(190,100%,45%)] transition-all placeholder:text-slate-400 bg-slate-50/50 hover:bg-white" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Email Address *</label>
-                    <input type="email" required placeholder="john.doe@example.com" className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[hsl(190,100%,45%)] transition-all placeholder:text-slate-400 bg-slate-50/50 hover:bg-white" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Phone Number *</label>
-                    <input type="tel" required placeholder="+1 (555) 123-4567" className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[hsl(190,100%,45%)] transition-all placeholder:text-slate-400 bg-slate-50/50 hover:bg-white" />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1.5">Current Company (Optional)</label>
-                  <input type="text" placeholder="Current company name" className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[hsl(190,100%,45%)] transition-all placeholder:text-slate-400 bg-slate-50/50 hover:bg-white" />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">LinkedIn Profile</label>
-                    <input type="url" placeholder="https://linkedin.com/in/..." className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[hsl(190,100%,45%)] transition-all placeholder:text-slate-400 bg-slate-50/50 hover:bg-white" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Portfolio / Website</label>
-                    <input type="url" placeholder="https://yourportfolio.com" className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[hsl(190,100%,45%)] transition-all placeholder:text-slate-400 bg-slate-50/50 hover:bg-white" />
-                  </div>
-                </div>
-              </div>
-
-              {/* --- Right Column: Application Details --- */}
-              <div className="space-y-6">
-                <h4 className="text-sm font-bold text-[hsl(195,100%,25%)] uppercase tracking-wider mb-2 border-b border-slate-100 pb-2">Application Details</h4>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Position *</label>
-                    <select required className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[hsl(190,100%,45%)] transition-all bg-slate-50/50 hover:bg-white text-slate-700 cursor-pointer">
-                      <option value="">Select a position</option>
-                      {jobs.map((job: any) => (
-                        <option key={job._id} value={job._id}>{job.title || job.jobTitle}</option>
-                      ))}
-                      <option value="general">General Application</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Experience Level *</label>
-                    <select required className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[hsl(190,100%,45%)] transition-all bg-slate-50/50 hover:bg-white text-slate-700 cursor-pointer">
-                      <option value="">Select level</option>
-                      <option value="entry">Entry Level</option>
-                      <option value="mid">Mid Level</option>
-                      <option value="senior">Senior Level</option>
-                      <option value="lead">Lead / Manager</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1.5">Resume/CV *</label>
-                  <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:bg-cyan-50 hover:border-[hsl(190,100%,45%)] transition-all cursor-pointer group bg-slate-50/50">
-                    <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto mb-3 group-hover:bg-[hsl(195,100%,25%)] transition-colors">
-                      <UploadCloud size={18} className="text-[hsl(195,100%,25%)] group-hover:text-white transition-colors" />
-                    </div>
-                    <p className="text-sm font-bold text-[hsl(195,100%,25%)] mb-1">Click to upload or drag & drop</p>
-                    <p className="text-xs text-slate-400 font-medium">PDF, DOC, DOCX up to 10MB</p>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1.5">Cover Letter (Optional)</label>
-                  <textarea rows={3} placeholder="Tell us why you'd be a great fit..." className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[hsl(190,100%,45%)] transition-all placeholder:text-slate-400 bg-slate-50/50 hover:bg-white resize-none"></textarea>
-                </div>
-              </div>
-
-              {/* --- Full Width Submit --- */}
-              <div className="lg:col-span-2 pt-6 mt-2 border-t border-slate-100 flex justify-end">
-                <button type="button" className="w-full md:w-auto px-12 py-4 rounded-xl bg-[hsl(195,100%,25%)] hover:bg-[hsl(195,100%,20%)] text-white font-bold text-base shadow-[0_4px_18px_rgba(0,105,148,0.25)] hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200">
-                  Submit Application
-                </button>
-              </div>
-            </form>
+            <div className="relative z-10">
+              <CareerApplicationForm
+                availablePositions={jobs.map((j: any) => j.title || j.jobTitle).filter(Boolean)}
+              />
+            </div>
           </div>
         </div>
       </section>

@@ -1,34 +1,58 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IJobApplication extends Document {
-  jobId: mongoose.Types.ObjectId;
+  jobId?: mongoose.Types.ObjectId | string;
+  position?: string;
+  firstName?: string;
+  lastName?: string;
   fullName: string;
   email: string;
   phone: string;
-  currentLocation: string;
-  experience: string;
-  coverMessage: string;
-  resumeUrl: string; // Internal path or S3 url
-  status: "pending" | "reviewed" | "rejected" | "accepted";
+  currentCompany?: string;
+  linkedin?: string;
+  portfolio?: string;
+  experienceLevel?: string;
+  coverLetter?: string;
+  resumeUrl: string;
+  resumeName?: string;
+  status: "New" | "Shortlisted" | "Under Review" | "Interview Scheduled" | "Hired" | "Rejected" | "pending" | "reviewed" | "accepted";
+  notes?: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 const JobApplicationSchema: Schema = new Schema(
   {
-    jobId: { type: Schema.Types.ObjectId, ref: "Job", required: true },
+    jobId: { type: Schema.Types.Mixed },
+    position: { type: String, default: "General Application" },
+    firstName: { type: String },
+    lastName: { type: String },
     fullName: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
-    currentLocation: { type: String, required: true },
-    experience: { type: String, required: true },
-    coverMessage: { type: String, required: true },
+    currentCompany: { type: String, default: "" },
+    linkedin: { type: String, default: "" },
+    portfolio: { type: String, default: "" },
+    experienceLevel: { type: String, default: "Fresher (0–1y)" },
+    coverLetter: { type: String, default: "" },
     resumeUrl: { type: String, required: true },
+    resumeName: { type: String, default: "resume.pdf" },
     status: {
       type: String,
-      enum: ["pending", "reviewed", "rejected", "accepted"],
-      default: "pending",
+      enum: [
+        "New",
+        "Shortlisted",
+        "Under Review",
+        "Interview Scheduled",
+        "Hired",
+        "Rejected",
+        "pending",
+        "reviewed",
+        "accepted",
+      ],
+      default: "New",
     },
+    notes: { type: String, default: "" },
   },
   {
     timestamps: true,

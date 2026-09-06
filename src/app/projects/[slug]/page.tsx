@@ -22,6 +22,10 @@ import SlideUp from "@/components/animations/SlideUp";
 import FadeIn from "@/components/animations/FadeIn";
 import { VISHA_PROJECTS, VishaProjectItem } from "@/data/vishaProjects";
 import ProjectCaseStudyTabs from "@/components/projects/ProjectCaseStudyTabs";
+import connectToDatabase from "@/lib/mongoose";
+import Project from "@/lib/models/Project";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -29,7 +33,20 @@ export async function generateMetadata({
   params: Promise<{ slug: string }> | { slug: string };
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const project = VISHA_PROJECTS.find((p) => p.slug === resolvedParams.slug);
+  let project = VISHA_PROJECTS.find((p) => p.slug === resolvedParams.slug);
+
+  if (!project) {
+    try {
+      await connectToDatabase();
+      const dbProj = await Project.findOne({ slug: resolvedParams.slug }).lean();
+      if (dbProj) {
+        return {
+          title: `${dbProj.title} - Enterprise Case Study - Visha IT Solutions`,
+          description: dbProj.description?.slice(0, 160),
+        };
+      }
+    } catch {}
+  }
 
   if (!project) {
     const formatted = resolvedParams.slug
@@ -55,9 +72,41 @@ export default async function ProjectDetailPage({
 }) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-  let project: VishaProjectItem | undefined = VISHA_PROJECTS.find(
-    (p) => p.slug === slug
-  );
+  let project: VishaProjectItem | undefined;
+
+  try {
+    await connectToDatabase();
+    const dbProj: any = await Project.findOne({ slug, isActive: true }).lean();
+    const staticMatch = VISHA_PROJECTS.find((p) => p.slug === slug);
+
+    if (dbProj) {
+      project = {
+        id: dbProj.slug || dbProj._id.toString(),
+        slug: dbProj.slug,
+        title: dbProj.title || staticMatch?.title,
+        clientName: dbProj.clientName || staticMatch?.clientName || "Enterprise Client",
+        category: dbProj.category || staticMatch?.category || "Enterprise Software & Cloud",
+        badge: dbProj.badge || staticMatch?.badge || "Production Deployed",
+        shortDescription: dbProj.shortDescription || staticMatch?.shortDescription || dbProj.description?.slice(0, 160) || "",
+        description: dbProj.description || staticMatch?.description || "",
+        image: dbProj.image || staticMatch?.image || "/services/ecommerce-solutions.jpg",
+        technologies: dbProj.technologies?.length ? dbProj.technologies : (staticMatch?.technologies || ["Next.js", "Node.js", "Cloud"]),
+        metrics: (dbProj.metrics && dbProj.metrics.length > 0) ? dbProj.metrics : (staticMatch?.metrics || [dbProj.outcome || "99.99% Cloud Uptime"]),
+        deliverables: (dbProj.deliverables && dbProj.deliverables.length > 0) ? dbProj.deliverables : (staticMatch?.deliverables || [
+          "Modular Cloud Microservices Architecture",
+          "High-Throughput API Gateway & Authentication",
+          "Automated Multi-Stage CI/CD Deployment",
+          "Real-Time Telemetry & Observability Dashboard",
+        ]),
+        outcome: dbProj.outcome || staticMatch?.outcome || "Accelerated transactional velocity by 40% while reducing operational costs.",
+      };
+    } else if (staticMatch) {
+      project = staticMatch;
+    }
+  } catch (e) {
+    console.error("Error fetching project from DB:", e);
+    project = VISHA_PROJECTS.find((p) => p.slug === slug);
+  }
 
   // Fallback if slug is not matched exactly
   if (!project) {

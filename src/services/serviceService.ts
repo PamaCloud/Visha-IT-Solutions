@@ -5,7 +5,7 @@ export class ServiceService {
   async getActiveServices(): Promise<any[]> {
     try {
       const services = await serviceRepository.getAllActiveServices();
-      if (services && services.length >= 4) {
+      if (services && services.length > 0) {
         return JSON.parse(JSON.stringify(services));
       }
       return VISHA_SERVICES;

@@ -23,6 +23,10 @@ import SlideUp from "@/components/animations/SlideUp";
 import FadeIn from "@/components/animations/FadeIn";
 import { VISHA_TRAINING_PROGRAMS, ALL_TRAINING_PROGRAMS, VishaTrainingItem } from "@/data/vishaTraining";
 import TrainingInteractiveTabs from "@/components/training/TrainingInteractiveTabs";
+import connectToDatabase from "@/lib/mongoose";
+import TrainingProgram from "@/lib/models/TrainingProgram";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -30,22 +34,26 @@ export async function generateMetadata({
   params: Promise<{ slug: string }> | { slug: string };
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const program = ALL_TRAINING_PROGRAMS.find((p) => p.slug === resolvedParams.slug) ||
+  let program = ALL_TRAINING_PROGRAMS.find((p) => p.slug === resolvedParams.slug) ||
     VISHA_TRAINING_PROGRAMS.find((p) => p.slug === resolvedParams.slug);
 
   if (!program) {
-    const formatted = resolvedParams.slug
-      .split("-")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
-    return {
-      title: `${formatted} Training - Visha IT Solutions`,
-      description: `Advance your career with industry-aligned ${formatted} training.`,
-    };
+    try {
+      await connectToDatabase();
+      const dbProg = await TrainingProgram.findOne({ slug: resolvedParams.slug }).lean();
+      if (dbProg) {
+        return {
+          title: `${dbProg.title} Training - Visha IT Solutions`,
+          description: dbProg.description?.slice(0, 160),
+        };
+      }
+    } catch {}
   }
 
+  if (!program) return { title: "Training Program - Visha IT Solutions" };
+
   return {
-    title: `${program.title} - Professional Certification - Visha IT Solutions`,
+    title: `${program.title} Training - Visha IT Solutions`,
     description: program.shortDescription,
   };
 }
@@ -57,9 +65,70 @@ export default async function TrainingDetailPage({
 }) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-  let program: VishaTrainingItem | undefined =
-    ALL_TRAINING_PROGRAMS.find((p) => p.slug === slug) ||
-    VISHA_TRAINING_PROGRAMS.find((p) => p.slug === slug);
+  let program: VishaTrainingItem | undefined;
+
+  try {
+    await connectToDatabase();
+    const dbProg: any = await TrainingProgram.findOne({ slug, isActive: true }).lean();
+    const staticMatch =
+      ALL_TRAINING_PROGRAMS.find((p) => p.slug === slug) ||
+      VISHA_TRAINING_PROGRAMS.find((p) => p.slug === slug);
+
+    if (dbProg) {
+      program = {
+        id: dbProg.slug || dbProg._id.toString(),
+        slug: dbProg.slug,
+        title: dbProg.title || staticMatch?.title,
+        badge: dbProg.badge || staticMatch?.badge || "Professional Track",
+        shortDescription: dbProg.shortDescription || staticMatch?.shortDescription || (dbProg.description ? dbProg.description.slice(0, 160) : ""),
+        description: dbProg.description || staticMatch?.description || "",
+        duration: dbProg.duration || staticMatch?.duration || "6 Months",
+        mode: dbProg.mode || staticMatch?.mode || "Hybrid (Online + Lab)",
+        level: dbProg.level || staticMatch?.level || "Beginner to Enterprise",
+        image: dbProg.image || staticMatch?.image || "/training/fullstack.jpg",
+        technologies: (dbProg.technologies && dbProg.technologies.length > 0) ? dbProg.technologies : (staticMatch?.technologies || ["Core Engineering", "Frameworks", "Databases", "Cloud Architecture"]),
+        syllabus: (dbProg.syllabus && dbProg.syllabus.length > 0) ? dbProg.syllabus : (staticMatch?.syllabus || (dbProg.curriculum ? dbProg.curriculum.split(",") : [
+          "Language & Core Fundamentals",
+          "Framework Architecture & Microservices",
+          "Database Design & Optimization",
+          "Capstone Project & Deployment",
+        ])),
+        modules: (dbProg.modules && dbProg.modules.length > 0) ? dbProg.modules : (staticMatch?.modules || [
+          {
+            title: "Module 1: Language & Architecture Fundamentals",
+            badge: "Weeks 1 - 4",
+            description: `Deep dive into the core architecture, syntax and foundations of ${dbProg.title}.`,
+            points: ["Core Architecture & Foundations", "Design Patterns & Object Modeling", "Code Quality & Git"],
+          },
+          {
+            title: "Module 2: Enterprise Services & APIs",
+            badge: "Weeks 5 - 8",
+            description: "Building production microservices, secure APIs, and middleware pipelines.",
+            points: ["RESTful API Architecture", "Microservices & Authentication", "Performance Optimization"],
+          },
+          {
+            title: "Module 3: Capstone & Cloud Deployment",
+            badge: "Weeks 9 - 12",
+            description: "End-to-end project implementation, containerization, and cloud deployment.",
+            points: ["Enterprise Capstone Project", "CI/CD & Cloud Launch", "Placement Preparation"],
+          },
+        ]),
+        careerRoles: (dbProg.careerRoles && dbProg.careerRoles.length > 0) ? dbProg.careerRoles : (staticMatch?.careerRoles || [
+          `${dbProg.title} Engineer`,
+          "Full Stack Developer",
+          "Software Development Engineer",
+          "Technical Consultant",
+        ]),
+      };
+    } else if (staticMatch) {
+      program = staticMatch;
+    }
+  } catch (e) {
+    console.error("Error fetching program from DB:", e);
+    program =
+      ALL_TRAINING_PROGRAMS.find((p) => p.slug === slug) ||
+      VISHA_TRAINING_PROGRAMS.find((p) => p.slug === slug);
+  }
 
   // Fallback if slug is not matched exactly
   if (!program) {

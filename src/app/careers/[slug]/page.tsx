@@ -4,6 +4,8 @@ import Link from "next/link";
 import { MapPin, Clock, PlayCircle, Wallet, CalendarDays, CheckCircle2, Building2, Users } from "lucide-react";
 import { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> | { slug: string } }): Promise<Metadata> {
   const resolvedParams = await params;
   const job = await publicContentService.getJob(resolvedParams.slug);

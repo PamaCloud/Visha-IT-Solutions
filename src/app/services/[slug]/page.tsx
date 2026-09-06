@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import ServiceDetailView from "@/components/services/ServiceDetailView";
 import { VISHA_SERVICES } from "@/data/vishaServices";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {

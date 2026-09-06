@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, Outfit } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import FloatingWidgets from "@/components/layout/FloatingWidgets";
+import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import ScrollToTopOnNavigate from "@/components/layout/ScrollToTopOnNavigate";
 import { QuoteDialogProvider } from "@/context/QuoteDialogContext";
 
@@ -36,10 +34,9 @@ export default function RootLayout({
       <body className={`${inter.variable} ${playfair.variable} ${outfit.variable} font-sans antialiased flex flex-col min-h-screen bg-white`}>
         <QuoteDialogProvider>
           <ScrollToTopOnNavigate />
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-          <FloatingWidgets />
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
         </QuoteDialogProvider>
       </body>
     </html>

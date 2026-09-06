@@ -20,6 +20,10 @@ import { Metadata } from "next";
 import SlideUp from "@/components/animations/SlideUp";
 import FadeIn from "@/components/animations/FadeIn";
 import { VISHA_TRAINING_PROGRAMS, VishaTrainingItem } from "@/data/vishaTraining";
+import connectToDatabase from "@/lib/mongoose";
+import TrainingProgram from "@/lib/models/TrainingProgram";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Professional IT Training Programs - Visha IT Solutions",
@@ -29,8 +33,37 @@ export const metadata: Metadata = {
 
 const iconList = [Code2, Layers, Cpu, Database, Terminal, GraduationCap];
 
-export default function TrainingPage() {
-  const programs: VishaTrainingItem[] = VISHA_TRAINING_PROGRAMS;
+export default async function TrainingPage() {
+  let programs: any[] = VISHA_TRAINING_PROGRAMS;
+
+  try {
+    await connectToDatabase();
+    const dbPrograms = await TrainingProgram.find({ isActive: true }).lean();
+    if (dbPrograms && dbPrograms.length > 0) {
+      // Merge with syllabus/modules metadata if available
+      programs = dbPrograms.map((p: any) => {
+        const fallback = VISHA_TRAINING_PROGRAMS.find((v) => v.slug === p.slug);
+        return {
+          id: p.slug || p._id.toString(),
+          slug: p.slug,
+          title: p.title,
+          badge: p.badge || fallback?.badge || "Popular",
+          shortDescription: p.shortDescription || fallback?.shortDescription || (p.description ? p.description.substring(0, 150) + "..." : ""),
+          description: p.description || fallback?.description || "",
+          duration: p.duration || fallback?.duration || "12 Weeks",
+          mode: p.mode || fallback?.mode || "Hybrid",
+          level: p.level || fallback?.level || "Beginner to Enterprise",
+          technologies: (p.technologies && p.technologies.length > 0) ? p.technologies : (fallback?.technologies || ["Full Stack", "Cloud", "Modern Frameworks"]),
+          syllabus: (p.syllabus && p.syllabus.length > 0) ? p.syllabus : (fallback?.syllabus || (p.curriculum ? p.curriculum.split(",") : [])),
+          modules: (p.modules && p.modules.length > 0) ? p.modules : (fallback?.modules || []),
+          careerRoles: (p.careerRoles && p.careerRoles.length > 0) ? p.careerRoles : (fallback?.careerRoles || ["Full Stack Developer", "Software Engineer"]),
+          image: p.image || fallback?.image || "/hero-bg.jpg",
+        };
+      });
+    }
+  } catch (err) {
+    console.error("Error loading training dynamically:", err);
+  }
 
   return (
     <div className="min-h-screen bg-slate-50/50 pb-20">
@@ -146,7 +179,7 @@ export default function TrainingPage() {
                         Curriculum Highlights
                       </h3>
                       <div className="grid grid-cols-1 gap-2.5">
-                        {programs[0].syllabus.slice(0, 4).map((item, sIdx) => (
+                        {programs[0].syllabus.slice(0, 4).map((item: string, sIdx: number) => (
                           <div key={sIdx} className="flex items-start gap-2.5">
                             <CheckCircle2
                               size={16}
@@ -162,7 +195,7 @@ export default function TrainingPage() {
 
                     {/* Tech Stack Pills */}
                     <div className="mb-6 flex flex-wrap gap-1.5">
-                      {programs[0].technologies.slice(0, 4).map((tech, tIdx) => (
+                      {programs[0].technologies.slice(0, 4).map((tech: string, tIdx: number) => (
                         <span
                           key={tIdx}
                           className="text-[11px] font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-700"
@@ -256,7 +289,7 @@ export default function TrainingPage() {
                             Curriculum Highlights
                           </h3>
                           <div className="grid grid-cols-1 gap-2.5">
-                            {program.syllabus.slice(0, 4).map((item, sIdx) => (
+                            {program.syllabus.slice(0, 4).map((item: string, sIdx: number) => (
                               <div key={sIdx} className="flex items-start gap-2.5">
                                 <CheckCircle2
                                   size={16}
@@ -272,7 +305,7 @@ export default function TrainingPage() {
 
                         {/* Tech Stack Pills */}
                         <div className="mb-6 flex flex-wrap gap-1.5">
-                          {program.technologies.slice(0, 4).map((tech, tIdx) => (
+                          {program.technologies.slice(0, 4).map((tech: string, tIdx: number) => (
                             <span
                               key={tIdx}
                               className="text-[11px] font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-700"

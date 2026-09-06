@@ -18,12 +18,16 @@ import {
 import { Metadata } from "next";
 import SlideUp from "@/components/animations/SlideUp";
 import FadeIn from "@/components/animations/FadeIn";
-import { VISHA_SERVICES, VishaServiceItem } from "@/data/vishaServices";
+import connectToDatabase from "@/lib/mongoose";
+import Service from "@/lib/models/Service";
+import { VISHA_SERVICES } from "@/data/vishaServices";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Enterprise Services - Visha IT Solutions",
   description:
-    "Explore our 6 core enterprise services: Recruitment & Staffing, Talent Acquisition, Payroll & HR Services, Digital Marketing, E-Commerce Solutions, and Training & Career Development.",
+    "Explore our core enterprise services: Recruitment & Staffing, Talent Acquisition, Payroll & HR Services, Digital Marketing, E-Commerce Solutions, and Training & Career Development.",
 };
 
 const iconMap: Record<string, any> = {
@@ -35,8 +39,27 @@ const iconMap: Record<string, any> = {
   GraduationCap,
 };
 
-export default function ServicesPage() {
-  const services: VishaServiceItem[] = VISHA_SERVICES;
+export default async function ServicesPage() {
+  let services: any[] = VISHA_SERVICES;
+
+  try {
+    await connectToDatabase();
+    const dbServices = await Service.find({ isActive: true }).sort({ order: 1 }).lean();
+    if (dbServices && dbServices.length > 0) {
+      services = dbServices.map((s: any) => ({
+        ...s,
+        id: s.slug || s._id.toString(),
+        iconName: s.icon || "Users",
+        subServices: s.subServices || s.features || [],
+        features: s.features || [],
+        ctaText: s.ctaText || "Explore Service →",
+        ctaLink: `/contact?service=${s.slug}`,
+        image: s.image || `/services/${s.slug}.jpg`,
+      }));
+    }
+  } catch (err) {
+    console.error("Error loading services dynamically from DB:", err);
+  }
 
   return (
     <div className="min-h-screen bg-slate-50/50 pb-20">
@@ -117,7 +140,7 @@ export default function ServicesPage() {
                         Included Offerings
                       </h3>
                       <div className="grid grid-cols-1 gap-2.5">
-                        {service.subServices.map((sub, sIdx) => (
+                        {service.subServices.map((sub: string, sIdx: number) => (
                           <div key={sIdx} className="flex items-center gap-2.5 text-xs font-semibold text-slate-700">
                             <CheckCircle2 className="w-4 h-4 text-cyan-500 shrink-0" />
                             <span>{sub}</span>

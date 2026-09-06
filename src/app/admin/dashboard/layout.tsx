@@ -1,5 +1,4 @@
 import AdminSidebar from "@/components/admin/AdminSidebar";
-import AdminHeader from "@/components/admin/AdminHeader";
 import AuthProvider from "@/components/providers/AuthProvider";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
@@ -18,11 +17,10 @@ export default async function DashboardLayout({
 
   return (
     <AuthProvider>
-      <div className="flex min-h-screen bg-gray-50 font-sans text-secondary">
+      <div className="flex min-h-screen bg-[#f8fafc] font-sans text-slate-800 antialiased selection:bg-[#00779e]/20">
         <AdminSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <AdminHeader />
-          <main className="p-8 flex-1 overflow-y-auto">
+          <main className="p-6 lg:p-10 flex-1 overflow-y-auto">
             {children}
           </main>
         </div>

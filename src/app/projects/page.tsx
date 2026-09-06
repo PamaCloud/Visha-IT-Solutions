@@ -18,6 +18,10 @@ import { Metadata } from "next";
 import SlideUp from "@/components/animations/SlideUp";
 import FadeIn from "@/components/animations/FadeIn";
 import { VISHA_PROJECTS, VishaProjectItem } from "@/data/vishaProjects";
+import connectToDatabase from "@/lib/mongoose";
+import Project from "@/lib/models/Project";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Enterprise Projects & Case Studies - Visha IT Solutions",
@@ -27,8 +31,39 @@ export const metadata: Metadata = {
 
 const projectIcons = [FolderGit2, Layers, Cpu, Database, Terminal, TrendingUp];
 
-export default function ProjectsPage() {
-  const projects: VishaProjectItem[] = VISHA_PROJECTS;
+export default async function ProjectsPage() {
+  let projects: any[] = VISHA_PROJECTS;
+
+  try {
+    await connectToDatabase();
+    const dbProjects = await Project.find({ isActive: true }).lean();
+    if (dbProjects && dbProjects.length > 0) {
+      projects = dbProjects.map((p: any) => {
+        const fallback = VISHA_PROJECTS.find((v) => v.slug === p.slug);
+        return {
+          id: p.slug || p._id.toString(),
+          slug: p.slug,
+          title: p.title,
+          category: p.category || fallback?.category || "Enterprise IT",
+          clientName: p.clientName || fallback?.clientName || "Enterprise Client",
+          badge: p.badge || fallback?.badge || "Enterprise Grade",
+          shortDescription: p.shortDescription || fallback?.shortDescription || p.description?.slice(0, 160) || "",
+          description: p.description,
+          technologies: p.technologies?.length ? p.technologies : (fallback?.technologies || ["Next.js", "Node.js", "MongoDB"]),
+          metrics: (p.metrics && p.metrics.length > 0) ? p.metrics : (fallback?.metrics || [p.outcome || "High concurrency performance"]),
+          image: p.image || fallback?.image || "/services/ecommerce-solutions.jpg",
+          deliverables: (p.deliverables && p.deliverables.length > 0) ? p.deliverables : (fallback?.deliverables || [
+            "Enterprise Microservices Architecture",
+            "Real-Time Monitoring & Security",
+            "Cloud Native Deployment",
+          ]),
+          outcome: p.outcome || fallback?.outcome || "Production deployed enterprise software",
+        };
+      });
+    }
+  } catch (err) {
+    console.error("Error loading projects dynamically:", err);
+  }
 
   return (
     <div className="min-h-screen bg-slate-50/50 pb-20">
@@ -142,7 +177,7 @@ export default function ProjectsPage() {
                         Key Deliverables
                       </h3>
                       <div className="grid grid-cols-1 gap-2.5">
-                        {project.deliverables.slice(0, 3).map((item, dIdx) => (
+                        {project.deliverables.slice(0, 3).map((item: string, dIdx: number) => (
                           <div key={dIdx} className="flex items-center gap-2.5 text-xs font-semibold text-slate-700">
                             <CheckCircle2 className="w-4 h-4 text-cyan-500 shrink-0" />
                             <span className="truncate">{item}</span>
@@ -153,7 +188,7 @@ export default function ProjectsPage() {
 
                     {/* Tech Stack Pills */}
                     <div className="mb-6 flex flex-wrap gap-1.5">
-                      {project.technologies.slice(0, 4).map((tech, tIdx) => (
+                      {project.technologies.slice(0, 4).map((tech: string, tIdx: number) => (
                         <span
                           key={tIdx}
                           className="px-2.5 py-1 rounded-md bg-slate-50 border border-slate-100 text-[11px] font-medium text-slate-600"

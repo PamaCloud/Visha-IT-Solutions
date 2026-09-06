@@ -34,8 +34,30 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<DropdownType>(null);
   const [mobileExpanded, setMobileExpanded] = useState<DropdownType>(null);
+  const [servicesList, setServicesList] = useState(VISHA_SERVICES);
+  const [trainingList, setTrainingList] = useState(VISHA_TRAINING_PROGRAMS);
+  const [projectsList, setProjectsList] = useState(VISHA_PROJECTS);
   const navContainerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+
+  useEffect(() => {
+    fetch("/api/public/nav-items")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          if (Array.isArray(json.data.services) && json.data.services.length > 0) {
+            setServicesList(json.data.services);
+          }
+          if (Array.isArray(json.data.training) && json.data.training.length > 0) {
+            setTrainingList(json.data.training);
+          }
+          if (Array.isArray(json.data.projects) && json.data.projects.length > 0) {
+            setProjectsList(json.data.projects);
+          }
+        }
+      })
+      .catch(() => {});
+  }, [pathname]);
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 10);
@@ -62,23 +84,24 @@ export default function Navbar() {
 
   const getDropdownData = (type: "services" | "training" | "projects") => {
     if (type === "services") {
+      const half = Math.ceil(servicesList.length / 2);
       return {
         baseHref: "/services",
-        col1: VISHA_SERVICES.slice(0, 3),
-        col2: VISHA_SERVICES.slice(3, 6),
+        col1: servicesList.slice(0, half),
+        col2: servicesList.slice(half),
       };
     }
     if (type === "training") {
       return {
         baseHref: "/training",
-        col1: VISHA_TRAINING_PROGRAMS.slice(0, 3),
-        col2: VISHA_TRAINING_PROGRAMS.slice(3, 6),
+        items: trainingList,
       };
     }
+    const half = Math.ceil(projectsList.length / 2);
     return {
       baseHref: "/projects",
-      col1: VISHA_PROJECTS.slice(0, 3),
-      col2: VISHA_PROJECTS.slice(3, 6),
+      col1: projectsList.slice(0, half),
+      col2: projectsList.slice(half),
     };
   };
 
@@ -157,33 +180,33 @@ export default function Navbar() {
                         <div className="w-[580px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-200">
                           <div className="flex flex-col gap-3">
                             {/* Above Row: 1 Course in the Middle */}
-                            <div className="flex justify-center">
-                              <Link
-                                href="/training/python-full-stack"
-                                onClick={() => setActiveDropdown(null)}
-                                className="w-full max-w-sm px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block"
-                              >
-                                Python Full Stack Development
-                              </Link>
-                            </div>
+                            {trainingList[0] && (
+                              <div className="flex justify-center">
+                                <Link
+                                  href={`/training/${trainingList[0].slug}`}
+                                  onClick={() => setActiveDropdown(null)}
+                                  className="w-full max-w-sm px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block"
+                                >
+                                  {trainingList[0].title}
+                                </Link>
+                              </div>
+                            )}
 
                             {/* One Row: 2 Courses side-by-side */}
-                            <div className="grid grid-cols-2 gap-3">
-                              <Link
-                                href="/training/mern-stack-development"
-                                onClick={() => setActiveDropdown(null)}
-                                className="px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block"
-                              >
-                                MERN Stack Development
-                              </Link>
-                              <Link
-                                href="/training/dotnet-full-stack"
-                                onClick={() => setActiveDropdown(null)}
-                                className="px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block"
-                              >
-                                .NET Full Stack Development
-                              </Link>
-                            </div>
+                            {trainingList.length > 1 && (
+                              <div className="grid grid-cols-2 gap-3">
+                                {trainingList.slice(1, 3).map((item) => (
+                                  <Link
+                                    key={item.id || item.slug}
+                                    href={`/training/${item.slug}`}
+                                    onClick={() => setActiveDropdown(null)}
+                                    className="px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block"
+                                  >
+                                    {item.title}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       ) : (
@@ -191,9 +214,9 @@ export default function Navbar() {
                           <div className="grid grid-cols-2 gap-x-6 gap-y-1">
                             {/* Column 1 */}
                             <div className="space-y-1">
-                              {col1.map((item) => (
+                              {col1?.map((item: any) => (
                                 <Link
-                                  key={item.id}
+                                  key={item.id || item.slug}
                                   href={`${baseHref}/${item.slug}`}
                                   onClick={() => setActiveDropdown(null)}
                                   className="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors"
@@ -205,9 +228,9 @@ export default function Navbar() {
 
                             {/* Column 2 */}
                             <div className="space-y-1">
-                              {col2.map((item) => (
+                              {col2?.map((item: any) => (
                                 <Link
-                                  key={item.id}
+                                  key={item.id || item.slug}
                                   href={`${baseHref}/${item.slug}`}
                                   onClick={() => setActiveDropdown(null)}
                                   className="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors"
@@ -274,17 +297,17 @@ export default function Navbar() {
             {navLinks.map((link) => {
               if (link.dropdownType) {
                 const isExpanded = mobileExpanded === link.dropdownType;
-                let items: { id: string; slug: string; title: string }[] = [];
+                let items: { id?: string; slug: string; title: string }[] = [];
                 let baseHref = "";
 
                 if (link.dropdownType === "services") {
-                  items = VISHA_SERVICES;
+                  items = servicesList;
                   baseHref = "/services";
                 } else if (link.dropdownType === "training") {
-                  items = VISHA_TRAINING_PROGRAMS;
+                  items = trainingList;
                   baseHref = "/training";
                 } else if (link.dropdownType === "projects") {
-                  items = VISHA_PROJECTS;
+                  items = projectsList;
                   baseHref = "/projects";
                 }
 
