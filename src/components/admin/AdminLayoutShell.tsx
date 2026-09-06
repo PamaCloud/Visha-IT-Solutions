@@ -142,8 +142,8 @@ export default function AdminLayoutShell({
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col antialiased">
-      {/* ── Top Header Bar (Matching Image 2) ─────────────────────────────── */}
-      <header className="sticky top-0 z-30 bg-white border-b border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] h-[62px] sm:h-[72px] flex items-center px-3.5 sm:px-8 lg:px-12">
+      {/* ── Fixed Top Header Bar (100% Sticky across all devices) ──────── */}
+      <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] h-[62px] sm:h-[72px] flex items-center px-3.5 sm:px-8 lg:px-12">
         {/* Left: Mobile Menu Toggle & Brand Logo */}
         <div className="flex items-center gap-3 sm:gap-6 pl-0.5 sm:pl-4">
           <button
@@ -168,10 +168,10 @@ export default function AdminLayoutShell({
         </div>
       </header>
 
-      {/* ── Main Workspace Body (Sidebar + Content) ───────────────────────── */}
-      <div className="flex-1 flex min-w-0">
-        {/* Desktop Sidebar (Fixed / Sticky) */}
-        <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200/80 flex-col shrink-0 select-none shadow-[1px_0_15px_rgba(0,0,0,0.01)] min-h-[calc(100vh-4rem)]">
+      {/* ── Main Workspace Body with offset for fixed header ───────────────── */}
+      <div className="pt-[62px] sm:pt-[72px] flex-1 flex min-w-0">
+        {/* Desktop Sidebar (Fixed below header) */}
+        <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200/80 flex-col shrink-0 select-none shadow-[1px_0_15px_rgba(0,0,0,0.01)] fixed top-[72px] bottom-0 left-0 z-30">
           <nav className="flex-grow px-4 py-6 overflow-y-auto custom-scrollbar">
             {renderNavLinks()}
           </nav>
@@ -292,8 +292,8 @@ export default function AdminLayoutShell({
           </div>
         )}
 
-        {/* Main Content Area */}
-        <main className="flex-1 p-3 sm:p-6 lg:p-8 min-w-0 overflow-y-auto">
+        {/* Main Content Area (offset by lg:ml-64 to clear fixed desktop sidebar) */}
+        <main className="flex-1 lg:ml-64 p-3.5 sm:p-6 lg:p-8 min-w-0">
           {children}
         </main>
       </div>
