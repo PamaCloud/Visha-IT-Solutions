@@ -47,7 +47,7 @@ export default function AdminSidebar() {
     <aside className="w-64 bg-white border-r border-slate-200/80 text-slate-700 flex flex-col h-screen sticky top-0 shrink-0 select-none shadow-[1px_0_15px_rgba(0,0,0,0.02)]">
       {/* Brand Header */}
       <div className="pt-6 pb-5 px-6 border-b border-slate-100 flex items-center justify-center">
-        <Link href="/admin/dashboard" className="relative w-44 h-11 block">
+        <Link href="/admin/dashboard" className="relative w-52 h-13 block">
           <Image
             src="/logo-dark.png"
             alt="Visha IT Solutions"
@@ -153,7 +153,14 @@ export default function AdminSidebar() {
             </div>
           </div>
           <button
-            onClick={() => signOut({ callbackUrl: "/admin/login" })}
+            onClick={async () => {
+              if (typeof window !== "undefined") {
+                sessionStorage.clear();
+                localStorage.clear();
+              }
+              await signOut({ redirect: false });
+              window.location.replace("/admin/login");
+            }}
             title="Sign Out"
             className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0 ml-1 cursor-pointer"
           >

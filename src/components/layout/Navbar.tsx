@@ -143,19 +143,20 @@ export default function Navbar() {
           : "bg-white/95 backdrop-blur-xl border-b border-gray-100"
       }`}
     >
-      <nav className="container flex items-center justify-between h-16 lg:h-20">
+      <nav className="container flex items-center justify-between h-[70px] lg:h-[82px]">
         {/* Logo */}
         <Link
           href="/"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="flex items-center flex-shrink-0 group"
         >
-          <div className="relative w-44 sm:w-48 h-10 sm:h-11">
+          <div className="relative w-52 sm:w-60 lg:w-68 h-12 sm:h-13 lg:h-15">
             <Image
               src="/logo-dark.png"
               alt="Visha IT Solutions"
               fill
-              sizes="(max-width: 640px) 176px, 192px"
+              sizes="(max-width: 640px) 208px, (max-width: 1024px) 240px, 272px"
+              quality={100}
               className="object-contain object-left group-hover:opacity-90 transition-opacity"
               priority
             />
@@ -320,7 +321,7 @@ export default function Navbar() {
 
         {/* Mobile Hamburger */}
         <button
-          className="lg:hidden p-2 text-[hsl(210,29%,24%)] transition-colors"
+          className="lg:hidden p-2.5 rounded-xl border border-slate-200/80 bg-slate-50 text-[hsl(210,29%,24%)] hover:bg-slate-100 transition-colors shadow-2xs cursor-pointer flex items-center justify-center"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >

@@ -4,6 +4,10 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
+// Force zero caching on the server for all dashboard routes
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function DashboardLayout({
   children,
 }: {
@@ -23,4 +27,3 @@ export default async function DashboardLayout({
     </AuthProvider>
   );
 }
-

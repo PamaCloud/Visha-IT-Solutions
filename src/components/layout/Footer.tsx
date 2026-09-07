@@ -15,12 +15,13 @@ export default function Footer() {
           {/* Brand (Abhivorn: lg:col-span-2) */}
           <div className="lg:col-span-2 space-y-6">
             <Link href="/" className="inline-block group">
-              <div className="relative w-44 sm:w-48 h-10 sm:h-11">
+              <div className="relative w-52 sm:w-60 h-12 sm:h-14">
                 <Image
                   src="/logo-white.png"
                   alt="Visha IT Solutions"
                   fill
-                  sizes="(max-width: 640px) 176px, 192px"
+                  sizes="(max-width: 640px) 208px, 240px"
+                  quality={100}
                   className="object-contain object-left group-hover:opacity-90 transition-opacity"
                 />
               </div>

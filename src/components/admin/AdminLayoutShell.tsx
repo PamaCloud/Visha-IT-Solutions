@@ -29,7 +29,7 @@ export default function AdminLayoutShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
@@ -40,6 +40,53 @@ export default function AdminLayoutShell({
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
+
+  // Anti-cache security: detect browser back/forward (left/right navigation & bfcache)
+  useEffect(() => {
+    // 1. Detect if the page was restored from browser memory cache (bfcache)
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        // Force full hard reload to trigger server-side auth validation
+        window.location.reload();
+      }
+    };
+
+    // 2. Detect browser Back/Forward navigation buttons (popstate)
+    const handlePopState = () => {
+      if (status === "unauthenticated") {
+        window.location.replace("/admin/login");
+      }
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("pageshow", handlePageShow);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [status]);
+
+  // Client-side authentication guard: immediate redirect if unauthenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      window.location.replace("/admin/login");
+    }
+  }, [status]);
+
+  // Secure logout handler: clears browser storage and replaces current history state
+  const handleLogout = async () => {
+    try {
+      if (typeof window !== "undefined") {
+        sessionStorage.clear();
+        localStorage.clear();
+      }
+      await signOut({ redirect: false });
+      window.location.replace("/admin/login");
+    } catch (e) {
+      window.location.replace("/admin/login");
+    }
+  };
 
   // Prevent background scroll when modal or mobile menu is open
   useEffect(() => {
@@ -140,38 +187,72 @@ export default function AdminLayoutShell({
     </div>
   );
 
+  if (status === "unauthenticated") {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="text-center text-white p-6">
+          <p className="text-sm font-semibold text-slate-300">Session ended. Redirecting to login...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col antialiased">
       {/* ── Fixed Top Header Bar (100% Sticky across all devices) ──────── */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] h-[62px] sm:h-[72px] flex items-center px-3.5 sm:px-8 lg:px-12">
-        {/* Left: Mobile Menu Toggle & Brand Logo */}
-        <div className="flex items-center gap-3 sm:gap-6 pl-0.5 sm:pl-4">
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(true)}
-            className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
-            aria-label="Open navigation menu"
-          >
-            <Menu size={22} />
-          </button>
-
-          <Link href="/admin/dashboard" className="relative w-40 sm:w-56 lg:w-64 h-9 sm:h-12 lg:h-13 block">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] h-[68px] sm:h-[76px] flex items-center justify-between px-4 sm:px-8 lg:px-12">
+        {/* Left: Brand Logo (Prominent, High Clarity, Clean Margin) */}
+        <div className="flex items-center">
+          <Link href="/admin/dashboard" className="relative w-48 sm:w-60 lg:w-68 h-11 sm:h-13 lg:h-14 block group">
             <Image
               src="/logo-dark.png"
               alt="Visha IT Solutions"
               fill
-              sizes="(max-width: 640px) 160px, (max-width: 1024px) 224px, 256px"
-              className="object-contain object-left"
+              sizes="(max-width: 640px) 192px, (max-width: 1024px) 240px, 272px"
+              className="object-contain object-left group-hover:opacity-95 transition-opacity"
               priority
+              quality={100}
             />
           </Link>
+        </div>
+
+        {/* Right: Actions, Live Site Link & Mobile 3-Lines Hamburger Menu on the FAR RIGHT */}
+        <div className="flex items-center gap-2.5 sm:gap-4">
+          {/* <Link
+            href="/"
+            target="_blank"
+            className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all shadow-xs"
+          >
+            <ExternalLink size={13} className="text-[#00779e]" />
+            <span>Live Website</span>
+          </Link> */}
+
+          {/* <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00779e]/10 text-[#004f6e] text-xs font-bold tracking-wide uppercase">
+            <ShieldCheck size={13} className="text-[#00779e]" />
+            Admin Console
+          </span> */}
+
+          {/* User profile avatar */}
+          {/* <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+            {userInitials}
+          </div> */}
+
+          {/* Mobile 3-Lines Hamburger Toggle Button - Positioned cleanly on the FAR RIGHT */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(true)}
+            className="lg:hidden p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer shadow-xs flex items-center justify-center ml-1"
+            aria-label="Open navigation menu"
+          >
+            <Menu size={22} />
+          </button>
         </div>
       </header>
 
       {/* ── Main Workspace Body with offset for fixed header ───────────────── */}
-      <div className="pt-[62px] sm:pt-[72px] flex-1 flex min-w-0">
+      <div className="pt-[68px] sm:pt-[76px] flex-1 flex min-w-0">
         {/* Desktop Sidebar (Fixed below header) */}
-        <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200/80 flex-col shrink-0 select-none shadow-[1px_0_15px_rgba(0,0,0,0.01)] fixed top-[72px] bottom-0 left-0 z-30">
+        <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200/80 flex-col shrink-0 select-none shadow-[1px_0_15px_rgba(0,0,0,0.01)] fixed top-[68px] sm:top-[76px] bottom-0 left-0 z-30">
           <nav className="flex-grow px-4 py-6 overflow-y-auto custom-scrollbar">
             {renderNavLinks()}
           </nav>
@@ -227,7 +308,7 @@ export default function AdminLayoutShell({
             <div className="relative w-4/5 max-w-xs bg-white h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-250">
               {/* Drawer Header */}
               <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-                <div className="relative w-36 h-8">
+                <div className="relative w-48 h-11">
                   <Image
                     src="/logo-dark.png"
                     alt="Visha IT Solutions"
@@ -329,7 +410,7 @@ export default function AdminLayoutShell({
 
               <button
                 type="button"
-                onClick={() => signOut({ callbackUrl: "/admin/login" })}
+                onClick={handleLogout}
                 className="flex-1 py-2.5 px-5 bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md shadow-rose-600/20 transition-all cursor-pointer"
               >
                 Sign out

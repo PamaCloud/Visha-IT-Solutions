@@ -50,7 +50,7 @@ export default function NotFound() {
       <div className="w-full max-w-[480px] bg-white rounded-3xl shadow-[0_12px_45px_-10px_rgba(0,119,182,0.14)] border border-sky-100/90 p-8 sm:p-10 relative z-10 text-center flex flex-col items-center">
         
         {/* Brand Logo - Perfectly Centered */}
-        <div className="relative w-44 h-12 mb-6 flex justify-center items-center">
+        <div className="relative w-52 h-14 mb-6 flex justify-center items-center">
           <Image
             src="/logo-dark.png"
             alt="Visha IT Solutions"

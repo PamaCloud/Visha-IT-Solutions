@@ -62,7 +62,7 @@ export default function AdminLoginPage() {
           </button>
 
           {/* Centered Brand Logo */}
-          <div className="relative w-44 h-12 mb-3">
+          <div className="relative w-52 h-14 mb-3">
             <Image
               src="/logo-dark.png"
               alt="Visha IT Solutions"

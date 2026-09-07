@@ -126,76 +126,77 @@ export default function Hero() {
       </div>
 
       {/* ── Hero Content ───────────────────────────────────────── */}
-      <div className="container relative z-10 w-full mt-6 sm:mt-0">
-        <div className="max-w-5xl mx-auto text-center relative">
+      <div className="container relative z-10 w-full pt-4 sm:pt-0">
+        <div className="max-w-4xl mx-auto text-center relative">
           {/* Subtle Ambient Glow behind text */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] max-w-3xl h-[150%] bg-black/40 blur-[90px] -z-10 rounded-full pointer-events-none hidden sm:block" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] max-w-2xl h-[130%] bg-cyan-500/10 blur-[100px] -z-10 rounded-full pointer-events-none" />
 
-          {/* Glass Badges Strip */}
-          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-10 flex-wrap">
-            <span className="glass-pill flex items-center gap-1.5 border-[hsl(190,100%,50%)]/40 text-white font-medium bg-black/40 backdrop-blur-md">
-              <Sparkles size={13} className="text-[hsl(190,100%,50%)]" />
-              {current.badge}
-            </span>
-            <span className="glass-pill bg-black/40 backdrop-blur-md">99.8% Uptime</span>
-            <span className="glass-pill bg-black/40 backdrop-blur-md">200+ Projects</span>
-            <span className="glass-pill bg-black/40 backdrop-blur-md">MSME Registered</span>
+          {/* Single Refined Category Pill (No Button Clutter) */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 border border-cyan-400/30 text-cyan-300 text-xs font-semibold backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.15)] mb-5 sm:mb-6">
+            <Sparkles size={13} className="text-cyan-400" />
+            <span className="tracking-wide uppercase">{current.badge}</span>
           </div>
 
-          {/* Main Headline with Stable Synchronous Crossfade */}
-          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-white mb-6 sm:mb-8 leading-[1.15] sm:leading-[1.1] tracking-tight drop-shadow-2xl px-2 sm:px-0">
+          {/* Main Headline with Clean Fast Crossfade (Zero Overlap) */}
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl mb-4 sm:mb-6 leading-[1.15]">
             Enterprise Grade{" "}
-            <br />
-            <div className="relative min-h-[2.5em] sm:min-h-[1.3em] flex items-center justify-center mt-2 sm:mt-3">
-              <AnimatePresence>
+            <span className="block mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-cyan-200">
+              <AnimatePresence mode="wait">
                 <motion.span
                   key={current.title}
-                  initial={{ opacity: 0, y: 24 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -24 }}
-                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-                  className="absolute inset-x-0 flex justify-center items-center text-[hsl(190,100%,48%)] drop-shadow-[0_4px_30px_rgba(6,182,212,0.55)] px-4 leading-tight sm:leading-normal"
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.28, ease: "easeInOut" }}
+                  className="inline-block drop-shadow-[0_4px_30px_rgba(6,182,212,0.5)]"
                 >
                   {current.title}
                 </motion.span>
               </AnimatePresence>
-            </div>
+            </span>
           </h1>
 
-          {/* Dynamic Service Tagline */}
-          <div className="min-h-[6.5rem] sm:min-h-[4.5rem] flex items-center justify-center mb-8 sm:mb-12 px-3 sm:px-4">
-            <div className="relative w-full max-w-2xl min-h-[4.5rem] sm:min-h-[3rem] flex items-center justify-center">
-              <AnimatePresence>
-                <motion.p
-                  key={current.tagline}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.6 }}
-                  className="absolute inset-x-0 text-sm sm:text-lg lg:text-xl text-white/95 font-normal leading-relaxed drop-shadow-lg text-center px-1"
-                >
-                  {current.tagline}
-                </motion.p>
-              </AnimatePresence>
-            </div>
+          {/* Dynamic Service Tagline with mode="wait" (Guarantees NO overlapping text) */}
+          <div className="max-w-2xl mx-auto min-h-[4rem] sm:min-h-[3.5rem] flex items-center justify-center mb-8 sm:mb-10 px-4">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={current.tagline}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.24, ease: "easeInOut" }}
+                className="text-sm sm:text-base lg:text-lg text-slate-200 font-light leading-relaxed text-center drop-shadow-md"
+              >
+                {current.tagline}
+              </motion.p>
+            </AnimatePresence>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4 sm:px-0 mb-8 sm:mb-10">
+          {/* Classic Refined CTA Actions (Proportionate, Not Heavy Slabs) */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none mx-auto mb-8 sm:mb-10">
             <Link
               href={current.ctaLink}
-              className="btn-primary h-12 px-7 sm:h-14 sm:px-9 text-sm sm:text-base w-full sm:w-auto shadow-[0_0_35px_-8px_rgba(6,182,212,0.85)] inline-flex items-center justify-center gap-2 group/cta"
+              className="h-12 px-7 sm:h-13 sm:px-9 w-full sm:w-auto rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-sm sm:text-base shadow-[0_0_28px_rgba(6,182,212,0.45)] hover:shadow-[0_0_38px_rgba(6,182,212,0.65)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 inline-flex items-center justify-center gap-2 group/cta"
             >
               <span>{current.ctaText}</span>
-              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transform group-hover/cta:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-1 transition-transform" />
             </Link>
             <button
               type="button"
               onClick={() => openQuoteDialog("Consulting")}
-              className="btn-glass h-12 px-7 sm:h-14 sm:px-9 text-sm sm:text-base w-full sm:w-auto inline-flex items-center justify-center bg-white/10 hover:bg-white/20 border-white/25 text-white cursor-pointer"
+              className="h-12 px-6 sm:h-13 sm:px-8 w-full sm:w-auto rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white font-medium text-sm sm:text-base backdrop-blur-md transition-all cursor-pointer"
             >
               Book a Demo
             </button>
+          </div>
+
+          {/* Minimalist Editorial Trust Indicators (Elegant text line, NOT button pills) */}
+          <div className="flex items-center justify-center gap-3 sm:gap-6 text-[11px] sm:text-xs text-white/60 font-medium tracking-wider uppercase pt-2">
+            <span>99.8% Uptime</span>
+            <span className="w-1 h-1 rounded-full bg-white/30" />
+            <span>200+ Projects</span>
+            <span className="w-1 h-1 rounded-full bg-white/30" />
+            <span>MSME Registered</span>
           </div>
         </div>
       </div>
