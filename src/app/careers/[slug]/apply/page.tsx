@@ -42,7 +42,7 @@ export default async function JobApplyPage({
     .filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50/70 py-12 md:py-16">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50/70 pt-24 sm:pt-32 pb-16 md:pb-20">
       <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Navigation Breadcrumb */}
         <div className="mb-6 flex items-center justify-between">
@@ -65,7 +65,7 @@ export default async function JobApplyPage({
         </div>
 
         {/* Application Card */}
-        <div className="bg-white rounded-[2.5rem] p-6 sm:p-10 lg:p-12 shadow-[0_15px_40px_rgba(0,0,0,0.05)] border border-slate-100 relative overflow-hidden">
+        <div className="bg-white rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-10 lg:p-12 shadow-[0_15px_40px_rgba(0,0,0,0.05)] border border-slate-100 relative overflow-hidden">
           {/* Subtle Decorative Glow */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-400/5 rounded-full blur-3xl pointer-events-none" />
 

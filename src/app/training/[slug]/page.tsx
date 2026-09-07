@@ -212,7 +212,7 @@ export default async function TrainingDetailPage({
   return (
     <div className="min-h-screen bg-slate-50/50 pb-20">
       {/* ── Section 1: Hero Header & Overview ────────────────────── */}
-      <div className="relative pt-28 sm:pt-32 lg:pt-36 pb-20 sm:pb-24 bg-gradient-to-br from-slate-900 via-slate-900 to-[hsl(195,100%,15%)] text-white overflow-hidden">
+      <div className="relative pt-24 sm:pt-32 lg:pt-36 pb-28 sm:pb-28 bg-gradient-to-br from-slate-900 via-slate-900 to-[hsl(195,100%,15%)] text-white overflow-hidden">
         {/* Subtle decorative glowing background orbs */}
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-[hsl(195,100%,40%)]/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
@@ -276,10 +276,10 @@ export default async function TrainingDetailPage({
 
               {/* CTAs */}
               <SlideUp delay={0.3}>
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pb-4 sm:pb-0">
                   <Link
                     href="/get-a-quote"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[hsl(195,100%,35%)] hover:bg-[hsl(195,100%,30%)] text-white font-semibold text-sm transition-all shadow-[0_4px_20px_rgba(0,105,148,0.4)] hover:-translate-y-0.5"
+                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[hsl(195,100%,35%)] hover:bg-[hsl(195,100%,30%)] text-white font-semibold text-sm transition-all shadow-[0_4px_20px_rgba(0,105,148,0.4)] hover:-translate-y-0.5 w-full sm:w-auto text-center"
                   >
                     <span>Enroll in Next Cohort</span>
                     <ArrowRight size={16} />

@@ -28,7 +28,7 @@ export default async function CareersPage() {
     <div className="bg-slate-50/50 min-h-screen pb-24 text-slate-900 font-sans">
       
       {/* ── 1. Hero Section (Exact Services Layout) ─────────────── */}
-      <section className="pt-28 sm:pt-36 pb-16 sm:pb-20">
+      <section className="pt-24 sm:pt-36 pb-12 sm:pb-20">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             {/* Left Hero Content */}
@@ -49,17 +49,17 @@ export default async function CareersPage() {
                 Build your future with a team that values innovation, growth, and impact. We are always looking for exceptional talent to join our practice areas.
               </p>
 
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                 <Link
                   href="#open-roles"
-                  className="px-8 py-3.5 rounded-full bg-[hsl(195,100%,25%)] hover:bg-[hsl(195,100%,20%)] text-white font-semibold text-sm shadow-[0_4px_18px_rgba(0,105,148,0.25)] hover:shadow-lg transition-all duration-200"
+                  className="px-8 py-3.5 rounded-full bg-[hsl(195,100%,25%)] hover:bg-[hsl(195,100%,20%)] text-white font-semibold text-sm text-center shadow-[0_4px_18px_rgba(0,105,148,0.25)] hover:shadow-lg transition-all duration-200"
                 >
                   View Openings
                 </Link>
 
                 <Link
                   href="#application-form"
-                  className="px-7 py-3.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold text-sm shadow-xs transition-all duration-200"
+                  className="px-7 py-3.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold text-sm text-center shadow-xs transition-all duration-200"
                 >
                   General Application
                 </Link>
@@ -68,7 +68,7 @@ export default async function CareersPage() {
 
             {/* Right Hero Image */}
             <div className="lg:col-span-6">
-              <div className="relative h-[340px] sm:h-[420px] w-full rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 bg-slate-900 group">
+              <div className="relative h-[230px] sm:h-[340px] lg:h-[420px] w-full rounded-2xl sm:rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 bg-slate-900 group">
                 <Image 
                   src="/careers-hero.jpg" 
                   alt="Careers at Visha IT"

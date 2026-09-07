@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { validateEmailStrict } from "@/lib/emailValidator";
 
 export const PROFILE_TYPE_OPTIONS = [
   "Startup",
@@ -72,29 +73,15 @@ export const quoteFormSchema = z.object({
   email: z
     .string()
     .min(1, "Email address is required.")
-    .refine((val) => !/\s/.test(val), {
-      message: "Email address cannot contain spaces.",
-    })
-    .refine((val) => val.length >= 6, {
-      message: "Email address must be at least 6 characters.",
-    })
-    .refine((val) => val.length <= 254, {
-      message: "Email address must not exceed 254 characters.",
-    })
-    .refine(
-      (val) => {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return (
-          emailRegex.test(val) &&
-          !val.startsWith("@") &&
-          !val.endsWith("@") &&
-          (val.match(/@/g) || []).length === 1
-        );
-      },
-      {
-        message: "Please enter a valid email address.",
+    .superRefine((val, ctx) => {
+      const res = validateEmailStrict(val);
+      if (!res.isValid) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: res.error || "Please enter a valid email address.",
+        });
       }
-    ),
+    }),
 });
 
 export type QuoteFormValues = z.infer<typeof quoteFormSchema>;
@@ -139,20 +126,8 @@ export function validateQuoteField(
       return null;
     }
     case "email": {
-      if (!value || value.trim() === "") return "Email address is required.";
-      if (/\s/.test(value)) return "Email address cannot contain spaces.";
-      if (value.length > 254) return "Email address must not exceed 254 characters.";
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (
-        value.length < 6 ||
-        !emailRegex.test(value) ||
-        value.startsWith("@") ||
-        value.endsWith("@") ||
-        (value.match(/@/g) || []).length !== 1
-      ) {
-        return "Please enter a valid email address.";
-      }
-      return null;
+      const res = validateEmailStrict(value);
+      return res.isValid ? null : (res.error || "Please enter a valid email address.");
     }
     default:
       return null;

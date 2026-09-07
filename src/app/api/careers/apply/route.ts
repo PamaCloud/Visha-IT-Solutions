@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongoose";
+import { validateEmailStrict } from "@/lib/emailValidator";
 import JobApplication from "@/lib/models/JobApplication";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
@@ -66,6 +67,10 @@ export async function POST(req: NextRequest) {
       applicationData = await req.json();
     }
 
+    const emailCheck = validateEmailStrict(applicationData.email || "");
+    if (!emailCheck.isValid) {
+      return NextResponse.json({ error: emailCheck.error }, { status: 400 });
+    }
     if (!applicationData.fullName || !applicationData.email || !applicationData.phone) {
       return NextResponse.json(
         { error: "Full name, email, and phone number are required." },

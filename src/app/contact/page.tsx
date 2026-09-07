@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import ContactForm from "@/components/forms/ContactForm";
 import { Mail, Phone, MapPin, Clock, Sparkles } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import SlideUp from "@/components/animations/SlideUp";
 import FadeIn from "@/components/animations/FadeIn";
 
@@ -64,15 +65,23 @@ export default function ContactPage() {
                       <Phone size={22} strokeWidth={1.75} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm mb-0.5">Phone Number</h4>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-0.5">
+                      <h4 className="font-bold text-slate-900 text-sm mb-0.5">Phone &amp; WhatsApp</h4>
+                      <div className="flex flex-wrap items-center gap-2.5 mt-1">
                         <a
                           href="tel:+919014646804"
-                          className="text-slate-600 text-sm font-medium hover:text-[hsl(195,100%,25%)] transition-colors"
+                          className="text-slate-700 text-sm font-semibold hover:text-[hsl(195,100%,25%)] transition-colors"
                         >
                           +91 90146 46804
                         </a>
-                        
+                        <a
+                          href="https://wa.me/919014646804"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 text-xs font-semibold transition-all hover:scale-105 shadow-2xs"
+                        >
+                          <FaWhatsapp className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>WhatsApp</span>
+                        </a>
                       </div>
                     </div>
                   </div>

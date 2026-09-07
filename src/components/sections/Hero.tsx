@@ -132,7 +132,7 @@ export default function Hero() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] max-w-3xl h-[150%] bg-black/40 blur-[90px] -z-10 rounded-full pointer-events-none hidden sm:block" />
 
           {/* Glass Badges Strip */}
-          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8 flex-wrap">
+          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-10 flex-wrap">
             <span className="glass-pill flex items-center gap-1.5 border-[hsl(190,100%,50%)]/40 text-white font-medium bg-black/40 backdrop-blur-md">
               <Sparkles size={13} className="text-[hsl(190,100%,50%)]" />
               {current.badge}
@@ -143,10 +143,10 @@ export default function Hero() {
           </div>
 
           {/* Main Headline with Stable Synchronous Crossfade */}
-          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-white mb-4 sm:mb-6 leading-[1.15] sm:leading-[1.1] tracking-tight drop-shadow-2xl px-2 sm:px-0">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-white mb-6 sm:mb-8 leading-[1.15] sm:leading-[1.1] tracking-tight drop-shadow-2xl px-2 sm:px-0">
             Enterprise Grade{" "}
             <br />
-            <div className="relative min-h-[1.25em] flex items-center justify-center mt-1 sm:mt-2">
+            <div className="relative min-h-[2.5em] sm:min-h-[1.3em] flex items-center justify-center mt-2 sm:mt-3">
               <AnimatePresence>
                 <motion.span
                   key={current.title}
@@ -154,7 +154,7 @@ export default function Hero() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -24 }}
                   transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-                  className="absolute inset-x-0 flex justify-center items-center text-[hsl(190,100%,48%)] drop-shadow-[0_4px_30px_rgba(6,182,212,0.55)] px-4"
+                  className="absolute inset-x-0 flex justify-center items-center text-[hsl(190,100%,48%)] drop-shadow-[0_4px_30px_rgba(6,182,212,0.55)] px-4 leading-tight sm:leading-normal"
                 >
                   {current.title}
                 </motion.span>
@@ -163,8 +163,8 @@ export default function Hero() {
           </h1>
 
           {/* Dynamic Service Tagline */}
-          <div className="min-h-[5.5rem] sm:min-h-[4rem] flex items-center justify-center mb-6 sm:mb-10 px-2 sm:px-4">
-            <div className="relative w-full max-w-2xl min-h-[3rem] flex items-center justify-center">
+          <div className="min-h-[6.5rem] sm:min-h-[4.5rem] flex items-center justify-center mb-8 sm:mb-12 px-3 sm:px-4">
+            <div className="relative w-full max-w-2xl min-h-[4.5rem] sm:min-h-[3rem] flex items-center justify-center">
               <AnimatePresence>
                 <motion.p
                   key={current.tagline}
@@ -172,7 +172,7 @@ export default function Hero() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.6 }}
-                  className="absolute inset-x-0 text-sm sm:text-lg lg:text-xl text-white/95 font-normal leading-relaxed drop-shadow-lg text-center"
+                  className="absolute inset-x-0 text-sm sm:text-lg lg:text-xl text-white/95 font-normal leading-relaxed drop-shadow-lg text-center px-1"
                 >
                   {current.tagline}
                 </motion.p>

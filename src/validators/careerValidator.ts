@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { validateEmailStrict } from "@/lib/emailValidator";
 
 export const CAREER_POSITION_OPTIONS = [
   "Frontend Developer",
@@ -44,21 +45,15 @@ export const careerFormSchema = z.object({
   email: z
     .string()
     .min(1, "Email address is required.")
-    .refine((val) => !/\s/.test(val), {
-      message: "Email address cannot contain spaces.",
-    })
-    .refine((val) => val.length >= 6 && val.length <= 254, {
-      message: "Please enter a valid email address.",
-    })
-    .refine(
-      (val) => {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailRegex.test(val) && !val.startsWith("@") && !val.endsWith("@");
-      },
-      {
-        message: "Please enter a valid email address.",
+    .superRefine((val, ctx) => {
+      const res = validateEmailStrict(val);
+      if (!res.isValid) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: res.error || "Please enter a valid email address.",
+        });
       }
-    ),
+    }),
 
   phone: z
     .string()
@@ -192,19 +187,8 @@ export function validateCareerField(
     }
 
     case "email": {
-      if (!value || value.trim() === "") return "Email address is required.";
-      if (/\s/.test(value)) return "Email address cannot contain spaces.";
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (
-        value.length < 6 ||
-        value.length > 254 ||
-        !emailRegex.test(value) ||
-        value.startsWith("@") ||
-        value.endsWith("@")
-      ) {
-        return "Please enter a valid email address.";
-      }
-      return null;
+      const res = validateEmailStrict(value || "");
+      return res.isValid ? null : (res.error || "Please enter a valid email address.");
     }
 
     case "phone": {
