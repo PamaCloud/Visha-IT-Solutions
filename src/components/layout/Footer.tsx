@@ -33,7 +33,7 @@ export default function Footer() {
               {[
                 { icon: FaLinkedin, href: "#", label: "LinkedIn" },
                 { icon: FaInstagram, href: "#", label: "Instagram" },
-              ].map(({ icon: Icon, href, label }) => (
+                ].map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
@@ -110,13 +110,14 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="tel:+919999999999"
+                  href="tel:+919014646804"
                   className="flex items-start gap-3 text-white/60 hover:text-[hsl(195,100%,50%)] transition-colors text-sm"
                 >
                   <Phone className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <span>+91 9999999999</span>
+                  <span>+91 90146 46804</span>
                 </a>
               </li>
+              
               <li>
                 <span className="flex items-start gap-3 text-white/60 text-sm">
                   <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import {
   FolderGit2,
   Folder,
@@ -39,6 +41,7 @@ interface ProjectItem {
 }
 
 export default function AdminProjectsPage() {
+  const { confirm: confirmAction, dialogProps } = useConfirmDialog();
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -216,17 +219,25 @@ export default function AdminProjectsPage() {
     }
   };
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Are you sure you want to delete project "${title}"?`)) return;
-    try {
-      const res = await fetch(`/api/admin/projects/${id}`, { method: "DELETE" });
-      const json = await res.json();
-      if (json.success) {
-        setProjects((prev) => prev.filter((p) => p._id !== id));
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const handleDelete = (id: string, title: string) => {
+    confirmAction({
+      title: "Confirm Deletion",
+      message: `Are you sure you want to delete project "${title}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      isDestructive: true,
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/admin/projects/${id}`, { method: "DELETE" });
+          const json = await res.json();
+          if (json.success) {
+            setProjects((prev) => prev.filter((p) => p._id !== id));
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      },
+    });
   };
 
   const filtered = projects.filter(
@@ -750,6 +761,7 @@ export default function AdminProjectsPage() {
           </div>
         </div>
       )}
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 }

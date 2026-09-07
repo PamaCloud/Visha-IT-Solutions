@@ -1,89 +1,94 @@
 import { NextResponse } from "next/server";
+import {
+  readPersistedFile,
+  initialCmsServices,
+  initialCmsProjects,
+  initialCmsTraining,
+} from "@/lib/cmsStorage";
 import connectToDatabase from "@/lib/mongoose";
 import Service from "@/lib/models/Service";
 import Project from "@/lib/models/Project";
 import TrainingProgram from "@/lib/models/TrainingProgram";
-import { VISHA_SERVICES } from "@/data/vishaServices";
-import { VISHA_PROJECTS } from "@/data/vishaProjects";
-import { VISHA_TRAINING_PROGRAMS } from "@/data/vishaTraining";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    await connectToDatabase();
+    // 1. Read directly from persistent disk storage (always instant and up-to-date with admin edits)
+    let services = readPersistedFile<any>("services.json", initialCmsServices);
+    let projects = readPersistedFile<any>("projects.json", initialCmsProjects);
+    let training = readPersistedFile<any>("training.json", initialCmsTraining);
 
-    const [dbServices, dbProjects, dbTraining] = await Promise.all([
-      Service.find({ isActive: true }).sort({ order: 1 }).lean(),
-      Project.find({ isActive: true }).sort({ order: 1, createdAt: -1 }).lean(),
-      TrainingProgram.find({ isActive: true }).sort({ order: 1 }).lean(),
-    ]);
+    // 2. Attempt to sync with MongoDB if connected
+    try {
+      await connectToDatabase();
 
-    const services = dbServices && dbServices.length > 0
-      ? dbServices.map((s: any) => ({
-          id: s._id.toString(),
-          slug: s.slug,
-          title: s.title,
-          badge: s.badge || "",
-          shortDescription: s.shortDescription || "",
-          iconName: s.iconName || "Users",
-          image: s.image || "/services/website-development.jpg",
-          subServices: s.subServices || [],
-          ctaText: s.ctaText || "Learn More →",
-          ctaLink: s.ctaLink || `/services/${s.slug}`,
-        }))
-      : VISHA_SERVICES;
+      const [dbServices, dbProjects, dbTraining] = await Promise.all([
+        Service.find({ isActive: true }).sort({ order: 1 }).lean(),
+        Project.find({ isActive: true }).sort({ order: 1, createdAt: -1 }).lean(),
+        TrainingProgram.find({ isActive: true }).sort({ order: 1 }).lean(),
+      ]);
 
-    const projects = dbProjects && dbProjects.length > 0
-      ? dbProjects.map((p: any) => ({
+      if (dbServices && dbServices.length > 0) {
+        const validDb = dbServices.filter(
+          (s: any) => !['wheel-alignment', 'wheel-balancing', 'new-tyre-services', 'battery-replacement-jump-start'].includes(s.slug)
+        );
+        if (validDb.length > 0) {
+          const map = new Map();
+          services.forEach((s: any) => map.set(s.slug || s._id, s));
+          validDb.forEach((s: any) => map.set(s.slug || s._id.toString(), {
+            ...s,
+            id: s._id.toString(),
+            ctaLink: s.ctaLink || `/services/${s.slug}`,
+          }));
+          services = Array.from(map.values());
+        }
+      }
+
+      if (dbProjects && dbProjects.length > 0) {
+        const map = new Map();
+        projects.forEach((p: any) => map.set(p.slug || p._id, p));
+        dbProjects.forEach((p: any) => map.set(p.slug || p._id.toString(), {
+          ...p,
           id: p._id.toString(),
-          slug: p.slug,
-          title: p.title,
-          clientName: p.clientName || "Client Project",
-          category: p.category || "Web Application",
-          badge: p.badge || "Featured",
-          shortDescription: p.shortDescription || "",
-          image: p.image || "/services/ecommerce-solutions.jpg",
-          technologies: p.technologies || [],
-          deliverables: p.deliverables || [],
-          metrics: p.metrics || [],
-          outcome: p.outcome || "",
-        }))
-      : VISHA_PROJECTS;
+        }));
+        projects = Array.from(map.values());
+      }
 
-    const training = dbTraining && dbTraining.length > 0
-      ? dbTraining.map((t: any) => ({
+      if (dbTraining && dbTraining.length > 0) {
+        const map = new Map();
+        training.forEach((t: any) => map.set(t.slug || t._id, t));
+        dbTraining.forEach((t: any) => map.set(t.slug || t._id.toString(), {
+          ...t,
           id: t._id.toString(),
-          slug: t.slug,
-          title: t.title,
-          badge: t.badge || "Professional Track",
-          shortDescription: t.shortDescription || "",
-          duration: t.duration || "6 Months",
-          mode: t.mode || "Hybrid",
-          level: t.level || "Beginner to Pro",
-          image: t.image || "/services/training-and-career-development.jpg",
-          technologies: t.technologies || [],
-          syllabus: t.syllabus || [],
-          careerRoles: t.careerRoles || [],
-        }))
-      : VISHA_TRAINING_PROGRAMS;
+        }));
+        training = Array.from(map.values());
+      }
+    } catch (dbErr) {
+      console.warn("MongoDB unavailable in nav-items, serving from persistent storage:", dbErr);
+    }
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        services,
-        projects,
-        training,
+    return NextResponse.json(
+      {
+        success: true,
+        data: {
+          services,
+          projects,
+          training,
+        },
+        timestamp: Date.now(),
       },
-    });
+      {
+        headers: { "Cache-Control": "no-store, max-age=0" },
+      }
+    );
   } catch (err: any) {
-    return NextResponse.json({
-      success: true,
-      data: {
-        services: VISHA_SERVICES,
-        projects: VISHA_PROJECTS,
-        training: VISHA_TRAINING_PROGRAMS,
+    return NextResponse.json(
+      {
+        success: false,
+        error: err.message,
       },
-    });
+      { status: 500 }
+    );
   }
 }

@@ -65,7 +65,15 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h4 className="font-bold text-slate-900 text-sm mb-0.5">Phone Number</h4>
-                      <p className="text-slate-600 text-sm font-medium">+91 7036592351</p>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-0.5">
+                        <a
+                          href="tel:+919014646804"
+                          className="text-slate-600 text-sm font-medium hover:text-[hsl(195,100%,25%)] transition-colors"
+                        >
+                          +91 90146 46804
+                        </a>
+                        
+                      </div>
                     </div>
                   </div>
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import {
   MessageSquare,
   Phone,
@@ -35,6 +37,7 @@ interface EnquiryItem {
 }
 
 export default function AdminEnquiriesPage() {
+  const { confirm: confirmAction, dialogProps } = useConfirmDialog();
   const [enquiries, setEnquiries] = useState<EnquiryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -83,20 +86,28 @@ export default function AdminEnquiriesPage() {
     }
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to permanently delete the enquiry from "${name}"?`)) return;
-    try {
-      const res = await fetch(`/api/admin/enquiries/${id}`, { method: "DELETE" });
-      const json = await res.json();
-      if (json.success) {
-        setEnquiries((prev) => prev.filter((item) => item._id !== id));
-        if (selectedEnquiry && selectedEnquiry._id === id) {
-          setSelectedEnquiry(null);
+  const handleDelete = (id: string, name: string) => {
+    confirmAction({
+      title: "Confirm Deletion",
+      message: `Are you sure you want to permanently delete the enquiry from "${name}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      isDestructive: true,
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/admin/enquiries/${id}`, { method: "DELETE" });
+          const json = await res.json();
+          if (json.success) {
+            setEnquiries((prev) => prev.filter((item) => item._id !== id));
+            if (selectedEnquiry && selectedEnquiry._id === id) {
+              setSelectedEnquiry(null);
+            }
+          }
+        } catch (err) {
+          console.error(err);
         }
-      }
-    } catch (err) {
-      console.error(err);
-    }
+      },
+    });
   };
 
   const filtered = enquiries.filter((item) => {
@@ -576,6 +587,7 @@ export default function AdminEnquiriesPage() {
           </div>
         </div>
       )}
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 }

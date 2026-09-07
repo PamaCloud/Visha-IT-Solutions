@@ -1,5 +1,9 @@
 "use client";
 
+import { notifyCmsUpdate } from "@/hooks/useRealtimeSync";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+
 import { useState, useEffect } from "react";
 import {
   GraduationCap,
@@ -53,6 +57,7 @@ interface TrainingItem {
 }
 
 export default function AdminTrainingPage() {
+  const { confirm: confirmAction, dialogProps } = useConfirmDialog();
   const [courses, setCourses] = useState<TrainingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -256,7 +261,8 @@ export default function AdminTrainingPage() {
         const json = await res.json();
         if (json.success) {
           setCourses((prev) =>
-            prev.map((c) => (c._id === editingCourse._id ? json.data : c))
+            prev.map((c) => (c._id === editingCourse._id ? json.data : c)));
+          notifyCmsUpdate('training'
           );
           setModalOpen(false);
         }
@@ -269,6 +275,7 @@ export default function AdminTrainingPage() {
         const json = await res.json();
         if (json.success) {
           setCourses((prev) => [json.data, ...prev]);
+          notifyCmsUpdate('training');
           setModalOpen(false);
         }
       }
@@ -279,17 +286,26 @@ export default function AdminTrainingPage() {
     }
   };
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Are you sure you want to delete course "${title}"?`)) return;
-    try {
-      const res = await fetch(`/api/admin/training/${id}`, { method: "DELETE" });
-      const json = await res.json();
-      if (json.success) {
-        setCourses((prev) => prev.filter((c) => c._id !== id));
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const handleDelete = (id: string, title: string) => {
+    confirmAction({
+      title: "Confirm Deletion",
+      message: `Are you sure you want to delete course "${title}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      isDestructive: true,
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/admin/training/${id}`, { method: "DELETE" });
+          const json = await res.json();
+          if (json.success) {
+            setCourses((prev) => prev.filter((c) => c._id !== id));
+            notifyCmsUpdate('training');
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      },
+    });
   };
 
   const filtered = courses.filter(
@@ -866,6 +882,7 @@ export default function AdminTrainingPage() {
           </div>
         </div>
       )}
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 }

@@ -37,9 +37,9 @@ var mongoose_1 = __importStar(require("mongoose"));
 var SiteSettingSchema = new mongoose_1.Schema({
     companyName: { type: String, required: true, default: "Visha IT Solutions" },
     email: { type: String, required: true, default: "contact@vishait.com" },
-    phone: { type: String, required: true, default: "+91 9999999999" },
+    phone: { type: String, required: true, default: "+91 90146 46804" },
     address: { type: String, required: true, default: "Hyderabad, India" },
-    whatsapp: { type: String, default: "+91 9999999999" },
+    whatsapp: { type: String, default: "+91 90146 46804" },
     socialLinks: {
         facebook: { type: String },
         twitter: { type: String },

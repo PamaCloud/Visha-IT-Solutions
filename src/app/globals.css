@@ -375,3 +375,23 @@ body.not-found-active footer,
 body.not-found-active .fixed.bottom-6 {
   display: none !important;
 }
+
+/* Infinite Horizontal Marquee Animation */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-33.333333%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 32s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { useState, useEffect, useMemo } from "react";
 import {
   Search,
@@ -124,6 +126,7 @@ const STATUS_CONFIG: Record<
 };
 
 export default function CandidatesManager() {
+  const { confirm: confirmAction, dialogProps } = useConfirmDialog();
   const [candidates, setCandidates] = useState<CandidateApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -217,25 +220,33 @@ export default function CandidatesManager() {
     }
   };
 
-  const handleDeleteCandidate = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete applicant "${name}"?`)) return;
-    setDeletingId(id);
-    try {
-      const res = await fetch(`/api/admin/applications/${id}`, {
-        method: "DELETE",
-      });
-      const json = await res.json();
-      if (json.success) {
-        setCandidates((prev) => prev.filter((item) => item._id !== id));
-        if (selectedCandidate?._id === id) {
-          setSelectedCandidate(null);
+  const handleDeleteCandidate = (id: string, name: string) => {
+    confirmAction({
+      title: "Confirm Deletion",
+      message: `Are you sure you want to delete applicant "${name}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      isDestructive: true,
+      onConfirm: async () => {
+        setDeletingId(id);
+        try {
+          const res = await fetch(`/api/admin/applications/${id}`, {
+            method: "DELETE",
+          });
+          const json = await res.json();
+          if (json.success) {
+            setCandidates((prev) => prev.filter((item) => item._id !== id));
+            if (selectedCandidate?._id === id) {
+              setSelectedCandidate(null);
+            }
+          }
+        } catch (err) {
+          console.error("Failed to delete candidate:", err);
+        } finally {
+          setDeletingId(null);
         }
-      }
-    } catch (err) {
-      console.error("Failed to delete candidate:", err);
-    } finally {
-      setDeletingId(null);
-    }
+      },
+    });
   };
 
   const filteredCandidates = useMemo(() => {
@@ -852,6 +863,7 @@ export default function CandidatesManager() {
           </div>
         </div>
       )}
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 }

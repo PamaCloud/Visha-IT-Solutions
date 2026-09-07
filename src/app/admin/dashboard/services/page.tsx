@@ -1,5 +1,9 @@
 "use client";
 
+import { notifyCmsUpdate } from "@/hooks/useRealtimeSync";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+
 import { useState, useEffect } from "react";
 import {
   Wrench,
@@ -35,6 +39,7 @@ interface ServiceItem {
 }
 
 export default function AdminServicesPage() {
+  const { confirm: confirmAction, dialogProps } = useConfirmDialog();
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -186,7 +191,8 @@ export default function AdminServicesPage() {
         const json = await res.json();
         if (json.success) {
           setServices((prev) =>
-            prev.map((s) => (s._id === editingService._id ? json.data : s))
+            prev.map((s) => (s._id === editingService._id ? json.data : s)));
+          notifyCmsUpdate('services'
           );
           setModalOpen(false);
         }
@@ -199,6 +205,7 @@ export default function AdminServicesPage() {
         const json = await res.json();
         if (json.success) {
           setServices((prev) => [json.data, ...prev]);
+          notifyCmsUpdate('services');
           setModalOpen(false);
         }
       }
@@ -209,17 +216,26 @@ export default function AdminServicesPage() {
     }
   };
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Are you sure you want to delete service "${title}"?`)) return;
-    try {
-      const res = await fetch(`/api/admin/services/${id}`, { method: "DELETE" });
-      const json = await res.json();
-      if (json.success) {
-        setServices((prev) => prev.filter((s) => s._id !== id));
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const handleDelete = (id: string, title: string) => {
+    confirmAction({
+      title: "Confirm Deletion",
+      message: `Are you sure you want to delete service "${title}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      isDestructive: true,
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/admin/services/${id}`, { method: "DELETE" });
+          const json = await res.json();
+          if (json.success) {
+            setServices((prev) => prev.filter((s) => s._id !== id));
+            notifyCmsUpdate('services');
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      },
+    });
   };
 
   const filtered = services.filter(
@@ -723,6 +739,7 @@ export default function AdminServicesPage() {
           </div>
         </div>
       )}
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 }

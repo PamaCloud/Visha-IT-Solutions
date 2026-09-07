@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useConfirmDialog } from "@/hooks/useConfirmDialog";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import {
   Briefcase,
   Plus,
@@ -35,6 +37,7 @@ interface JobItem {
 }
 
 export default function AdminJobsPage() {
+  const { confirm: confirmAction, dialogProps } = useConfirmDialog();
   const [jobs, setJobs] = useState<JobItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -149,17 +152,25 @@ export default function AdminJobsPage() {
     }
   };
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Are you sure you want to delete job posting "${title}"?`)) return;
-    try {
-      const res = await fetch(`/api/admin/jobs/${id}`, { method: "DELETE" });
-      const json = await res.json();
-      if (json.success) {
-        setJobs((prev) => prev.filter((j) => j._id !== id));
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const handleDelete = (id: string, title: string) => {
+    confirmAction({
+      title: "Confirm Deletion",
+      message: `Are you sure you want to delete job posting "${title}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      isDestructive: true,
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/admin/jobs/${id}`, { method: "DELETE" });
+          const json = await res.json();
+          if (json.success) {
+            setJobs((prev) => prev.filter((j) => j._id !== id));
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      },
+    });
   };
 
   const filtered = jobs.filter(
@@ -508,6 +519,7 @@ export default function AdminJobsPage() {
           </div>
         </div>
       )}
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 }

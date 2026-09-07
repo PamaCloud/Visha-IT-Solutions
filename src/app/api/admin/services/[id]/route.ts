@@ -3,6 +3,9 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongoose";
 import Service from "@/lib/models/Service";
+import { readPersistedFile, writePersistedFile, initialCmsServices } from "@/lib/cmsStorage";
+
+const STORAGE_FILE = "services.json";
 
 export async function PUT(
   req: NextRequest,
@@ -17,27 +20,51 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
 
-    await connectToDatabase();
+    const subServices = Array.isArray(body.subServices)
+      ? body.subServices.filter(Boolean)
+      : (body.subServices || "").split(",").map((s: string) => s.trim()).filter(Boolean);
 
-    const updateData: any = { ...body };
-    if (body.features && typeof body.features === "string") {
-      updateData.features = body.features.split(",").map((s: string) => s.trim()).filter(Boolean);
+    const features = Array.isArray(body.features)
+      ? body.features.filter(Boolean)
+      : (body.features || "").split(",").map((s: string) => s.trim()).filter(Boolean);
+
+    // 1. Update persistent local storage
+    const currentServices = readPersistedFile<any>(STORAGE_FILE, initialCmsServices);
+    let updatedService: any = null;
+
+    const updatedServices = currentServices.map((s: any) => {
+      if (s._id === id || s.slug === id) {
+        updatedService = {
+          ...s,
+          ...body,
+          subServices: subServices.length > 0 ? subServices : s.subServices,
+          features: features.length > 0 ? features : s.features,
+          updatedAt: new Date().toISOString(),
+        };
+        return updatedService;
+      }
+      return s;
+    });
+
+    if (updatedService) {
+      writePersistedFile(STORAGE_FILE, updatedServices);
     }
-    if (body.subServices && typeof body.subServices === "string") {
-      updateData.subServices = body.subServices.split(",").map((s: string) => s.trim()).filter(Boolean);
+
+    // 2. Also update MongoDB
+    try {
+      await connectToDatabase();
+      const mongoUpdate = await Service.findByIdAndUpdate(id, body, { new: true }).lean();
+      if (mongoUpdate) {
+        updatedService = { ...mongoUpdate, _id: mongoUpdate._id.toString() };
+      }
+    } catch (dbErr) {
+      console.warn("MongoDB update error, persistent file saved:", dbErr);
     }
 
-    const updated = await Service.findByIdAndUpdate(
-      id,
-      { $set: updateData },
-      { returnDocument: "after" }
-    );
-
-    if (!updated) {
-      return NextResponse.json({ error: "Service not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ success: true, data: updated });
+    return NextResponse.json({
+      success: true,
+      data: updatedService || body,
+    });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -54,11 +81,20 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    await connectToDatabase();
 
-    const deleted = await Service.findByIdAndDelete(id);
-    if (!deleted) {
-      return NextResponse.json({ error: "Service not found" }, { status: 404 });
+    // 1. Remove from local persistent storage
+    const currentServices = readPersistedFile<any>(STORAGE_FILE, initialCmsServices);
+    const remainingServices = currentServices.filter(
+      (s: any) => s._id !== id && s.slug !== id
+    );
+    writePersistedFile(STORAGE_FILE, remainingServices);
+
+    // 2. Remove from MongoDB
+    try {
+      await connectToDatabase();
+      await Service.findByIdAndDelete(id);
+    } catch (dbErr) {
+      console.warn("MongoDB delete error, persistent file updated:", dbErr);
     }
 
     return NextResponse.json({ success: true, message: "Service deleted successfully" });

@@ -1,219 +1,147 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import {
+  Users,
+  UserCheck,
+  FileSpreadsheet,
+  Megaphone,
+  ShoppingCart,
+  GraduationCap,
   ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  Users,
-  UserCheck,
-  FileSpreadsheet,
-  Megaphone,
-  ShoppingCart,
-  GraduationCap,
-  CheckCircle2,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { VISHA_SERVICES, VishaServiceItem } from "@/data/vishaServices";
+  Sparkles,
+  ShieldCheck,
+} from 'lucide-react';
+import { VISHA_SERVICES } from '@/data/vishaServices';
+import { useRealtimeSync } from '@/hooks/useRealtimeSync';
 
-const iconMap: Record<string, any> = {
-  Users,
-  UserCheck,
-  FileSpreadsheet,
-  Megaphone,
-  ShoppingCart,
-  GraduationCap,
+const iconMap: Record<string, React.ReactNode> = {
+  Users: <Users className="w-4 h-4 text-[#0284c7]" />,
+  UserCheck: <UserCheck className="w-4 h-4 text-[#0284c7]" />,
+  FileSpreadsheet: <FileSpreadsheet className="w-4 h-4 text-[#0284c7]" />,
+  Megaphone: <Megaphone className="w-4 h-4 text-[#0284c7]" />,
+  ShoppingCart: <ShoppingCart className="w-4 h-4 text-[#0284c7]" />,
+  GraduationCap: <GraduationCap className="w-4 h-4 text-[#0284c7]" />,
 };
 
 export default function ServicesPreview() {
-  const services: VishaServiceItem[] = VISHA_SERVICES;
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [cardsPerView, setCardsPerView] = useState(3);
+  const liveServices = useRealtimeSync('/api/public/services', VISHA_SERVICES);
 
-  // Update cards per view based on viewport width
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setCardsPerView(1);
-      } else if (window.innerWidth < 1024) {
-        setCardsPerView(2);
-      } else {
-        setCardsPerView(3);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const maxIndex = Math.max(0, services.length - cardsPerView);
-
-  const nextSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  }, [maxIndex]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
-  }, [maxIndex]);
-
-  // Smooth auto-play carousel with pause on hover
-  useEffect(() => {
-    if (isPaused) return;
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 4500);
-    return () => clearInterval(interval);
-  }, [isPaused, nextSlide]);
+  // Duplicate items 3x for a seamless infinite loop
+  const marqueeItems = [...liveServices, ...liveServices, ...liveServices];
 
   return (
-    <section className="py-16 sm:py-24 bg-slate-50/50 relative overflow-hidden" id="services">
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4 sm:gap-6">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[hsl(195,100%,25%)]/8 text-[hsl(195,100%,25%)] text-xs font-semibold uppercase tracking-wider mb-3">
-              Our Core Expertise
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[hsl(210,29%,24%)] tracking-tight">
-              Technology & <span className="gradient-text">Talent Solutions</span>
-            </h2>
-            <p className="text-base sm:text-lg text-[hsl(207,14%,50%)] mt-3 leading-relaxed">
-              Explore our specialized services tailored for modern enterprises, high-growth startups, and ambitious professionals.
-            </p>
-          </div>
+    <section className="py-14 bg-gradient-to-b from-slate-50 via-white to-slate-50/80 relative overflow-hidden border-y border-slate-100">
+      {/* Decorative ambient background */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-sky-200/20 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Carousel Navigation Arrows */}
-          <div className="flex items-center gap-3 self-start md:self-end">
-            <button
-              onClick={prevSlide}
-              aria-label="Previous service"
-              className="w-12 h-12 rounded-full border border-slate-200 bg-white shadow-sm flex items-center justify-center text-slate-700 hover:bg-[hsl(195,100%,25%)] hover:text-white hover:border-[hsl(195,100%,25%)] transition-all duration-200 active:scale-95"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button
-              onClick={nextSlide}
-              aria-label="Next service"
-              className="w-12 h-12 rounded-full border border-slate-200 bg-white shadow-sm flex items-center justify-center text-slate-700 hover:bg-[hsl(195,100%,25%)] hover:text-white hover:border-[hsl(195,100%,25%)] transition-all duration-200 active:scale-95"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
+      {/* Centered Header Section */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 text-center">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-sky-100 text-[#0369a1] border border-sky-200 mb-3 mx-auto">
+          <Sparkles className="w-3.5 h-3.5 text-[#0284c7]" />
+          <span>CORE CAPABILITIES</span>
         </div>
-
-        {/* Carousel Container */}
-        <div
-          className="relative overflow-hidden py-4"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <motion.div
-            className="flex transition-transform duration-700 ease-out gap-6 lg:gap-8"
-            animate={{
-              x: `-${currentIndex * (100 / cardsPerView)}%`,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 120,
-              damping: 20,
-            }}
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Enterprise Services &amp; Solutions
+        </h2>
+        <p className="mt-2 text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
+          End-to-end technology, talent, and digital transformation built for high-growth enterprises.
+        </p>
+        <div className="mt-3">
+          <Link
+            href="/services"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#0369a1] hover:text-[#0284c7] group transition-colors"
           >
-            {services.map((service) => {
-              const IconComponent = iconMap[service.iconName] || Users;
+            <span>View all services</span>
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+      </div>
 
-              return (
-                <div
-                  key={service.id}
-                  className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-22px)] flex-shrink-0 flex flex-col"
-                >
-                  <div className="group bg-white rounded-3xl border border-slate-200/80 hover:border-slate-300 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full overflow-hidden">
-                    {/* Realistic Corporate Cover Image */}
-                    <div className="relative aspect-[4/3] sm:aspect-auto sm:h-56 w-full overflow-hidden bg-slate-100">
-                      <Image
-                        src={service.image}
-                        alt={service.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+      {/* Low-Height Continuous Auto-scrolling Marquee */}
+      <div className="relative w-full overflow-hidden py-1">
+        {/* Left & Right gradient fade masks for smooth transition */}
+        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
 
-                      {/* Badge */}
-                      {service.badge && (
-                        <span className="absolute top-4 left-4 text-xs font-semibold px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[hsl(195,100%,25%)] shadow-sm">
-                          {service.badge}
-                        </span>
-                      )}
+        {/* Marquee Track */}
+        <div className="animate-marquee flex gap-4 w-max cursor-pointer">
+          {marqueeItems.map((service: any, index: number) => {
+            const icon = iconMap[service.iconName] || (
+              <ShieldCheck className="w-4 h-4 text-[#0284c7]" />
+            );
 
-                      {/* Floating Icon */}
-                      <div className="absolute bottom-4 right-4 w-11 h-11 rounded-xl bg-white/95 backdrop-blur-md text-[hsl(195,100%,25%)] shadow-md flex items-center justify-center group-hover:bg-[hsl(195,100%,25%)] group-hover:text-white transition-colors duration-300">
-                        <IconComponent className="h-5 w-5" />
-                      </div>
+            const subList = Array.isArray(service.subServices) && service.subServices.length > 0
+              ? service.subServices
+              : ["Enterprise Architecture", "Dedicated Support"];
+
+            return (
+              <div
+                key={`${service.slug || service.id || service._id}-${index}`}
+                className="group relative w-[300px] sm:w-[340px] h-[160px] bg-white rounded-xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-sky-300 transition-all duration-300 flex flex-col justify-between p-3.5 flex-shrink-0 overflow-hidden"
+              >
+                {/* Brand top accent highlight on hover */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0284c7] to-[#0ea5e9] opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                {/* Top Row: Icon + Badge + Mini image thumbnail */}
+                <div className="flex items-start justify-between gap-2.5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-sky-50 border border-sky-100 flex items-center justify-center flex-shrink-0 text-[#0284c7] group-hover:bg-[#0284c7] group-hover:text-white transition-colors">
+                      {icon}
                     </div>
+                    <span className="text-[10px] font-bold tracking-wider uppercase text-sky-700 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-100/80">
+                      {service.badge || "Enterprise Grade"}
+                    </span>
+                  </div>
 
-                    {/* Card Body */}
-                    <div className="p-6 sm:p-7 flex flex-col flex-grow">
-                      <h3 className="text-xl sm:text-2xl font-bold text-[hsl(210,29%,24%)] mb-2 tracking-tight group-hover:text-[hsl(195,100%,25%)] transition-colors">
-                        {service.title}
-                      </h3>
-
-                      <p className="text-sm text-[hsl(207,14%,50%)] mb-5 leading-relaxed line-clamp-2">
-                        {service.shortDescription}
-                      </p>
-
-                      {/* Sub-services / Capabilities Highlights */}
-                      <div className="mb-6 pt-4 border-t border-slate-100 flex-grow">
-                        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
-                          Core Capabilities
-                        </p>
-                        <ul className="space-y-2">
-                          {service.subServices.slice(0, 4).map((sub, sIdx) => (
-                            <li key={sIdx} className="flex items-center gap-2 text-xs font-medium text-slate-700">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-[hsl(195,100%,35%)] shrink-0" />
-                              <span className="truncate">{sub}</span>
-                            </li>
-                          ))}
-                        </ul>
-                        {service.subServices.length > 4 && (
-                          <p className="text-[11px] font-semibold text-[hsl(195,100%,30%)] mt-2.5">
-                            + {service.subServices.length - 4} more specialized offerings
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Custom CTA button */}
-                      <Link
-                        href={`/services/${service.slug}`}
-                        className="mt-auto flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-slate-50 border border-slate-200 text-[hsl(210,29%,24%)] text-sm font-semibold hover:bg-[hsl(195,100%,25%)] hover:text-white hover:border-[hsl(195,100%,25%)] transition-all duration-300 group/btn shadow-2xs"
-                      >
-                        <span>{service.ctaText}</span>
-                        <ArrowRight size={14} className="transform group-hover/btn:translate-x-1 transition-transform" />
-                      </Link>
-                    </div>
+                  <div className="relative w-12 h-8 rounded-md overflow-hidden border border-slate-100 flex-shrink-0 shadow-inner bg-slate-100">
+                    <Image
+                      src={service.image || "/services/website-development.jpg"}
+                      alt={service.title}
+                      fill
+                      sizes="48px"
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
                   </div>
                 </div>
-              );
-            })}
-          </motion.div>
-        </div>
 
-        {/* Carousel Pagination Dots */}
-        <div className="flex items-center justify-center gap-2 mt-8">
-          {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                currentIndex === idx
-                  ? "w-8 bg-[hsl(195,100%,25%)]"
-                  : "w-2.5 bg-slate-300 hover:bg-slate-400"
-              }`}
-            />
-          ))}
+                {/* Middle: Title & 1-line Description */}
+                <div className="my-0.5">
+                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-[#0369a1] transition-colors line-clamp-1">
+                    {service.title}
+                  </h3>
+                  <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
+                    {service.shortDescription || service.description}
+                  </p>
+                </div>
+
+                {/* Bottom Row: Key capability & Direct Link */}
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-[10px] text-slate-500 truncate max-w-[210px]">
+                    <span className="font-medium text-slate-600 truncate">
+                      {subList[0]}
+                    </span>
+                    {subList.length > 1 && (
+                      <>
+                        <span className="text-slate-300">•</span>
+                        <span className="text-slate-400">+{subList.length - 1} more</span>
+                      </>
+                    )}
+                  </div>
+
+                  <Link
+                    href={`/services#${service.slug}`}
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0284c7] hover:text-[#0369a1] flex-shrink-0 group-hover:translate-x-0.5 transition-all"
+                  >
+                    <span>View</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

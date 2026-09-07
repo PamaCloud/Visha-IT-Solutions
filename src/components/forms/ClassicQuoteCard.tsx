@@ -162,7 +162,7 @@ export default function ClassicQuoteCard({
         "🌐 *Source:* Visha IT Solutions Website",
       ].join("\n");
 
-      const whatsappUrl = `https://wa.me/917036592351?text=${encodeURIComponent(fullMessage)}`;
+      const whatsappUrl = `https://wa.me/919014646804?text=${encodeURIComponent(fullMessage)}`;
 
       if (typeof window !== "undefined") {
         window.open(whatsappUrl, "_blank");

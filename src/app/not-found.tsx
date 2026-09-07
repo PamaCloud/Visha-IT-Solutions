@@ -8,7 +8,7 @@ import { Home, ArrowRight, RefreshCw, Compass, Sparkles } from "lucide-react";
 
 export default function NotFound() {
   const router = useRouter();
-  const TOTAL_SECONDS = 60; // 1 minute countdown
+  const TOTAL_SECONDS = 30; // 30 seconds countdown
   const [countdown, setCountdown] = useState(TOTAL_SECONDS);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -107,7 +107,7 @@ export default function NotFound() {
               Auto-redirecting to Home
             </span>
             <span className="font-semibold text-[#004f6e] font-mono">
-              {countdown === 60 ? "1 min (60s)" : `${countdown}s`}
+              {`${countdown}s`}
             </span>
           </div>
 

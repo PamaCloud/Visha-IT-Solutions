@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -40,8 +40,8 @@ export default function Navbar() {
   const navContainerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
-  useEffect(() => {
-    fetch("/api/public/nav-items")
+  const fetchNavItems = useCallback(() => {
+    fetch(`/api/public/nav-items?_t=${Date.now()}`, { cache: 'no-store' })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) {
@@ -57,7 +57,37 @@ export default function Navbar() {
         }
       })
       .catch(() => {});
-  }, [pathname]);
+  }, []);
+
+  useEffect(() => {
+    fetchNavItems();
+
+    // BroadcastChannel for instant cross-tab live sync
+    let channel: BroadcastChannel | null = null;
+    try {
+      channel = new BroadcastChannel('visha_cms_sync');
+      channel.onmessage = () => {
+        fetchNavItems();
+      };
+    } catch (e) {}
+
+    // Storage event listener fallback
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'visha_cms_last_update') {
+        fetchNavItems();
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+
+    // Heartbeat polling every 3 seconds for live sync
+    const interval = setInterval(fetchNavItems, 3000);
+
+    return () => {
+      if (channel) channel.close();
+      window.removeEventListener('storage', handleStorage);
+      clearInterval(interval);
+    };
+  }, [pathname, fetchNavItems]);
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 10);
@@ -137,7 +167,9 @@ export default function Navbar() {
           {navLinks.map((link) => {
             const hasDropdown = !!link.dropdownType;
             const isActive =
-              pathname === link.href || (hasDropdown && pathname.startsWith(link.href));
+              link.href === "/"
+                ? pathname === "/"
+                : pathname === link.href || (hasDropdown && pathname.startsWith(link.href));
             const isCurrentOpen = activeDropdown === link.dropdownType;
 
             if (hasDropdown && link.dropdownType) {
@@ -157,8 +189,10 @@ export default function Navbar() {
                       )
                     }
                     className={`px-4 py-2 rounded-full text-sm font-medium inline-flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${
-                      isActive || isCurrentOpen
+                      isActive
                         ? "bg-[hsl(195,100%,25%)]/10 text-[hsl(195,100%,25%)] font-semibold"
+                        : isCurrentOpen
+                        ? "text-[hsl(195,100%,25%)] bg-slate-100/80 font-medium"
                         : "text-slate-600 hover:text-[hsl(195,100%,25%)] hover:bg-slate-100/80"
                     }`}
                   >
@@ -177,39 +211,43 @@ export default function Navbar() {
                   {isCurrentOpen && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
                       {link.dropdownType === "training" ? (
-                        <div className="w-[580px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-200">
-                          <div className="flex flex-col gap-3">
-                            {/* Above Row: 1 Course in the Middle */}
-                            {trainingList[0] && (
-                              <div className="flex justify-center">
-                                <Link
-                                  href={`/training/${trainingList[0].slug}`}
-                                  onClick={() => setActiveDropdown(null)}
-                                  className="w-full max-w-sm px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block"
-                                >
-                                  {trainingList[0].title}
-                                </Link>
-                              </div>
-                            )}
-
-                            {/* One Row: 2 Courses side-by-side */}
-                            {trainingList.length > 1 && (
-                              <div className="grid grid-cols-2 gap-3">
-                                {trainingList.slice(1, 3).map((item) => (
+                          <div className="w-[580px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-200">
+                            <div className="flex flex-col gap-3">
+                              {/* If odd number of courses (e.g. 3 or 1), 1 course centered in the middle on top */}
+                              {trainingList.length % 2 === 1 && trainingList[0] && (
+                                <div className="flex justify-center">
                                   <Link
-                                    key={item.id || item.slug}
-                                    href={`/training/${item.slug}`}
+                                    href={`/training/${trainingList[0].slug}`}
                                     onClick={() => setActiveDropdown(null)}
-                                    className="px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block"
+                                    className="w-full max-w-xs px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block capitalize"
                                   >
-                                    {item.title}
+                                    {trainingList[0].title}
                                   </Link>
-                                ))}
-                              </div>
-                            )}
+                                </div>
+                              )}
+
+                              {/* 2 Courses in the row below (or all courses if even count) */}
+                              {(() => {
+                                const paired = trainingList.length % 2 === 1 ? trainingList.slice(1) : trainingList;
+                                if (paired.length === 0) return null;
+                                return (
+                                  <div className="grid grid-cols-2 gap-3">
+                                    {paired.map((item) => (
+                                      <Link
+                                        key={item.id || item.slug}
+                                        href={`/training/${item.slug}`}
+                                        onClick={() => setActiveDropdown(null)}
+                                        className="px-4 py-3 rounded-xl text-center text-sm font-bold text-slate-800 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors border border-slate-100/80 shadow-xs block capitalize"
+                                      >
+                                        {item.title}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                );
+                              })()}
+                            </div>
                           </div>
-                        </div>
-                      ) : (
+                        ) : (
                         <div className="w-[560px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-200">
                           <div className="grid grid-cols-2 gap-x-6 gap-y-1">
                             {/* Column 1 */}
