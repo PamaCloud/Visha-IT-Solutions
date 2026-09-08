@@ -96,7 +96,7 @@ export default function ServicesLiveCatalog({ initialServices }: { initialServic
                     href={`/services/${service.slug}`}
                     className="w-full h-12 rounded-full border border-slate-200 bg-slate-50/80 text-slate-800 text-sm font-semibold hover:bg-[hsl(195,100%,25%)] hover:text-white hover:border-[hsl(195,100%,25%)] transition-all duration-300 shadow-xs flex items-center justify-center gap-2 group/btn mt-auto"
                   >
-                    <span>{service.ctaText || "Explore Service →"}</span>
+                    <span>{(service.ctaText || "Explore Service").replace(/[\s\u2192\->]+$/, "").trim()}</span>
                     <ArrowRight size={15} className="transform group-hover/btn:translate-x-1 transition-transform" />
                   </Link>
                 </div>

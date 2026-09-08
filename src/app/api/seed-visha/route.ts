@@ -22,7 +22,7 @@ export async function GET() {
       iconName: s.iconName || "Users",
       subServices: s.subServices || [],
       features: s.features || [],
-      ctaText: s.ctaText || "Explore Service →",
+      ctaText: s.ctaText || "Explore Service",
       ctaLink: `/contact?service=${s.slug}`,
       image: s.image,
       isActive: true,

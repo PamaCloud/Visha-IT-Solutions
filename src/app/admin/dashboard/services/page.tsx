@@ -65,7 +65,7 @@ export default function AdminServicesPage() {
       "100% Pre-Vetted Engineers & Specialists",
       "Guaranteed Replacement Policy",
     ],
-    ctaText: "Explore Service →",
+    ctaText: "Explore Service",
     ctaLink: "/contact",
     isActive: true,
     order: 0,
@@ -117,7 +117,7 @@ export default function AdminServicesPage() {
       features: Array.isArray(service.features) && service.features.length > 0
         ? service.features
         : ["High Reliability", "Industry Standard"],
-      ctaText: service.ctaText || "Explore Service →",
+      ctaText: service.ctaText || "Explore Service",
       ctaLink: service.ctaLink || `/contact?service=${service.slug}`,
       isActive: service.isActive,
       order: service.order || 0,
@@ -682,7 +682,7 @@ export default function AdminServicesPage() {
                     type="text"
                     value={formData.ctaText}
                     onChange={(e) => setFormData({ ...formData, ctaText: e.target.value })}
-                    placeholder="Explore Service →"
+                    placeholder="Explore Service"
                     className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-[#00779e]"
                   />
                 </div>

@@ -5,7 +5,7 @@ import Project from "@/lib/models/Project";
 import TrainingProgram from "@/lib/models/TrainingProgram";
 import Job from "@/lib/models/Job";
 import Link from "next/link";
-import Image from "next/image";
+import AdminThumbnail from "@/components/admin/AdminThumbnail";
 import {
   ImageIcon,
   FileText,
@@ -17,10 +17,95 @@ import {
   ExternalLink,
   Briefcase
 } from "lucide-react";
+import { getCachedDashboardData, setCachedDashboardData } from "@/lib/dashboardCache";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage() {
+interface DashboardData {
+  dynamicRoutesCount: number;
+  totalAssetsCount: number;
+  recentUpdates: Array<{
+    id: string;
+    title: string;
+    path: string;
+    location: string;
+    locationBadgeClass: string;
+    timestamp: string;
+    actionUrl: string;
+    actionLabel: string;
+    image: string;
+    type: "service" | "training" | "project" | "job";
+    sortDate: number;
+  }>;
+}
+
+// Known guaranteed images for Visha services
+const SERVICE_IMAGE_MAP: Record<string, string> = {
+  "recruitment-and-staffing": "/services/recruitment-and-staffing.jpg",
+  "talent-acquisition": "/services/talent-acquisition.jpg",
+  "payroll-and-hr-services": "/services/payroll-and-hr-services.jpg",
+  "digital-marketing": "/services/digital-marketing.jpg",
+  "ecommerce-solutions": "/services/e-commerce-solutions.jpg",
+  "e-commerce-solutions": "/services/e-commerce-solutions.jpg",
+  "training-and-career-development": "/services/training-and-career-development.jpg",
+  "it-recruitment": "/services/it-recruitment.jpg",
+  "website-development": "/services/website-development.jpg",
+};
+
+// Helper to format timestamps gracefully
+const formatTimestamp = (dateInput?: Date | string) => {
+  if (!dateInput) return "Live";
+  const date = new Date(dateInput);
+  if (isNaN(date.getTime())) return "Live";
+
+  const now = new Date();
+  const isToday =
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+
+  if (isToday) {
+    return `Today, ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`;
+  }
+
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+};
+
+// Safe image resolver ensuring valid existing paths
+const resolveImage = (img?: string, type?: "service" | "training" | "project" | "job", slug?: string) => {
+  if (slug && SERVICE_IMAGE_MAP[slug]) {
+    return SERVICE_IMAGE_MAP[slug];
+  }
+  if (
+    img &&
+    typeof img === "string" &&
+    img.startsWith("/") &&
+    !img.includes("/assets/") &&
+    !img.includes("wheel") &&
+    !img.includes("tyre") &&
+    !img.includes("battery") &&
+    !img.includes("digital-marketing-services")
+  ) {
+    return img;
+  }
+  if (type === "training") return "/services/training-and-career-development.jpg";
+  if (type === "project") return "/services/ecommerce-solutions.jpg";
+  if (type === "job") return "/careers-hero.jpg";
+  return "/services/recruitment-and-staffing.jpg";
+};
+
+async function fetchDashboardData(): Promise<DashboardData> {
+  // Check memory cache first (<5ms instant response)
+  const cached = getCachedDashboardData<DashboardData>();
+  if (cached) {
+    return cached;
+  }
+
   await connectToDatabase();
 
   const [
@@ -34,15 +119,29 @@ export default async function DashboardPage() {
     recentTraining,
     recentJobs,
   ] = await Promise.all([
-    Service.countDocuments(),
+    Service.countDocuments({
+      slug: { $nin: ["wheel-alignment", "wheel-balancing", "new-tyre-services", "battery-replacement-jump-start"] }
+    }),
     Project.countDocuments(),
     TrainingProgram.countDocuments(),
     Job.countDocuments(),
     JobApplication.countDocuments(),
-    Service.find().sort({ updatedAt: -1, createdAt: -1 }).limit(3).lean(),
-    Project.find().sort({ updatedAt: -1, createdAt: -1 }).limit(3).lean(),
-    TrainingProgram.find().sort({ updatedAt: -1, createdAt: -1 }).limit(3).lean(),
-    Job.find().sort({ updatedAt: -1, createdAt: -1 }).limit(2).lean(),
+    Service.find(
+      { slug: { $nin: ["wheel-alignment", "wheel-balancing", "new-tyre-services", "battery-replacement-jump-start"] } },
+      { _id: 1, title: 1, slug: 1, image: 1, updatedAt: 1, createdAt: 1 }
+    ).sort({ updatedAt: -1, createdAt: -1 }).limit(3).lean(),
+    Project.find(
+      {},
+      { _id: 1, title: 1, slug: 1, image: 1, updatedAt: 1, createdAt: 1 }
+    ).sort({ updatedAt: -1, createdAt: -1 }).limit(3).lean(),
+    TrainingProgram.find(
+      {},
+      { _id: 1, title: 1, slug: 1, image: 1, updatedAt: 1, createdAt: 1 }
+    ).sort({ updatedAt: -1, createdAt: -1 }).limit(3).lean(),
+    Job.find(
+      {},
+      { _id: 1, title: 1, slug: 1, department: 1, updatedAt: 1, createdAt: 1 }
+    ).sort({ updatedAt: -1, createdAt: -1 }).limit(2).lean(),
   ]);
 
   // Compute dynamic routes: 5 static public pages + dynamic items
@@ -52,42 +151,7 @@ export default async function DashboardPage() {
   // Compute total media assets: computed across services, projects, training programs & platform
   const totalAssetsCount = (servicesCount * 4) + (projectsCount * 3) + (trainingCount * 6) + 24;
 
-  // Helper to format timestamps gracefully
-  const formatTimestamp = (dateInput?: Date | string) => {
-    if (!dateInput) return "Live";
-    const date = new Date(dateInput);
-    if (isNaN(date.getTime())) return "Live";
-
-    const now = new Date();
-    const isToday =
-      date.getDate() === now.getDate() &&
-      date.getMonth() === now.getMonth() &&
-      date.getFullYear() === now.getFullYear();
-
-    if (isToday) {
-      return `Today, ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`;
-    }
-
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
-  };
-
-  // Safe image resolver ensuring valid existing paths
-  const resolveImage = (img?: string, type?: string) => {
-    if (img && typeof img === "string" && img.startsWith("/") && !img.includes("digital-marketing-services")) {
-      return img;
-    }
-    if (type === "training") return "/services/training-and-career-development.jpg";
-    if (type === "project") return "/services/ecommerce-solutions.jpg";
-    if (type === "job") return "/careers-hero.jpg";
-    return "/services/recruitment-and-staffing.jpg";
-  };
-
-  // Compile real dynamic updates from MongoDB
+  // Compile dynamic updates
   const recentUpdates = [
     ...recentServices.map((s: any) => ({
       id: `service-${s._id}`,
@@ -97,8 +161,9 @@ export default async function DashboardPage() {
       locationBadgeClass: "bg-sky-50 text-[#004f6e] border-sky-100",
       timestamp: formatTimestamp(s.updatedAt || s.createdAt),
       actionUrl: "/admin/dashboard/services",
-      actionLabel: "Edit Service >",
-      image: resolveImage(s.image, "service"),
+      actionLabel: "Edit Service →",
+      image: resolveImage(s.image, "service", s.slug),
+      type: "service" as const,
       sortDate: new Date(s.updatedAt || s.createdAt || 0).getTime(),
     })),
     ...recentTraining.map((t: any) => ({
@@ -109,8 +174,9 @@ export default async function DashboardPage() {
       locationBadgeClass: "bg-cyan-50 text-cyan-700 border-cyan-100",
       timestamp: formatTimestamp(t.updatedAt || t.createdAt),
       actionUrl: "/admin/dashboard/training",
-      actionLabel: "Edit Course >",
-      image: resolveImage(t.image, "training"),
+      actionLabel: "Edit Course →",
+      image: resolveImage(t.image, "training", t.slug),
+      type: "training" as const,
       sortDate: new Date(t.updatedAt || t.createdAt || 0).getTime(),
     })),
     ...recentProjects.map((p: any) => ({
@@ -121,8 +187,9 @@ export default async function DashboardPage() {
       locationBadgeClass: "bg-indigo-50 text-indigo-700 border-indigo-100",
       timestamp: formatTimestamp(p.updatedAt || p.createdAt),
       actionUrl: "/admin/dashboard/projects",
-      actionLabel: "Edit Project >",
-      image: resolveImage(p.image, "project"),
+      actionLabel: "Edit Project →",
+      image: resolveImage(p.image, "project", p.slug),
+      type: "project" as const,
       sortDate: new Date(p.updatedAt || p.createdAt || 0).getTime(),
     })),
     ...recentJobs.map((j: any) => ({
@@ -133,11 +200,25 @@ export default async function DashboardPage() {
       locationBadgeClass: "bg-emerald-50 text-emerald-700 border-emerald-100",
       timestamp: formatTimestamp(j.updatedAt || j.createdAt),
       actionUrl: "/admin/dashboard/jobs",
-      actionLabel: "Manage Job >",
+      actionLabel: "Manage Job →",
       image: "/careers-hero.jpg",
+      type: "job" as const,
       sortDate: new Date(j.updatedAt || j.createdAt || 0).getTime(),
     })),
   ].sort((a, b) => b.sortDate - a.sortDate);
+
+  const result: DashboardData = {
+    dynamicRoutesCount,
+    totalAssetsCount,
+    recentUpdates,
+  };
+
+  setCachedDashboardData(result);
+  return result;
+}
+
+export default async function DashboardPage() {
+  const { dynamicRoutesCount, totalAssetsCount, recentUpdates } = await fetchDashboardData();
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
@@ -156,6 +237,7 @@ export default async function DashboardPage() {
         <div className="flex items-center gap-2.5 flex-wrap">
           <Link
             href="/admin/dashboard/jobs"
+            prefetch={true}
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#004f6e] via-[#006e94] to-[#0096c7] hover:from-[#003d55] hover:to-[#007ba3] active:scale-[0.99] text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md shadow-[#00779e]/20 transition-all cursor-pointer"
           >
             <Plus size={15} />
@@ -164,6 +246,7 @@ export default async function DashboardPage() {
 
           <Link
             href="/admin/dashboard/services"
+            prefetch={true}
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl shadow-2xs transition-all cursor-pointer"
           >
             <Layers size={15} className="text-[#00779e]" />
@@ -172,18 +255,19 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* ── 3 Metrics Cards Row (Matching Image 3 Layout) ─────────────────── */}
+      {/* ── 3 Metrics Cards Row ───────────────────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
         {/* Card 1: TOTAL ASSETS */}
         <Link
           href="/admin/dashboard/services"
+          prefetch={true}
           className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-[#00779e]/40 hover:shadow-md transition-all group"
         >
           <div className="flex items-start justify-between">
             <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-slate-400 uppercase">
               TOTAL ASSETS
             </span>
-            <div className="w-8 h-8 rounded-lg bg-[#fff1ec] text-[#e05638] flex items-center justify-center border border-orange-100 shrink-0 group-hover:scale-105 transition-transform">
+            <div className="w-8 h-8 rounded-lg bg-sky-50 text-[#00779e] flex items-center justify-center border border-sky-100 shrink-0 group-hover:scale-105 transition-transform">
               <ImageIcon size={15} />
             </div>
           </div>
@@ -193,7 +277,7 @@ export default async function DashboardPage() {
             </h3>
             <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block shrink-0" />
-              Active media files across {servicesCount} services &amp; {projectsCount} projects
+              Connected enterprise media files
             </p>
           </div>
         </Link>
@@ -201,6 +285,7 @@ export default async function DashboardPage() {
         {/* Card 2: DYNAMIC ROUTES */}
         <Link
           href="/admin/dashboard/training"
+          prefetch={true}
           className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-[#00779e]/40 hover:shadow-md transition-all group"
         >
           <div className="flex items-start justify-between">
@@ -244,7 +329,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Recent Content Updates (100% Dynamic from MongoDB) ─────────────── */}
+      {/* ── Recent Content Updates (Dynamic with Guaranteed Images) ───────── */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-[0_2px_15px_rgba(0,0,0,0.02)] overflow-hidden">
         <div className="p-4 sm:p-6 border-b border-slate-100 flex items-center justify-between">
           <div>
@@ -279,16 +364,13 @@ export default async function DashboardPage() {
                 <tr key={item.id} className="hover:bg-slate-50/60 transition-colors">
                   {/* MEDIA Thumbnail */}
                   <td className="py-3.5 px-6">
-                    <div className="relative w-14 h-10 rounded-lg overflow-hidden bg-slate-100 border border-slate-200/80 shrink-0">
-                      <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        unoptimized
-                        sizes="56px"
-                        className="object-cover"
-                      />
-                    </div>
+                    <AdminThumbnail
+                      src={item.image}
+                      alt={item.title}
+                      type={item.type}
+                      className="w-14 h-10 rounded-lg border border-slate-200/80 shrink-0"
+                      sizes="56px"
+                    />
                   </td>
 
                   {/* DETAILS */}
@@ -315,6 +397,7 @@ export default async function DashboardPage() {
                   <td className="py-3.5 px-6 text-right">
                     <Link
                       href={item.actionUrl}
+                      prefetch={true}
                       className="text-xs font-semibold text-slate-600 hover:text-[#004f6e] inline-flex items-center gap-1 transition-colors"
                     >
                       <span>{item.actionLabel}</span>
@@ -331,16 +414,13 @@ export default async function DashboardPage() {
           {recentUpdates.map((item) => (
             <div key={item.id} className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-slate-100 border border-slate-200/80 shrink-0">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    unoptimized
-                    sizes="48px"
-                    className="object-cover"
-                  />
-                </div>
+                <AdminThumbnail
+                  src={item.image}
+                  alt={item.title}
+                  type={item.type}
+                  className="w-12 h-12 rounded-xl border border-slate-200/80 shrink-0"
+                  sizes="48px"
+                />
                 <div className="min-w-0">
                   <h4 className="font-bold text-slate-900 text-xs truncate">
                     {item.title}
@@ -356,6 +436,7 @@ export default async function DashboardPage() {
 
               <Link
                 href={item.actionUrl}
+                prefetch={true}
                 className="shrink-0 px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[#004f6e] text-[11px] font-bold rounded-xl transition-all"
               >
                 Edit &rarr;
@@ -367,5 +448,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-
-

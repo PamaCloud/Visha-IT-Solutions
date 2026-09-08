@@ -22,7 +22,7 @@
       "Contract, Permanent & Executive Search",
       "Seamless Onboarding & Documentation"
     ],
-    "ctaText": "Hire Talent →",
+    "ctaText": "Hire Talent",
     "ctaLink": "/contact?service=recruitment-and-staffing",
     "image": "/services/recruitment-and-staffing.jpg",
     "isActive": true,
@@ -52,7 +52,7 @@
       "Rigorous Technical & Cultural Fitment",
       "Employer Value Proposition (EVP) Strategy"
     ],
-    "ctaText": "Build Your Talent Pipeline →",
+    "ctaText": "Build Your Talent Pipeline",
     "ctaLink": "/contact?service=talent-acquisition",
     "image": "/services/talent-acquisition.jpg",
     "isActive": true,
@@ -83,7 +83,7 @@
       "Self-service Digital Payslips & Portal",
       "Standardized HR Policies & Documentation"
     ],
-    "ctaText": "Get Payroll Support →",
+    "ctaText": "Get Payroll Support",
     "ctaLink": "/contact?service=payroll-and-hr-services",
     "image": "/services/payroll-and-hr-services.jpg",
     "isActive": true,
@@ -115,7 +115,7 @@
       "Engaging Social Brand Storytelling",
       "Transparent Real-Time Performance Analytics"
     ],
-    "ctaText": "Grow Your Business →",
+    "ctaText": "Grow Your Business",
     "ctaLink": "/contact?service=digital-marketing",
     "image": "/services/digital-marketing.jpg",
     "isActive": true,
@@ -147,7 +147,7 @@
       "Automated Inventory & Order Tracking",
       "Mobile-First Responsive Conversion Architecture"
     ],
-    "ctaText": "Build Your Online Store →",
+    "ctaText": "Build Your Online Store",
     "ctaLink": "/contact?service=ecommerce-solutions",
     "image": "/services/e-commerce-solutions.jpg",
     "isActive": true,
@@ -179,7 +179,7 @@
       "Dedicated Mock Interviews & Resume Grooming",
       "Placement Assistance & Corporate Tie-ups"
     ],
-    "ctaText": "Join Training Programs →",
+    "ctaText": "Join Training Programs",
     "ctaLink": "/contact?service=training-and-career-development",
     "image": "/services/training-and-career-development.jpg",
     "isActive": true,

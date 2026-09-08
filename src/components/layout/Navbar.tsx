@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Mail, Phone, MapPin } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { VISHA_SERVICES } from "@/data/vishaServices";
 import { VISHA_TRAINING_PROGRAMS } from "@/data/vishaTraining";
 import { VISHA_PROJECTS } from "@/data/vishaProjects";
@@ -402,7 +403,7 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div className="pt-4">
+            <div className="pt-4 space-y-3">
               <button
                 type="button"
                 onClick={() => {
@@ -411,8 +412,37 @@ export default function Navbar() {
                 }}
                 className="btn-primary w-full justify-center text-sm py-3 cursor-pointer"
               >
-                Get a Quote
+                Get a Project Quote
               </button>
+
+              {/* Tap-to-Call, Tap-to-Email & WhatsApp actions (FSD Section 5) */}
+              <div className="pt-3 border-t border-gray-100 flex flex-col gap-2">
+                <div className="flex items-center justify-between text-xs text-slate-600 gap-2">
+                  <a
+                    href="tel:+919014646804"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-semibold hover:bg-slate-100 transition-colors"
+                  >
+                    <Phone size={13} className="text-[hsl(195,100%,25%)]" />
+                    <span>Call Us</span>
+                  </a>
+                  <a
+                    href="mailto:contact@vishait.com"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-semibold hover:bg-slate-100 transition-colors"
+                  >
+                    <Mail size={13} className="text-[hsl(195,100%,25%)]" />
+                    <span>Email Us</span>
+                  </a>
+                </div>
+                <a
+                  href="https://wa.me/919014646804"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold hover:bg-emerald-100 transition-colors"
+                >
+                  <FaWhatsapp size={14} className="text-emerald-600" />
+                  <span>Chat on WhatsApp (+91 90146 46804)</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

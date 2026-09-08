@@ -70,9 +70,7 @@ export default function AdminSidebar() {
             {overviewLinks.map((link) => {
               const active = isLinkActive(link.href);
               return (
-                <Link
-                  key={link.name}
-                  href={link.href}
+                <Link key={link.name} href={link.href} prefetch={true}
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                     active
                       ? "bg-[#e6f4f8] text-[#004f6e] shadow-xs"
@@ -99,9 +97,7 @@ export default function AdminSidebar() {
             {websiteManagementLinks.map((link) => {
               const active = isLinkActive(link.href);
               return (
-                <Link
-                  key={link.name}
-                  href={link.href}
+                <Link key={link.name} href={link.href} prefetch={true}
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all ${
                     active
                       ? "bg-[#e6f4f8] text-[#004f6e] font-semibold shadow-xs"
