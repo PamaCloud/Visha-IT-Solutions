@@ -1,106 +1,104 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShieldCheck, Award, TrendingUp, Handshake } from "lucide-react";
 import { motion } from "framer-motion";
-import AnimatedCounter from "@/components/animations/AnimatedCounter";
 
 const slowFadeIn = {
-  initial: { opacity: 0, y: 50, filter: "blur(20px)" },
-  whileInView: { opacity: 1, y: 0, filter: "blur(0px)" },
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-50px" },
-  transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+  transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 };
 
-const metrics = [
-  { value: 50,   suffix: "+",  decimals: 0, label: "Enterprise Clients" },
-  { value: 10,   suffix: "+",  decimals: 0, label: "Years Experience"   },
-  { value: 200,  suffix: "+",  decimals: 0, label: "Projects Delivered" },
-  { value: 99.8, suffix: "%",  decimals: 1, label: "System Uptime"      },
-];
-
-const whyUs = [
-  { title: "Client Focused",    description: "Our experts craft unique and tailored IT strategies that you won't find off-the-shelf." },
-  { title: "Quality Driven",    description: "From code to deployment, we maintain the highest standards of software engineering."   },
-  { title: "Result Oriented",   description: "We are here anytime you need us — before, during, or after your project delivery."     },
-  { title: "MSME Registered",   description: "Recognized and registered, operating with full compliance and professional integrity." },
+const trustPoints = [
+  {
+    title: "Client Focused",
+    description: "Our experts craft unique and tailored IT strategies that align directly with your distinct business vision and operational goals.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Quality Driven",
+    description: "From architecture to deployment, we maintain rigorous software engineering standards, peer reviews, and comprehensive quality assurance.",
+    icon: Award,
+  },
+  {
+    title: "Result Oriented",
+    description: "Every digital solution, marketing campaign, and talent placement is focused on delivering measurable commercial value and sustainable growth.",
+    icon: TrendingUp,
+  },
+  {
+    title: "Trusted Partner",
+    description: "A dependable technology and workforce partner offering full transparency, proactive collaboration, and dedicated ongoing support.",
+    icon: Handshake,
+  },
 ];
 
 export default function AboutPreview() {
   return (
-    <>
-      {/* ── Metrics Section (Abhivorn style: white bg, divide-x border) ── */}
-      <section className="py-16 sm:py-20 bg-white border-b border-gray-100">
-        <div className="container">
-          <motion.div
-            {...slowFadeIn}
-            className="grid grid-cols-2 md:grid-cols-4 gap-y-10 md:gap-y-0 gap-x-6 md:gap-x-10 divide-x divide-gray-200"
-          >
-            {metrics.map((metric, index) => (
-              <div key={metric.label} className={`text-center ${index === 0 ? "" : "pl-6 md:pl-10"}`}>
-                <div className="text-4xl md:text-5xl font-bold text-[hsl(210,29%,24%)] mb-3 tracking-tighter">
-                  <AnimatedCounter value={metric.value} suffix={metric.suffix} decimals={metric.decimals} />
-                </div>
-                <div className="text-xs font-bold text-[hsl(207,14%,50%)] uppercase tracking-widest">
-                  {metric.label}
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+    <section className="py-20 sm:py-28 bg-slate-50/70 border-b border-slate-100 relative overflow-hidden">
+      <div className="container">
+        {/* ── 3–5 Line Company Introduction (FSD Section 6.2) ── */}
+        <motion.div {...slowFadeIn} className="max-w-3xl mx-auto text-center mb-16 sm:mb-20">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#0d5cd9] text-xs font-semibold uppercase tracking-wider mb-4">
+            About Visha IT Solutions
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-5">
+            Empowering Modern Enterprises with Technology &amp; Talent
+          </h2>
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+            Visha IT Solutions is a professional technology and talent solutions business dedicated to driving enterprise growth.
+            We specialize in delivering high-converting <strong>E-Commerce</strong> platforms, data-driven <strong>Digital Marketing</strong> campaigns,
+            strategic <strong>Recruitment &amp; Staffing</strong>, and career-advancing <strong>IT Training</strong>.
+            Our team combines technical rigor with business acumen to deliver dependable, high-impact results.
+          </p>
+        </motion.div>
 
-      {/* ── Why Choose Us (Abhivorn: muted bg, numbered white cards) ── */}
-      <section className="py-16 sm:py-24 bg-[hsl(210,40%,96%)]/30 border-y border-gray-100">
-        <div className="container">
-          <motion.div
-            {...slowFadeIn}
-            className="text-center mb-12 sm:mb-20"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-[hsl(210,29%,24%)] mb-5 tracking-tight">
-              Why Visha IT Solutions?
-            </h2>
-            <p className="text-lg text-[hsl(207,14%,50%)] max-w-2xl mx-auto font-light">
-              We combine technical excellence with business acumen to deliver solutions that drive measurable results.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {whyUs.map((item, index) => (
+        {/* ── 4 Official Trust / Value Points (FSD Section 6.2) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {trustPoints.map((item, index) => {
+            const IconComponent = item.icon;
+            return (
               <motion.div
                 key={item.title}
-                initial={{ opacity: 0, y: 50, filter: "blur(20px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 1.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 hover:border-[hsl(195,100%,25%)]/20 hover:shadow-md transition-all duration-300"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-7 shadow-sm hover:shadow-md hover:border-blue-300 hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between"
               >
-                <div className="text-sm font-mono font-bold text-[hsl(195,100%,25%)]/70 mb-4 sm:mb-6">
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0d5cd9] mb-5">
+                    <IconComponent className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+
+                <div className="text-xs font-mono font-bold text-slate-300 mt-6">
                   0{index + 1}
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-[hsl(210,29%,24%)] mb-2 sm:mb-3">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-[hsl(210,29%,24%)]/70 leading-relaxed font-medium">
-                  {item.description}
-                </p>
               </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            {...slowFadeIn}
-            className="text-center mt-12"
-          >
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-2 text-[hsl(195,100%,25%)] font-bold hover:text-[hsl(195,100%,35%)] transition-colors link-underline"
-            >
-              Discover our story <ArrowRight size={18} />
-            </Link>
-          </motion.div>
+            );
+          })}
         </div>
-      </section>
-    </>
+
+        {/* ── CTA: Learn More (FSD Section 6.2) ── */}
+        <motion.div {...slowFadeIn} className="text-center mt-12 sm:mt-14">
+          <Link
+            href="/about"
+            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-[#0d5cd9] hover:bg-[#0b4eb8] text-white font-semibold text-sm shadow-sm hover:shadow-md transition-all group"
+          >
+            <span>Learn More About Us</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </motion.div>
+      </div>
+    </section>
   );
 }
+

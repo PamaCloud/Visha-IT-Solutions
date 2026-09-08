@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { X } from "lucide-react";
 import ClassicQuoteCard from "@/components/forms/ClassicQuoteCard";
 
 interface QuoteDialogContextType {
@@ -118,9 +117,9 @@ export function QuoteDialogProvider({ children }: { children: React.ReactNode })
 
       {children}
 
-      {/* ── Dialog / Modal Overlay ─────────────────────────────────── */}
+      {/* Dialog / Modal Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
           {/* Backdrop Blur */}
           <div
             onClick={closeQuoteDialog}
@@ -128,8 +127,8 @@ export function QuoteDialogProvider({ children }: { children: React.ReactNode })
             aria-hidden="true"
           />
 
-          {/* Modal Container - Sleek, compact and comfortable fit */}
-          <div className="relative z-10 w-full max-w-[465px] my-auto animate-in zoom-in-95 fade-in duration-200">
+          {/* Modal Container - Increased comfortable width without scrollbar */}
+          <div className="relative z-10 w-full max-w-[620px] my-auto animate-in zoom-in-95 fade-in duration-200">
             {/* Classic Form Card with elegant integrated inside close button */}
             <ClassicQuoteCard
               defaultInquiryType={defaultInquiry}

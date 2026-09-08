@@ -55,12 +55,10 @@ export default function Footer() {
             <h4 className="text-xs font-bold tracking-widest uppercase text-white/90 mb-6">Services</h4>
             <ul className="space-y-3">
               {[
-                { name: "Recruitment & Staffing",        href: "/services/recruitment-and-staffing" },
-                { name: "Talent Acquisition",             href: "/services/talent-acquisition" },
-                { name: "Payroll & HR Services",         href: "/services/payroll-and-hr-services" },
-                { name: "Digital Marketing",              href: "/services/digital-marketing" },
                 { name: "E-Commerce Solutions",          href: "/services/ecommerce-solutions" },
-                { name: "Training & Career Dev",         href: "/services/training-and-career-development" },
+                { name: "Digital Marketing",              href: "/services/digital-marketing" },
+                { name: "Recruitment & Staffing",        href: "/services/recruitment-and-staffing" },
+                { name: "Training Programs",             href: "/training" },
               ].map((link) => (
                 <li key={link.name}>
                   <Link

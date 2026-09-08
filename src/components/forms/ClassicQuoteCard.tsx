@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, CheckCircle2, Loader2, AlertCircle, X } from "lucide-react";
+import { ChevronDown, CheckCircle2, Loader2, AlertCircle, X, ShieldCheck } from "lucide-react";
 import {
-  PROFILE_TYPE_OPTIONS,
-  INQUIRY_TYPE_OPTIONS,
+  SERVICE_REQUIRED_OPTIONS,
+  BUDGET_RANGE_OPTIONS,
   validateQuoteField,
   QuoteFormValues,
 } from "@/validators/quoteValidator";
@@ -25,37 +25,26 @@ export default function ClassicQuoteCard({
 }: Props) {
   const [formData, setFormData] = useState<QuoteFormValues>({
     fullName: "",
-    profileType: "",
-    inquiryType: defaultInquiryType || "",
-    mobileNumber: "",
+    companyName: "",
     email: "",
+    mobileNumber: "",
+    serviceRequired: defaultInquiryType || "E-Commerce",
+    description: "",
+    budgetRange: "Flexible / Discuss Later",
+    preferredContactMethod: "WhatsApp",
+    consent: false,
   });
 
-  const [touched, setTouched] = useState<Record<keyof QuoteFormValues, boolean>>({
-    fullName: false,
-    profileType: false,
-    inquiryType: false,
-    mobileNumber: false,
-    email: false,
-  });
-
-  const [fieldErrors, setFieldErrors] = useState<Record<keyof QuoteFormValues, string | null>>({
-    fullName: null,
-    profileType: null,
-    inquiryType: null,
-    mobileNumber: null,
-    email: null,
-  });
-
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string | null>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [generalError, setGeneralError] = useState<string | null>(null);
 
-  const handleFieldChange = (field: keyof QuoteFormValues, value: string) => {
+  const handleFieldChange = (field: keyof QuoteFormValues, value: any) => {
     let sanitizedValue = value;
 
     if (field === "fullName") {
-      // Allow only letters and spaces; block numbers and special characters completely
       sanitizedValue = value
         .replace(/[^A-Za-z ]/g, "")
         .replace(/^\s+/, "")
@@ -64,7 +53,6 @@ export default function ClassicQuoteCard({
     } else if (field === "mobileNumber") {
       sanitizedValue = value.replace(/\D/g, "").slice(0, 10);
     } else if (field === "email") {
-      // Disallow spaces and special characters that cannot exist in valid email
       let clean = value.replace(/\s/g, "").replace(/[^a-zA-Z0-9@._+-]/g, "");
       const atIndex = clean.indexOf("@");
       if (atIndex !== -1) {
@@ -75,7 +63,6 @@ export default function ClassicQuoteCard({
 
     setFormData((prev) => ({ ...prev, [field]: sanitizedValue }));
 
-    // If already touched, validate live so error clears immediately upon correction
     if (touched[field]) {
       const error = validateQuoteField(field, sanitizedValue);
       setFieldErrors((prev) => ({ ...prev, [field]: error }));
@@ -92,29 +79,30 @@ export default function ClassicQuoteCard({
     e.preventDefault();
     setGeneralError(null);
 
-    // Mark all fields as touched
-    const allTouched: Record<keyof QuoteFormValues, boolean> = {
+    const allTouched: Record<string, boolean> = {
       fullName: true,
-      profileType: true,
-      inquiryType: true,
-      mobileNumber: true,
       email: true,
+      mobileNumber: true,
+      serviceRequired: true,
+      description: true,
+      consent: true,
     };
     setTouched(allTouched);
 
-    // Validate all fields
     const nameErr = validateQuoteField("fullName", formData.fullName);
-    const profileErr = validateQuoteField("profileType", formData.profileType);
-    const inquiryErr = validateQuoteField("inquiryType", formData.inquiryType);
-    const mobileErr = validateQuoteField("mobileNumber", formData.mobileNumber);
     const emailErr = validateQuoteField("email", formData.email);
+    const mobileErr = validateQuoteField("mobileNumber", formData.mobileNumber);
+    const serviceErr = validateQuoteField("serviceRequired", formData.serviceRequired);
+    const descErr = validateQuoteField("description", formData.description);
+    const consentErr = validateQuoteField("consent", formData.consent);
 
     const errors = {
       fullName: nameErr,
-      profileType: profileErr,
-      inquiryType: inquiryErr,
-      mobileNumber: mobileErr,
       email: emailErr,
+      mobileNumber: mobileErr,
+      serviceRequired: serviceErr,
+      description: descErr,
+      consent: consentErr,
     };
     setFieldErrors(errors);
 
@@ -126,38 +114,45 @@ export default function ClassicQuoteCard({
     setIsSubmitting(true);
 
     try {
-      // Backend Validation & Storage via Server Action
       const submitData = new FormData();
       submitData.append("fullName", formData.fullName.trim());
-      submitData.append("profileType", formData.profileType);
-      submitData.append("inquiryType", formData.inquiryType);
-      submitData.append("mobileNumber", formData.mobileNumber);
+      submitData.append("companyName", formData.companyName?.trim() || "");
       submitData.append("email", formData.email.trim());
+      submitData.append("mobileNumber", formData.mobileNumber);
+      submitData.append("serviceRequired", formData.serviceRequired);
+      submitData.append("description", formData.description.trim());
+      submitData.append("budgetRange", formData.budgetRange || "Flexible");
+      submitData.append("preferredContactMethod", formData.preferredContactMethod || "WhatsApp");
+      submitData.append("consent", String(formData.consent));
 
       const res = await submitQuoteEnquiry(submitData);
 
       if (!res.success && res.errors) {
         setFieldErrors({
           fullName: res.errors.fullName?.[0] || null,
-          profileType: res.errors.profileType?.[0] || null,
-          inquiryType: res.errors.inquiryType?.[0] || null,
-          mobileNumber: res.errors.mobileNumber?.[0] || null,
           email: res.errors.email?.[0] || null,
+          mobileNumber: res.errors.mobileNumber?.[0] || null,
+          serviceRequired: res.errors.serviceRequired?.[0] || null,
+          description: res.errors.description?.[0] || null,
+          consent: res.errors.consent?.[0] || null,
         });
         setGeneralError(res.message || "Please resolve the highlighted errors.");
         setIsSubmitting(false);
         return;
       }
 
-      // WhatsApp Message Hand-off with ALL details properly formatted and encoded
+      // WhatsApp Message Hand-off
       const fullMessage = [
-        "🌟 *New Advisory & Project Quote Request*",
+        "🚀 *New Project Quote Request (Visha IT Solutions)*",
         "----------------------------------------",
         `👤 *Client Name:* ${formData.fullName.trim()}`,
-        `🏢 *Profile Type:* ${formData.profileType}`,
-        `📌 *Inquiry Type:* ${formData.inquiryType}`,
+        `🏢 *Company:* ${formData.companyName?.trim() || "Not specified"}`,
+        `💼 *Service Required:* ${formData.serviceRequired}`,
         `📱 *Mobile Number:* +91 ${formData.mobileNumber}`,
-        `✉️ *Email Address:* ${formData.email.trim() || "Not provided"}`,
+        `✉️ *Business Email:* ${formData.email.trim()}`,
+        `💰 *Budget Range:* ${formData.budgetRange}`,
+        `📝 *Requirement Details:*`,
+        formData.description.trim(),
         "----------------------------------------",
         "🌐 *Source:* Visha IT Solutions Website",
       ].join("\n");
@@ -173,9 +168,7 @@ export default function ClassicQuoteCard({
         setTimeout(onSuccess, 2500);
       }
     } catch {
-      setGeneralError(
-        "Something went wrong while submitting. Please try again or reach out directly on WhatsApp."
-      );
+      setGeneralError("Something went wrong while submitting. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -184,7 +177,7 @@ export default function ClassicQuoteCard({
   if (isSuccess) {
     return (
       <div
-        className={`relative bg-white rounded-3xl border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-6 sm:p-8 text-center flex flex-col items-center justify-center min-h-[380px] ${className}`}
+        className={`relative bg-white rounded-3xl border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.12)] p-6 sm:p-8 text-center flex flex-col items-center justify-center min-h-[360px] ${className}`}
       >
         {onClose && (
           <button
@@ -196,14 +189,14 @@ export default function ClassicQuoteCard({
             <X size={16} strokeWidth={2.2} />
           </button>
         )}
-        <div className="w-13 h-13 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 shadow-xs border border-emerald-100">
-          <CheckCircle2 size={30} />
+        <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 shadow-xs border border-emerald-100">
+          <CheckCircle2 size={32} />
         </div>
-        <h3 className="text-xl font-extrabold text-slate-900 mb-1.5 tracking-tight">
-          Request Received!
+        <h3 className="text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">
+          Thank you!
         </h3>
-        <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto leading-relaxed mb-5 font-normal">
-          Thank you, <strong className="text-slate-800">{formData.fullName}</strong>. Our enterprise solutions team has received your enquiry and will call you back within 24 hours.
+        <p className="text-sm text-slate-600 max-w-sm mx-auto leading-relaxed mb-6 font-medium">
+          Thank you. Our solutions team will contact you shortly.
         </p>
         <button
           type="button"
@@ -211,27 +204,19 @@ export default function ClassicQuoteCard({
             setIsSuccess(false);
             setFormData({
               fullName: "",
-              profileType: "",
-              inquiryType: "",
-              mobileNumber: "",
+              companyName: "",
               email: "",
+              mobileNumber: "",
+              serviceRequired: "E-Commerce",
+              description: "",
+              budgetRange: "Flexible / Discuss Later",
+              preferredContactMethod: "WhatsApp",
+              consent: false,
             });
-            setTouched({
-              fullName: false,
-              profileType: false,
-              inquiryType: false,
-              mobileNumber: false,
-              email: false,
-            });
-            setFieldErrors({
-              fullName: null,
-              profileType: null,
-              inquiryType: null,
-              mobileNumber: null,
-              email: null,
-            });
+            setTouched({});
+            setFieldErrors({});
           }}
-          className="text-xs font-bold uppercase tracking-wider text-[hsl(195,100%,25%)] hover:underline cursor-pointer"
+          className="text-xs font-bold uppercase tracking-wider text-[#0d5cd9] hover:underline cursor-pointer"
         >
           Submit Another Request
         </button>
@@ -241,26 +226,24 @@ export default function ClassicQuoteCard({
 
   return (
     <div
-      className={`relative bg-white rounded-3xl border border-slate-100/90 shadow-[0_16px_40px_rgba(0,0,0,0.08)] p-5 sm:p-6.5 w-full max-w-[465px] mx-auto ${className}`}
+      className={`relative bg-white rounded-3xl border border-slate-150 shadow-[0_25px_60px_rgba(0,0,0,0.15)] p-5 sm:p-7 w-full max-w-[620px] mx-auto max-h-[92vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${className}`}
     >
-      {/* Form Header with inside Close Button */}
-      <div className="flex items-start justify-between gap-3 mb-4">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 mb-4 border-b border-slate-100 pb-3.5">
         <div>
-          <h2 className="text-xl sm:text-[22px] font-black text-slate-900 tracking-tight leading-snug mb-1">
-            Get Advisory & Project Quote
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-snug">
+            Get a Free Project Quote
           </h2>
-          <p className="text-xs text-slate-500 font-normal leading-relaxed">
-            Share your details — our technical solutions expert will call you back.
+          <p className="text-xs text-slate-500 mt-0.5 font-normal">
+            Share your project requirements — our solutions team will contact you promptly.
           </p>
         </div>
-
         {onClose && (
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-800 flex items-center justify-center transition-all cursor-pointer shrink-0 mt-0.5"
-            aria-label="Close dialog"
-            title="Close"
+            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-all cursor-pointer flex-shrink-0"
+            aria-label="Close form"
           >
             <X size={16} strokeWidth={2.2} />
           </button>
@@ -268,246 +251,205 @@ export default function ClassicQuoteCard({
       </div>
 
       {generalError && (
-        <div className="mb-3 p-3 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 text-xs font-semibold flex items-center gap-1.5">
-          <AlertCircle size={14} className="shrink-0 text-rose-500" />
+        <div className="mb-3.5 p-3 rounded-xl bg-rose-50 border border-rose-200/80 text-rose-700 text-xs flex items-center gap-2">
+          <AlertCircle size={15} className="shrink-0" />
           <span>{generalError}</span>
         </div>
       )}
 
-      {/* Form Fields */}
-      <form onSubmit={handleSubmit} noValidate className="space-y-3">
-        {/* 1. YOUR NAME */}
-        <div>
-          <label className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider text-slate-500 mb-1 block">
-            Your Name <span className="text-rose-500 font-bold ml-0.5">*</span>
-          </label>
-          <input
-            type="text"
-            value={formData.fullName}
-            onKeyDown={(e) => {
-              if (
-                e.ctrlKey ||
-                e.metaKey ||
-                ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)
-              ) {
-                return;
-              }
-              if (e.key === " ") {
-                const input = e.currentTarget;
-                if (input.selectionStart === 0 || input.value.endsWith(" ")) {
-                  e.preventDefault();
-                }
-                return;
-              }
-              if (!/^[A-Za-z]$/.test(e.key)) {
-                e.preventDefault();
-              }
-            }}
-            onChange={(e) => handleFieldChange("fullName", e.target.value)}
-            onBlur={() => handleBlur("fullName")}
-            placeholder="e.g., John Doe"
-            maxLength={50}
-            className={`w-full h-11 px-3.5 rounded-xl border bg-white text-slate-800 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none transition-all shadow-2xs ${
-              touched.fullName && fieldErrors.fullName
-                ? "border-rose-400 focus:border-rose-500 focus:ring-3 focus:ring-rose-500/10"
-                : "border-slate-200 focus:border-[hsl(195,100%,25%)] focus:ring-3 focus:ring-[hsl(195,100%,25%)]/10"
-            }`}
-          />
-          {touched.fullName && fieldErrors.fullName && (
-            <p className="mt-1 text-[11px] text-rose-500 font-medium flex items-center gap-1">
-              <AlertCircle size={12} className="shrink-0" />
-              {fieldErrors.fullName}
-            </p>
-          )}
-        </div>
-
-        {/* 2. PROFILE TYPE */}
-        <div>
-          <label className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider text-slate-500 mb-1 block">
-            Profile Type <span className="text-rose-500 font-bold ml-0.5">*</span>
-          </label>
-          <div className="relative">
-            <select
-              value={formData.profileType}
-              onChange={(e) => handleFieldChange("profileType", e.target.value)}
-              onBlur={() => handleBlur("profileType")}
-              className={`w-full h-11 px-3.5 rounded-xl border bg-white text-slate-800 text-xs sm:text-sm font-medium focus:outline-none transition-all appearance-none cursor-pointer pr-9 shadow-2xs ${
-                touched.profileType && fieldErrors.profileType
-                  ? "border-rose-400 focus:border-rose-500 focus:ring-3 focus:ring-rose-500/10"
-                  : "border-slate-200 focus:border-[hsl(195,100%,25%)] focus:ring-3 focus:ring-[hsl(195,100%,25%)]/10"
-              }`}
-            >
-              <option value="" disabled>
-                Select organisation type
-              </option>
-              {PROFILE_TYPE_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={16}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-            />
-          </div>
-          {touched.profileType && fieldErrors.profileType && (
-            <p className="mt-1 text-[11px] text-rose-500 font-medium flex items-center gap-1">
-              <AlertCircle size={12} className="shrink-0" />
-              {fieldErrors.profileType}
-            </p>
-          )}
-        </div>
-
-        {/* 3. INQUIRY TYPE */}
-        <div>
-          <label className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider text-slate-500 mb-1 block">
-            Inquiry Type <span className="text-rose-500 font-bold ml-0.5">*</span>
-          </label>
-          <div className="relative">
-            <select
-              value={formData.inquiryType}
-              onChange={(e) => handleFieldChange("inquiryType", e.target.value)}
-              onBlur={() => handleBlur("inquiryType")}
-              className={`w-full h-11 px-3.5 rounded-xl border bg-white text-slate-800 text-xs sm:text-sm font-medium focus:outline-none transition-all appearance-none cursor-pointer pr-9 shadow-2xs ${
-                touched.inquiryType && fieldErrors.inquiryType
-                  ? "border-rose-400 focus:border-rose-500 focus:ring-3 focus:ring-rose-500/10"
-                  : "border-slate-200 focus:border-[hsl(195,100%,25%)] focus:ring-3 focus:ring-[hsl(195,100%,25%)]/10"
-              }`}
-            >
-              <option value="" disabled>
-                Select inquiry type
-              </option>
-              {INQUIRY_TYPE_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={16}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-            />
-          </div>
-          {touched.inquiryType && fieldErrors.inquiryType && (
-            <p className="mt-1 text-[11px] text-rose-500 font-medium flex items-center gap-1">
-              <AlertCircle size={12} className="shrink-0" />
-              {fieldErrors.inquiryType}
-            </p>
-          )}
-        </div>
-
-        {/* 4. MOBILE NUMBER */}
-        <div>
-          <label className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider text-slate-500 mb-1 block">
-            Mobile Number <span className="text-rose-500 font-bold ml-0.5">*</span>
-          </label>
-          <div className="flex items-center gap-2">
-            <div className="w-13 sm:w-15 h-11 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center font-bold text-slate-700 text-xs sm:text-sm shrink-0 select-none">
-              +91
-            </div>
+      <form onSubmit={handleSubmit} noValidate className="space-y-3.5">
+        {/* Row 1: Full Name & Mobile Number */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+              Full Name <span className="text-rose-500">*</span>
+            </label>
             <input
-              type="tel"
-              inputMode="numeric"
-              maxLength={10}
-              value={formData.mobileNumber}
-              onKeyDown={(e) => {
-                if (
-                  e.ctrlKey ||
-                  e.metaKey ||
-                  ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)
-                ) {
-                  return;
-                }
-                // Digits only
-                if (!/^\d$/.test(e.key)) {
-                  e.preventDefault();
-                  return;
-                }
-                // First digit must be 6, 7, 8, 9
-                const input = e.currentTarget;
-                if (
-                  input.value.length === 0 ||
-                  (input.selectionStart === 0 && input.selectionEnd === input.value.length)
-                ) {
-                  if (!/^[6-9]$/.test(e.key)) {
-                    e.preventDefault();
-                  }
-                }
-              }}
-              onChange={(e) => handleFieldChange("mobileNumber", e.target.value)}
-              onBlur={() => handleBlur("mobileNumber")}
-              placeholder="10-digit mobile number"
-              className={`w-full h-11 px-3.5 rounded-xl border bg-white text-slate-800 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none transition-all shadow-2xs ${
-                touched.mobileNumber && fieldErrors.mobileNumber
-                  ? "border-rose-400 focus:border-rose-500 focus:ring-3 focus:ring-rose-500/10"
-                  : "border-slate-200 focus:border-[hsl(195,100%,25%)] focus:ring-3 focus:ring-[hsl(195,100%,25%)]/10"
+              type="text"
+              required
+              value={formData.fullName}
+              onChange={(e) => handleFieldChange("fullName", e.target.value)}
+              onBlur={() => handleBlur("fullName")}
+              placeholder="e.g., John Doe"
+              className={`w-full h-10.5 px-3.5 rounded-xl border bg-white text-slate-800 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none transition-all ${
+                touched.fullName && fieldErrors.fullName
+                  ? "border-rose-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/10"
+                  : "border-slate-200 focus:border-[#0d5cd9] focus:ring-2 focus:ring-blue-500/10"
               }`}
             />
+            {touched.fullName && fieldErrors.fullName && (
+              <p className="mt-1 text-[11px] text-rose-500 font-medium">{fieldErrors.fullName}</p>
+            )}
           </div>
-          {touched.mobileNumber && fieldErrors.mobileNumber && (
-            <p className="mt-1 text-[11px] text-rose-500 font-medium flex items-center gap-1">
-              <AlertCircle size={12} className="shrink-0" />
-              {fieldErrors.mobileNumber}
-            </p>
-          )}
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+              Phone Number <span className="text-rose-500">*</span>
+            </label>
+            <div className="relative flex items-center">
+              <span className="absolute left-3 text-xs font-semibold text-slate-500 pointer-events-none">
+                +91
+              </span>
+              <input
+                type="tel"
+                required
+                maxLength={10}
+                value={formData.mobileNumber}
+                onChange={(e) => handleFieldChange("mobileNumber", e.target.value)}
+                onBlur={() => handleBlur("mobileNumber")}
+                placeholder="9876543210"
+                className={`w-full h-10.5 pl-11 pr-3.5 rounded-xl border bg-white text-slate-800 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none transition-all ${
+                  touched.mobileNumber && fieldErrors.mobileNumber
+                    ? "border-rose-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/10"
+                    : "border-slate-200 focus:border-[#0d5cd9] focus:ring-2 focus:ring-blue-500/10"
+                }`}
+              />
+            </div>
+            {touched.mobileNumber && fieldErrors.mobileNumber && (
+              <p className="mt-1 text-[11px] text-rose-500 font-medium">{fieldErrors.mobileNumber}</p>
+            )}
+          </div>
         </div>
 
-        {/* 5. EMAIL ADDRESS */}
+        {/* Row 2: Business Email & Company Name */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+              Business Email <span className="text-rose-500">*</span>
+            </label>
+            <input
+              type="email"
+              required
+              value={formData.email}
+              onChange={(e) => handleFieldChange("email", e.target.value)}
+              onBlur={() => handleBlur("email")}
+              placeholder="e.g., john@company.com"
+              className={`w-full h-10.5 px-3.5 rounded-xl border bg-white text-slate-800 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none transition-all ${
+                touched.email && fieldErrors.email
+                  ? "border-rose-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/10"
+                  : "border-slate-200 focus:border-[#0d5cd9] focus:ring-2 focus:ring-blue-500/10"
+              }`}
+            />
+            {touched.email && fieldErrors.email && (
+              <p className="mt-1 text-[11px] text-rose-500 font-medium">{fieldErrors.email}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+              Company Name <span className="text-slate-400 font-normal lowercase">(optional)</span>
+            </label>
+            <input
+              type="text"
+              value={formData.companyName}
+              onChange={(e) => handleFieldChange("companyName", e.target.value)}
+              placeholder="e.g., Acme Enterprises"
+              className="w-full h-10.5 px-3.5 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:border-[#0d5cd9] focus:ring-2 focus:ring-blue-500/10 transition-all"
+            />
+          </div>
+        </div>
+
+        {/* Row 3: Service Required & Budget Range */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+              Service Required <span className="text-rose-500">*</span>
+            </label>
+            <div className="relative">
+              <select
+                value={formData.serviceRequired}
+                onChange={(e) => handleFieldChange("serviceRequired", e.target.value)}
+                className="w-full h-10.5 px-3.5 pr-9 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs sm:text-sm font-medium appearance-none focus:outline-none focus:border-[#0d5cd9] focus:ring-2 focus:ring-blue-500/10 cursor-pointer"
+              >
+                {SERVICE_REQUIRED_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={15}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+              Budget Range <span className="text-slate-400 font-normal lowercase">(optional)</span>
+            </label>
+            <div className="relative">
+              <select
+                value={formData.budgetRange}
+                onChange={(e) => handleFieldChange("budgetRange", e.target.value)}
+                className="w-full h-10.5 px-3.5 pr-9 rounded-xl border border-slate-200 bg-white text-slate-800 text-xs sm:text-sm font-medium appearance-none focus:outline-none focus:border-[#0d5cd9] focus:ring-2 focus:ring-blue-500/10 cursor-pointer"
+              >
+                {BUDGET_RANGE_OPTIONS.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={15}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Row 4: Project Description */}
         <div>
-          <label className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider text-slate-500 mb-1 block">
-            Email Address <span className="text-rose-500 font-bold ml-0.5">*</span>
+          <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+            Project / Requirement Description <span className="text-rose-500">*</span>
           </label>
-          <input
-            type="email"
-            maxLength={254}
-            value={formData.email}
-            onKeyDown={(e) => {
-              if (
-                e.ctrlKey ||
-                e.metaKey ||
-                ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)
-              ) {
-                return;
-              }
-              // Restrict spaces
-              if (e.key === " ") {
-                e.preventDefault();
-                return;
-              }
-              // Restrict duplicate @
-              if (e.key === "@" && e.currentTarget.value.includes("@")) {
-                e.preventDefault();
-                return;
-              }
-              // Restrict to valid email characters
-              if (!/^[a-zA-Z0-9._+@-]$/.test(e.key)) {
-                e.preventDefault();
-              }
-            }}
-            onChange={(e) => handleFieldChange("email", e.target.value)}
-            onBlur={() => handleBlur("email")}
-            placeholder="e.g., john@example.com"
-            className={`w-full h-11 px-3.5 rounded-xl border bg-white text-slate-800 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none transition-all shadow-2xs ${
-              touched.email && fieldErrors.email
-                ? "border-rose-400 focus:border-rose-500 focus:ring-3 focus:ring-rose-500/10"
-                : "border-slate-200 focus:border-[hsl(195,100%,25%)] focus:ring-3 focus:ring-[hsl(195,100%,25%)]/10"
+          <textarea
+            required
+            rows={2.5}
+            value={formData.description}
+            onChange={(e) => handleFieldChange("description", e.target.value)}
+            onBlur={() => handleBlur("description")}
+            placeholder="Briefly describe your requirements, key deliverables, or hiring needs..."
+            className={`w-full p-3 rounded-xl border bg-white text-slate-800 text-xs sm:text-sm font-medium placeholder:text-slate-400 focus:outline-none transition-all resize-none ${
+              touched.description && fieldErrors.description
+                ? "border-rose-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/10"
+                : "border-slate-200 focus:border-[#0d5cd9] focus:ring-2 focus:ring-blue-500/10"
             }`}
           />
-          {touched.email && fieldErrors.email && (
-            <p className="mt-1 text-[11px] text-rose-500 font-medium flex items-center gap-1">
-              <AlertCircle size={12} className="shrink-0" />
-              {fieldErrors.email}
-            </p>
+          {touched.description && fieldErrors.description && (
+            <p className="mt-1 text-[11px] text-rose-500 font-medium">{fieldErrors.description}</p>
           )}
         </div>
 
-        {/* CTA SUBMIT BUTTON */}
-        <div className="pt-1.5">
+        {/* Row 5: Consent Checkbox */}
+        <div className="pt-0.5">
+          <label className="flex items-start gap-2.5 cursor-pointer">
+            <input
+              type="checkbox"
+              required
+              checked={formData.consent}
+              onChange={(e) => handleFieldChange("consent", e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-slate-300 text-[#0d5cd9] focus:ring-blue-500 cursor-pointer"
+            />
+            <span className="text-[11px] text-slate-600 leading-tight">
+              I consent to Visha IT Solutions processing my contact details in accordance with the{" "}
+              <a href="/privacy-policy" target="_blank" className="text-[#0d5cd9] underline hover:text-blue-700 font-medium">
+                Privacy Policy
+              </a>
+              . <span className="text-rose-500">*</span>
+            </span>
+          </label>
+          {touched.consent && fieldErrors.consent && (
+            <p className="mt-1 text-[11px] text-rose-500 font-medium">{fieldErrors.consent}</p>
+          )}
+        </div>
+
+        {/* Submit Button */}
+        <div className="pt-1">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-11 sm:h-11.5 rounded-xl bg-gradient-to-r from-[hsl(195,100%,22%)] via-[#006994] to-[hsl(195,100%,30%)] hover:from-[hsl(195,100%,18%)] hover:to-[hsl(195,100%,26%)] text-white font-bold text-xs sm:text-sm tracking-wide shadow-[0_4px_16px_rgba(0,105,148,0.25)] hover:shadow-[0_6px_20px_rgba(0,105,148,0.35)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full h-11.5 rounded-xl bg-[#0d5cd9] hover:bg-[#0b4eb8] text-white font-bold text-sm tracking-wide shadow-[0_4px_16px_rgba(13,92,217,0.35)] hover:shadow-[0_6px_22px_rgba(13,92,217,0.45)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <>
@@ -515,15 +457,15 @@ export default function ClassicQuoteCard({
                 <span>Submitting Request...</span>
               </>
             ) : (
-              <span>Request a Call Back</span>
+              <span>Get a Free Project Quote</span>
             )}
           </button>
         </div>
 
-        {/* Disclaimer / Privacy Text */}
-        <p className="text-[10px] text-slate-400 leading-tight text-center pt-0.5">
-          By submitting, you authorise Visha IT Solutions Pvt. Ltd. to contact you regarding your enquiry. We respect your privacy.
-        </p>
+        <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-400 text-center pt-0.5">
+          <ShieldCheck size={12} className="text-emerald-500" />
+          <span>Your information is private and protected with 256-bit SSL encryption.</span>
+        </div>
       </form>
     </div>
   );

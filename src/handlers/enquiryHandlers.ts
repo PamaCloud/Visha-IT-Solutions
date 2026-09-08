@@ -7,7 +7,12 @@ import { emailService } from "@/services/emailService";
 
 export async function submitQuoteEnquiry(formData: FormData) {
   try {
-    const data = Object.fromEntries(formData.entries());
+    const rawData = Object.fromEntries(formData.entries());
+    // Convert checkbox 'on' or 'true' to boolean
+    const data = {
+      ...rawData,
+      consent: rawData.consent === "on" || rawData.consent === "true",
+    };
 
     const validatedFields = quoteFormSchema.safeParse(data);
 
@@ -19,22 +24,33 @@ export async function submitQuoteEnquiry(formData: FormData) {
       };
     }
 
-    const { fullName, profileType, inquiryType, mobileNumber, email } = validatedFields.data;
+    const {
+      fullName,
+      companyName,
+      serviceRequired,
+      mobileNumber,
+      email,
+      description,
+      budgetRange,
+      preferredContactMethod,
+    } = validatedFields.data;
 
     try {
       // Save to database
       const enquiry = await enquiryRepository.createEnquiry({
         fullName,
-        companyName: profileType,
-        serviceRequired: inquiryType,
+        companyName: companyName || "",
+        serviceRequired,
         phone: `+91 ${mobileNumber}`,
         email,
-        description: `Profile Type: ${profileType} | Inquiry Type: ${inquiryType}`,
+        description,
+        budgetRange,
+        preferredContactMethod: preferredContactMethod as "Email" | "Phone" | "WhatsApp",
         type: "project",
       });
 
-      // Send email asynchronously without blocking response
-      emailService.sendAdminNotification("New Project Quote Request", enquiry).catch(console.error);
+      // Send email notification asynchronously without blocking response
+      emailService.sendAdminNotification(`New Project Quote Request: ${serviceRequired}`, enquiry).catch(console.error);
     } catch (dbError) {
       console.error("Failed to save to database or send email:", dbError);
     }

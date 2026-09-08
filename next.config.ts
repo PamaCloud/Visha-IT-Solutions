@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  experimental: {
+    cpus: 1,
+    workerThreads: false,
+  },
   images: {
     qualities: [75, 100],
   },

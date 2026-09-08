@@ -316,7 +316,7 @@ export default function Navbar() {
             onClick={() => openQuoteDialog()}
             className="inline-flex items-center justify-center text-sm font-semibold px-6 py-2.5 rounded-full bg-gradient-to-r from-[hsl(195,100%,25%)] to-[hsl(195,100%,42%)] hover:from-[hsl(195,100%,20%)] hover:to-[hsl(195,100%,36%)] text-white shadow-[0_4px_14px_rgba(0,105,148,0.22)] hover:shadow-[0_6px_20px_rgba(0,105,148,0.32)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
           >
-            Get a Quote
+            Get a Project Quote
           </button>
         </div>
 
