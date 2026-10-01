@@ -402,17 +402,6 @@ export default function Hero() {
                           {card.subtitle}
                         </span>
                       </div>
-
-                      {/* Arrow indicator */}
-                      <div
-                        className={`ml-auto transition-all ${
-                          isActive
-                            ? "opacity-100 translate-x-0 text-[#0d5cd9]"
-                            : "opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 text-slate-400"
-                        }`}
-                      >
-                        <ArrowRight className="w-4 h-4" />
-                      </div>
                     </button>
                   );
                 })}
