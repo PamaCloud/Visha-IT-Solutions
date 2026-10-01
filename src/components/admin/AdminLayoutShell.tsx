@@ -20,7 +20,8 @@ import {
   Sparkles,
   ChevronRight,
   ShieldCheck,
-  AlertTriangle
+  AlertTriangle,
+  UserCheck
 } from "lucide-react";
 
 export default function AdminLayoutShell({
@@ -110,6 +111,7 @@ export default function AdminLayoutShell({
     { name: "Projects", href: "/admin/dashboard/projects", icon: Folder },
     { name: "Job Postings", href: "/admin/dashboard/jobs", icon: Briefcase },
     { name: "Applications", href: "/admin/dashboard/applications", icon: Users, badge: "Candidates" },
+    { name: "Registrations", href: "/admin/dashboard/registrations", icon: UserCheck, badge: "Leads" },
     { name: "Enquiries", href: "/admin/dashboard/enquiries", icon: MessageSquare },
   ];
 

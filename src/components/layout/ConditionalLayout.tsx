@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingWidgets from "@/components/layout/FloatingWidgets";
+import EntryRegisterModal from "@/components/layout/EntryRegisterModal";
 
 export default function ConditionalLayout({
   children,
@@ -25,6 +26,7 @@ export default function ConditionalLayout({
       <main className="flex-grow">{children}</main>
       <Footer />
       <FloatingWidgets />
+      <EntryRegisterModal />
     </>
   );
 }

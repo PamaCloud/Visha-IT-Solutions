@@ -11,13 +11,13 @@ interface SlideUpProps {
   yOffset?: number;
 }
 
-export default function SlideUp({ children, delay = 0, duration = 0.5, className = "", yOffset = 30 }: SlideUpProps) {
+export default function SlideUp({ children, delay = 0, duration = 0.45, className = "", yOffset = 20 }: SlideUpProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: yOffset }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      viewport={{ once: true }}
+      transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}

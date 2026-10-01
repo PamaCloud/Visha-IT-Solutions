@@ -44,13 +44,16 @@ export function useRealtimeSync<T>(apiUrl: string, initialData: T[]): T[] {
     };
     window.addEventListener('storage', handleStorage);
 
-    // 4. Polling interval (3 seconds) for live cross-device sync
-    const interval = setInterval(fetchLatest, 3000);
+    // 4. Window focus listener: re-fetch only when user switches back to tab
+    const handleFocus = () => {
+      fetchLatest();
+    };
+    window.addEventListener('focus', handleFocus);
 
     return () => {
       if (channel) channel.close();
       window.removeEventListener('storage', handleStorage);
-      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
     };
   }, [fetchLatest]);
 

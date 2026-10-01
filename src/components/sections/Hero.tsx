@@ -23,10 +23,10 @@ interface HeroSlide {
 
 const heroSlides: HeroSlide[] = [
   {
-    id: "ecommerce",
-    badge: "Digital Commerce",
-    serviceName: "E-Commerce Solutions",
-    image: "/services/ecommerce-daylight.jpg",
+    id: "recruitment",
+    badge: "Talent & Staffing",
+    serviceName: "Recruitment & Staffing",
+    image: "/services/recruitment-daylight.jpg",
   },
   {
     id: "marketing",
@@ -35,16 +35,16 @@ const heroSlides: HeroSlide[] = [
     image: "/services/digital-marketing-daylight.jpg",
   },
   {
-    id: "recruitment",
-    badge: "Talent & Staffing",
-    serviceName: "Recruitment Services",
-    image: "/services/recruitment-daylight.jpg",
-  },
-  {
     id: "training",
     badge: "Tech Academy",
-    serviceName: "Training & Development",
+    serviceName: "Training Programs",
     image: "/services/training-daylight.jpg",
+  },
+  {
+    id: "ecommerce",
+    badge: "Digital Commerce",
+    serviceName: "E-Commerce Solutions",
+    image: "/services/ecommerce-daylight.jpg",
   },
 ];
 
@@ -60,12 +60,12 @@ interface ServiceCardItem {
 
 const serviceCards: ServiceCardItem[] = [
   {
-    id: "ecommerce",
-    title: "E-Commerce",
-    subtitle: "Solutions",
-    href: "/services/ecommerce-solutions",
-    icon: ShoppingCart,
-    iconColor: "text-[#0d5cd9]",
+    id: "recruitment",
+    title: "Recruitment &",
+    subtitle: "Staffing",
+    href: "/services/recruitment-and-staffing",
+    icon: Users,
+    iconColor: "text-[#7c3aed]",
     slideIdx: 0,
   },
   {
@@ -78,21 +78,21 @@ const serviceCards: ServiceCardItem[] = [
     slideIdx: 1,
   },
   {
-    id: "recruitment",
-    title: "Recruitment",
-    subtitle: "Services",
-    href: "/services/recruitment-and-staffing",
-    icon: Users,
-    iconColor: "text-[#7c3aed]",
-    slideIdx: 2,
-  },
-  {
     id: "training",
-    title: "Training &",
-    subtitle: "Development",
+    title: "Training",
+    subtitle: "Programs",
     href: "/training",
     icon: GraduationCap,
     iconColor: "text-[#ea580c]",
+    slideIdx: 2,
+  },
+  {
+    id: "ecommerce",
+    title: "E-Commerce",
+    subtitle: "Solutions",
+    href: "/services/ecommerce-solutions",
+    icon: ShoppingCart,
+    iconColor: "text-[#0d5cd9]",
     slideIdx: 3,
   },
 ];
@@ -319,12 +319,13 @@ export default function Hero() {
 
               {/* Short Company Description */}
               <p className="text-lg lg:text-[19px] text-slate-700 font-normal leading-relaxed max-w-xl mb-9">
-                Visha IT Solutions helps businesses grow with powerful{" "}
-                <strong className="font-semibold text-slate-900">E-Commerce solutions</strong>,{" "}
+                Visha IT Solutions helps businesses grow with top{" "}
+                <strong className="font-semibold text-slate-900">Recruitment &amp; Staffing</strong>,{" "}
                 result-driven{" "}
                 <strong className="font-semibold text-slate-900">Digital Marketing</strong>,{" "}
-                right <strong className="font-semibold text-slate-900">Talent</strong> through Recruitment, and career-focused{" "}
-                <strong className="font-semibold text-slate-900">Training</strong>.
+                career-focused{" "}
+                <strong className="font-semibold text-slate-900">Training Programs</strong>, and high-performance{" "}
+                <strong className="font-semibold text-slate-900">E-Commerce solutions</strong>.
               </p>
 
               {/* Action Buttons */}

@@ -4,6 +4,7 @@ import Service from "@/lib/models/Service";
 import Project from "@/lib/models/Project";
 import TrainingProgram from "@/lib/models/TrainingProgram";
 import Job from "@/lib/models/Job";
+import LeadRegistration from "@/lib/models/LeadRegistration";
 import Link from "next/link";
 import AdminThumbnail from "@/components/admin/AdminThumbnail";
 import {
@@ -15,7 +16,8 @@ import {
   Layers,
   Sparkles,
   ExternalLink,
-  Briefcase
+  Briefcase,
+  UserCheck
 } from "lucide-react";
 import { getCachedDashboardData, setCachedDashboardData } from "@/lib/dashboardCache";
 
@@ -24,6 +26,8 @@ export const dynamic = "force-dynamic";
 interface DashboardData {
   dynamicRoutesCount: number;
   totalAssetsCount: number;
+  leadRegistrationsCount: number;
+  newRegistrationsCount: number;
   recentUpdates: Array<{
     id: string;
     title: string;
@@ -118,6 +122,8 @@ async function fetchDashboardData(): Promise<DashboardData> {
     recentProjects,
     recentTraining,
     recentJobs,
+    leadRegistrationsCount,
+    newRegistrationsCount,
   ] = await Promise.all([
     Service.countDocuments({
       slug: { $nin: ["wheel-alignment", "wheel-balancing", "new-tyre-services", "battery-replacement-jump-start"] }
@@ -142,6 +148,8 @@ async function fetchDashboardData(): Promise<DashboardData> {
       {},
       { _id: 1, title: 1, slug: 1, department: 1, updatedAt: 1, createdAt: 1 }
     ).sort({ updatedAt: -1, createdAt: -1 }).limit(2).lean(),
+    LeadRegistration.countDocuments(),
+    LeadRegistration.countDocuments({ status: "new" }),
   ]);
 
   // Compute dynamic routes: 5 static public pages + dynamic items
@@ -210,6 +218,8 @@ async function fetchDashboardData(): Promise<DashboardData> {
   const result: DashboardData = {
     dynamicRoutesCount,
     totalAssetsCount,
+    leadRegistrationsCount,
+    newRegistrationsCount,
     recentUpdates,
   };
 
@@ -218,7 +228,13 @@ async function fetchDashboardData(): Promise<DashboardData> {
 }
 
 export default async function DashboardPage() {
-  const { dynamicRoutesCount, totalAssetsCount, recentUpdates } = await fetchDashboardData();
+  const {
+    dynamicRoutesCount,
+    totalAssetsCount,
+    leadRegistrationsCount,
+    newRegistrationsCount,
+    recentUpdates,
+  } = await fetchDashboardData();
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
@@ -255,8 +271,32 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* ── 3 Metrics Cards Row ───────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
+      {/* ── 4 Metrics Cards Row ───────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
+        {/* Card 1: LEAD REGISTRATIONS */}
+        <Link
+          href="/admin/dashboard/registrations"
+          prefetch={true}
+          className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-[#00779e]/40 hover:shadow-md transition-all group"
+        >
+          <div className="flex items-start justify-between">
+            <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+              LEAD REGISTRATIONS
+            </span>
+            <div className="w-8 h-8 rounded-lg bg-[#e6f4f8] text-[#004f6e] flex items-center justify-center border border-sky-100 shrink-0 group-hover:scale-105 transition-transform">
+              <UserCheck size={16} />
+            </div>
+          </div>
+          <div className="mt-3 sm:mt-4">
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              {leadRegistrationsCount}
+            </h3>
+            <p className="text-[11px] sm:text-xs text-[#00779e] font-semibold mt-1.5 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00779e] inline-block shrink-0" />
+              {newRegistrationsCount} new leads requiring follow-up
+            </p>
+          </div>
+        </Link>
         {/* Card 1: TOTAL ASSETS */}
         <Link
           href="/admin/dashboard/services"
@@ -307,8 +347,8 @@ export default async function DashboardPage() {
           </div>
         </Link>
 
-        {/* Card 3: SYSTEM STATUS */}
-        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all sm:col-span-2 lg:col-span-1">
+        {/* Card 4: SYSTEM STATUS */}
+        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:border-slate-300 transition-all col-span-1">
           <div className="flex items-start justify-between">
             <span className="text-[10px] sm:text-[11px] font-bold tracking-wider text-slate-400 uppercase">
               SYSTEM STATUS

@@ -4,24 +4,24 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, Mail, Phone, MapPin } from "lucide-react";
+import { Menu, X, ChevronDown, Mail, Phone, MapPin, Building2, Users, ArrowRight } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { VISHA_SERVICES } from "@/data/vishaServices";
 import { VISHA_TRAINING_PROGRAMS } from "@/data/vishaTraining";
 import { VISHA_PROJECTS } from "@/data/vishaProjects";
 import { useQuoteDialog } from "@/context/QuoteDialogContext";
 
-type DropdownType = "services" | "training" | "projects" | null;
+type DropdownType = "company" | "services" | "training" | "projects" | null;
 
 interface NavItem {
   name: string;
   href: string;
-  dropdownType?: "services" | "training" | "projects";
+  dropdownType?: "company" | "services" | "training" | "projects";
 }
 
 const navLinks: NavItem[] = [
   { name: "Home", href: "/" },
-  { name: "About Us", href: "/about" },
+  { name: "Company", href: "/about", dropdownType: "company" },
   { name: "Services", href: "/services", dropdownType: "services" },
   { name: "Training", href: "/training", dropdownType: "training" },
   { name: "Projects", href: "/projects", dropdownType: "projects" },
@@ -80,19 +80,24 @@ export default function Navbar() {
     };
     window.addEventListener('storage', handleStorage);
 
-    // Heartbeat polling every 3 seconds for live sync
-    const interval = setInterval(fetchNavItems, 3000);
-
     return () => {
       if (channel) channel.close();
       window.removeEventListener('storage', handleStorage);
-      clearInterval(interval);
     };
   }, [pathname, fetchNavItems]);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 10);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -113,7 +118,7 @@ export default function Navbar() {
     setMobileOpen(false);
   }, [pathname]);
 
-  const getDropdownData = (type: "services" | "training" | "projects") => {
+  const getDropdownData = (type: DropdownType) => {
     if (type === "services") {
       const half = Math.ceil(servicesList.length / 2);
       return {
@@ -134,6 +139,11 @@ export default function Navbar() {
       col1: projectsList.slice(0, half),
       col2: projectsList.slice(half),
     };
+    return {
+      baseHref: "/about",
+      col1: [],
+      col2: [],
+    };
   };
 
   return (
@@ -144,19 +154,19 @@ export default function Navbar() {
           : "bg-white/95 backdrop-blur-xl border-b border-gray-100"
       }`}
     >
-      <nav className="container flex items-center justify-between h-[70px] lg:h-[82px]">
+      <nav className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-6 xl:px-8 flex items-center justify-between h-[70px] lg:h-[80px]">
         {/* Logo */}
         <Link
           href="/"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center flex-shrink-0 group"
+          className="flex items-center shrink-0 group"
         >
-          <div className="relative w-52 sm:w-60 lg:w-68 h-12 sm:h-13 lg:h-15">
+          <div className="relative w-44 sm:w-52 lg:w-48 xl:w-60 h-10 sm:h-11 lg:h-12">
             <Image
               src="/logo-dark.png"
               alt="Visha IT Solutions"
               fill
-              sizes="(max-width: 640px) 208px, (max-width: 1024px) 240px, 272px"
+              sizes="(max-width: 640px) 176px, (max-width: 1024px) 208px, 240px"
               quality={100}
               className="object-contain object-left group-hover:opacity-90 transition-opacity"
               priority
@@ -165,13 +175,15 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Links with 2-Column Floating Cards for Services, Training & Projects */}
-        <div ref={navContainerRef} className="hidden lg:flex items-center gap-1.5 py-1">
+        <div ref={navContainerRef} className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 py-1">
           {navLinks.map((link) => {
             const hasDropdown = !!link.dropdownType;
             const isActive =
               link.href === "/"
                 ? pathname === "/"
-                : pathname === link.href || (hasDropdown && pathname.startsWith(link.href));
+                : pathname === link.href ||
+                  (hasDropdown && pathname.startsWith(link.href)) ||
+                  (link.dropdownType === "company" && (pathname === "/about" || pathname === "/team"));
             const isCurrentOpen = activeDropdown === link.dropdownType;
 
             if (hasDropdown && link.dropdownType) {
@@ -190,7 +202,7 @@ export default function Navbar() {
                         prev === link.dropdownType ? null : link.dropdownType!
                       )
                     }
-                    className={`px-4 py-2 rounded-full text-sm font-medium inline-flex items-center gap-1.5 transition-all duration-200 cursor-pointer ${
+                    className={`px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full text-xs xl:text-sm font-medium inline-flex items-center gap-1 transition-all duration-200 cursor-pointer whitespace-nowrap ${
                       isActive
                         ? "bg-[hsl(195,100%,25%)]/10 text-[hsl(195,100%,25%)] font-semibold"
                         : isCurrentOpen
@@ -200,7 +212,7 @@ export default function Navbar() {
                   >
                     <span>{link.name}</span>
                     <ChevronDown
-                      size={15}
+                      size={14}
                       className={`transition-transform duration-200 ${
                         isCurrentOpen
                           ? "rotate-180 text-[hsl(195,100%,25%)]"
@@ -212,7 +224,26 @@ export default function Navbar() {
                   {/* Floating Card Dropdown */}
                   {isCurrentOpen && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                      {link.dropdownType === "training" ? (
+                      {link.dropdownType === "company" ? (
+                        <div className="w-44 bg-white rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.12)] border border-slate-100 p-1.5 animate-in fade-in zoom-in-95 duration-150">
+                          <div className="flex flex-col">
+                            <Link
+                              href="/about"
+                              onClick={() => setActiveDropdown(null)}
+                              className="px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors"
+                            >
+                              About Us
+                            </Link>
+                            <Link
+                              href="/team"
+                              onClick={() => setActiveDropdown(null)}
+                              className="px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:text-[hsl(195,100%,25%)] hover:bg-slate-50 transition-colors"
+                            >
+                              Our Team
+                            </Link>
+                          </div>
+                        </div>
+                      ) : link.dropdownType === "training" ? (
                           <div className="w-[580px] bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-200">
                             <div className="flex flex-col gap-3">
                               {/* If odd number of courses (e.g. 3 or 1), 1 course centered in the middle on top */}
@@ -297,7 +328,7 @@ export default function Navbar() {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }
                 }}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                className={`px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-full text-xs xl:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                   isActive
                     ? "bg-[hsl(195,100%,25%)]/10 text-[hsl(195,100%,25%)] font-semibold shadow-xs"
                     : "text-slate-600 hover:text-[hsl(195,100%,25%)] hover:bg-slate-100/80"
@@ -309,12 +340,23 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* CTA Button */}
-        <div className="hidden lg:block">
+        {/* CTA Buttons */}
+        <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("open-entry-modal"));
+              }
+            }}
+            className="inline-flex items-center justify-center text-xs xl:text-sm font-semibold px-3 xl:px-4 py-1.5 xl:py-2 rounded-full border border-[hsl(195,100%,25%)]/30 text-[hsl(195,100%,25%)] hover:bg-[hsl(195,100%,25%)]/5 transition-all duration-200 whitespace-nowrap cursor-pointer"
+          >
+            Register
+          </button>
           <button
             type="button"
             onClick={() => openQuoteDialog()}
-            className="inline-flex items-center justify-center text-sm font-semibold px-6 py-2.5 rounded-full bg-gradient-to-r from-[hsl(195,100%,25%)] to-[hsl(195,100%,42%)] hover:from-[hsl(195,100%,20%)] hover:to-[hsl(195,100%,36%)] text-white shadow-[0_4px_14px_rgba(0,105,148,0.22)] hover:shadow-[0_6px_20px_rgba(0,105,148,0.32)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+            className="inline-flex items-center justify-center text-xs xl:text-sm font-semibold px-4 xl:px-5 py-2 xl:py-2.5 rounded-full bg-gradient-to-r from-[hsl(195,100%,25%)] to-[hsl(195,100%,42%)] hover:from-[hsl(195,100%,20%)] hover:to-[hsl(195,100%,36%)] text-white shadow-[0_4px_14px_rgba(0,105,148,0.22)] hover:shadow-[0_6px_20px_rgba(0,105,148,0.32)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 whitespace-nowrap cursor-pointer"
           >
             Get a Project Quote
           </button>
@@ -337,6 +379,48 @@ export default function Navbar() {
             {navLinks.map((link) => {
               if (link.dropdownType) {
                 const isExpanded = mobileExpanded === link.dropdownType;
+
+                if (link.dropdownType === "company") {
+                  return (
+                    <div key={link.name} className="border-b border-gray-50 pb-2">
+                      <button
+                        onClick={() =>
+                          setMobileExpanded((prev) =>
+                            prev === link.dropdownType ? null : link.dropdownType!
+                          )
+                        }
+                        className="w-full flex items-center justify-between py-3 text-sm font-semibold text-[hsl(210,29%,24%)] cursor-pointer"
+                      >
+                        <span>{link.name}</span>
+                        <ChevronDown
+                          size={16}
+                          className={`transition-transform duration-200 ${
+                            isExpanded ? "rotate-180 text-[hsl(195,100%,25%)]" : ""
+                          }`}
+                        />
+                      </button>
+                      {isExpanded && (
+                        <div className="pl-4 space-y-1 pb-2">
+                          <Link
+                            href="/about"
+                            onClick={() => setMobileOpen(false)}
+                            className="block py-2 text-xs font-semibold text-slate-700 hover:text-[hsl(195,100%,25%)]"
+                          >
+                            About Us
+                          </Link>
+                          <Link
+                            href="/team"
+                            onClick={() => setMobileOpen(false)}
+                            className="block py-2 text-xs font-semibold text-slate-700 hover:text-[hsl(195,100%,25%)]"
+                          >
+                            Our Team
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
                 let items: { id?: string; slug: string; title: string }[] = [];
                 let baseHref = "";
 
@@ -403,7 +487,19 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div className="pt-4 space-y-3">
+            <div className="pt-4 space-y-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new CustomEvent("open-entry-modal"));
+                  }
+                }}
+                className="w-full flex items-center justify-center text-sm font-semibold py-2.5 rounded-xl border border-[hsl(195,100%,25%)] text-[hsl(195,100%,25%)] bg-[hsl(195,100%,25%)]/5 cursor-pointer"
+              >
+                Register with Visha
+              </button>
               <button
                 type="button"
                 onClick={() => {

@@ -62,27 +62,68 @@ export default function JobApplicationForm({ jobId }: { jobId: string }) {
       )}
 
       <div>
-        <label className="block text-sm font-medium text-secondary mb-1">Full Name *</label>
-        <input {...register("fullName", { required: "Full name is required" })} className="input-field" placeholder="John Doe" />
+        <label className="block text-sm font-medium text-secondary mb-1">
+          Full Name <span className="text-red-500 font-bold">*</span>
+        </label>
+        <input
+          {...register("fullName", {
+            required: "Full name is required",
+            minLength: { value: 2, message: "Full name must be at least 2 characters" },
+            pattern: {
+              value: /^[A-Za-z\s.]+$/,
+              message: "Full name can only contain letters and spaces (no numbers or special characters)",
+            },
+          })}
+          className="input-field"
+          placeholder="e.g. John Doe"
+        />
         {errors.fullName && <p className="mt-1 text-sm text-red-500">{errors.fullName.message}</p>}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label className="block text-sm font-medium text-secondary mb-1">Email Address *</label>
-          <input {...register("email", { required: "Email is required" })} type="email" className="input-field" placeholder="john@example.com" />
+          <label className="block text-sm font-medium text-secondary mb-1">
+            Email Address <span className="text-red-500 font-bold">*</span>
+          </label>
+          <input
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Please enter a valid email address",
+              },
+            })}
+            type="email"
+            className="input-field"
+            placeholder="e.g. john@example.com"
+          />
           {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-secondary mb-1">Phone Number *</label>
-          <input {...register("phone", { required: "Phone number is required" })} className="input-field" placeholder="+1 234 567 8900" />
+          <label className="block text-sm font-medium text-secondary mb-1">
+            Phone Number (10 Digits) <span className="text-red-500 font-bold">*</span>
+          </label>
+          <input
+            {...register("phone", {
+              required: "Phone number is required",
+              pattern: {
+                value: /^[0-9]{10}$/,
+                message: "Phone number must contain exactly 10 digits",
+              },
+            })}
+            maxLength={10}
+            className="input-field"
+            placeholder="9876543210"
+          />
           {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>}
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-secondary mb-1">Resume (PDF/DOC) *</label>
+        <label className="block text-sm font-medium text-secondary mb-1">
+          Resume (PDF/DOC) <span className="text-red-500 font-bold">*</span>
+        </label>
         <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center text-center hover:bg-gray-50 transition-colors cursor-pointer">
           <UploadCloud className="text-gray-400 mb-2" size={32} />
           <span className="text-sm text-secondary-light">

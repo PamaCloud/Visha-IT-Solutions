@@ -12,7 +12,9 @@ import {
   Globe2,
   Briefcase,
   CheckCircle2,
+  MapPin,
 } from "lucide-react";
+import { FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import SlideUp from "@/components/animations/SlideUp";
 import FadeIn from "@/components/animations/FadeIn";
 import { Metadata } from "next";
@@ -256,7 +258,172 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 4. Ready to Work With Us CTA Section (Glassy Enterprise Card - Replaced harsh cyan strip) */}
+      {/* 4. Leadership Team Section */}
+      <section id="team" className="py-20 md:py-28 bg-slate-50/60 relative scroll-mt-24 border-t border-slate-200/80">
+        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <FadeIn>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky-50 text-[#004f6e] text-xs font-bold tracking-wider uppercase mb-3 border border-sky-200">
+                <Sparkles size={13} className="text-[#00779e]" />
+                <span>EXECUTIVE GOVERNANCE</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+                Our Leadership Team
+              </h2>
+            </FadeIn>
+            <SlideUp delay={0.1}>
+              <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+                Guiding Visha IT Solutions with a vision of world-class technology, talent excellence, and global delivery across India and the UK.
+              </p>
+            </SlideUp>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+            {/* Devayani Kodipelli */}
+            <SlideUp delay={0.15}>
+              <div className="group h-full flex flex-col justify-between bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:border-sky-300 transition-all duration-300 relative overflow-hidden">
+                <div className="h-2 w-full bg-gradient-to-r from-[#004f6e] via-[#00779e] to-[#0284c7]" />
+                <div className="p-7 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
+                  <div>
+                    <div className="flex items-start justify-between gap-3 mb-5">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#004f6e] to-[#00779e] text-white font-black text-lg flex items-center justify-center shadow-md border-2 border-white ring-2 ring-sky-100">
+                        <span>DK</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider uppercase border bg-sky-50 text-[#004f6e] border-sky-200">
+                          GLOBAL LEADERSHIP
+                        </span>
+                        <div className="flex items-center justify-end gap-1 text-xs font-semibold text-slate-500 mt-1.5">
+                          <MapPin size={12} className="text-[#00779e]" />
+                          <span>Hyderabad, India</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-b border-slate-100 pb-4 mb-4">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-[#004f6e] transition-colors">
+                        Devayani Kodipelli
+                      </h3>
+                      <p className="text-sm font-bold text-[#00779e] mt-1">
+                        Chief Executive Officer (CEO)
+                      </p>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                      Pioneering executive leader steering corporate strategy, international enterprise alliances, and continuous organizational scaling across IT recruitment, web architectures, and career development programs.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
+                      Global Enterprise Strategy
+                    </div>
+                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
+                      Strategic Partnerships
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SlideUp>
+
+            {/* Vishnu Ganesh Kamsani */}
+            <SlideUp delay={0.25}>
+              <div className="group h-full flex flex-col justify-between bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300 relative overflow-hidden">
+                <div className="h-2 w-full bg-gradient-to-r from-[#0a2540] via-[#1e3a8a] to-[#2563eb]" />
+                <div className="p-7 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
+                  <div>
+                    <div className="flex items-start justify-between gap-3 mb-5">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0a2540] to-[#2563eb] text-white font-black text-lg flex items-center justify-center shadow-md border-2 border-white ring-2 ring-blue-100">
+                        <span>VG</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider uppercase border bg-blue-50 text-blue-900 border-blue-200">
+                          UK &amp; EUROPE
+                        </span>
+                        <div className="flex items-center justify-end gap-1 text-xs font-semibold text-slate-500 mt-1.5">
+                          <MapPin size={12} className="text-[#00779e]" />
+                          <span>London, UK</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-b border-slate-100 pb-4 mb-4">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-[#004f6e] transition-colors">
+                        Vishnu Ganesh Kamsani
+                      </h3>
+                      <p className="text-sm font-bold text-[#00779e] mt-1">
+                        Director / UK Operations
+                      </p>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                      Leading overseas market expansion and enterprise technology client accounts. Vishnu bridges European market opportunities with precision technical execution and bespoke engineering delivery.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
+                      UK &amp; Europe Expansion
+                    </div>
+                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
+                      Cross-Border Delivery
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SlideUp>
+
+            {/* Srikanth Nallapu */}
+            <SlideUp delay={0.35}>
+              <div className="group h-full flex flex-col justify-between bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:border-teal-300 transition-all duration-300 relative overflow-hidden">
+                <div className="h-2 w-full bg-gradient-to-r from-[#064e3b] via-[#0d9488] to-[#0284c7]" />
+                <div className="p-7 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
+                  <div>
+                    <div className="flex items-start justify-between gap-3 mb-5">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#064e3b] to-[#0d9488] text-white font-black text-lg flex items-center justify-center shadow-md border-2 border-white ring-2 ring-teal-100">
+                        <span>SN</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider uppercase border bg-teal-50 text-teal-900 border-teal-200">
+                          OPERATIONS &amp; SLA
+                        </span>
+                        <div className="flex items-center justify-end gap-1 text-xs font-semibold text-slate-500 mt-1.5">
+                          <MapPin size={12} className="text-[#00779e]" />
+                          <span>Hyderabad, India</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="border-b border-slate-100 pb-4 mb-4">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-[#004f6e] transition-colors">
+                        Srikanth Nallapu
+                      </h3>
+                      <p className="text-sm font-bold text-[#00779e] mt-1">
+                        Managing Director
+                      </p>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                      Directing daily organizational momentum, technical execution velocity, and delivery quality governance across all software projects, recruitment pipelines, and digital campaigns.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
+                      Operational Scalability
+                    </div>
+                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
+                      Engineering SLAs &amp; QA
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SlideUp>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Ready to Work With Us CTA Section */}
       <section className="py-20 md:py-28 bg-slate-50 relative overflow-hidden">
         <div className="container max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
           <SlideUp delay={0.1}>
