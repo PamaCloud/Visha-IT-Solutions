@@ -13,6 +13,7 @@ import {
   Briefcase,
   CheckCircle2,
   MapPin,
+  CheckSquare2,
 } from "lucide-react";
 import { FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import SlideUp from "@/components/animations/SlideUp";
@@ -24,6 +25,78 @@ export const metadata: Metadata = {
   description:
     "Learn about Visha IT Solutions, our journey, enterprise values, and mission to deliver cutting-edge technology and human-capital solutions worldwide.",
 };
+
+interface LeaderProfile {
+  name: string;
+  role: string;
+  division: string;
+  badge: string;
+  image: string;
+  accentGradient: string;
+  ringColor: string;
+  badgeBg: string;
+  location: string;
+  country: string;
+  quote: string;
+  topPoints: { label: string; desc: string }[];
+}
+
+const LEADERS: LeaderProfile[] = [
+  {
+    name: "Devayani Kodipelli",
+    role: "Founder & Chief Executive Officer (CEO)",
+    division: "Global Strategy & Corporate Governance",
+    badge: "GLOBAL LEADERSHIP",
+    image: "/team/devayani-avatar.jpg",
+    accentGradient: "from-[#004f6e] via-[#00779e] to-[#0284c7]",
+    ringColor: "border-[#00779e]/30 shadow-[#00779e]/20",
+    badgeBg: "bg-sky-50 text-[#004f6e] border-sky-200",
+    location: "Hyderabad, India",
+    country: "Global Headquarters",
+    quote: "Steering Visha IT Solutions with engineering excellence and global enterprise vision.",
+    topPoints: [
+      { label: "Global Strategy", desc: "Corporate expansion roadmaps & long-term value creation." },
+      { label: "Enterprise Alliances", desc: "Strategic partnerships with Tier-1 industry leaders." },
+      { label: "Digital Innovation", desc: "Next-generation cloud, AI systems & talent development." },
+    ],
+  },
+  {
+    name: "Vishnu Ganesh Kamsani",
+    role: "Director / UK & Europe Operations",
+    division: "UK & European Enterprise Expansion",
+    badge: "UK & EUROPE OPERATIONS",
+    image: "/team/vishnu-avatar.jpg",
+    accentGradient: "from-[#0a2540] via-[#1e3a8a] to-[#2563eb]",
+    ringColor: "border-blue-500/30 shadow-blue-500/20",
+    badgeBg: "bg-blue-50 text-blue-900 border-blue-200",
+    location: "London, United Kingdom",
+    country: "European Presence",
+    quote: "Connecting UK & European enterprises with agile IT talent and reliable execution.",
+    topPoints: [
+      { label: "UK & EU Expansion", desc: "Enterprise business growth & strategic client acquisition." },
+      { label: "Talent Mobility", desc: "Deploying vetted, high-caliber engineering specialists." },
+      { label: "Cross-Border Synergy", desc: "Seamless 24/7 UK-offshore team alignment & delivery." },
+    ],
+  },
+  {
+    name: "Srikanth Nallapu",
+    role: "Managing Director",
+    division: "Operational Scalability & Delivery SLA",
+    badge: "OPERATIONS & DELIVERY",
+    image: "/team/srikanth-avatar.jpg",
+    accentGradient: "from-[#064e3b] via-[#0d9488] to-[#0284c7]",
+    ringColor: "border-teal-500/30 shadow-teal-500/20",
+    badgeBg: "bg-teal-50 text-teal-900 border-teal-200",
+    location: "Hyderabad, India",
+    country: "Execution Center",
+    quote: "Upholding uncompromising delivery SLAs, agile execution, and QA excellence.",
+    topPoints: [
+      { label: "Operational Scale", desc: "Scaling multi-disciplinary engineering & agile infrastructure." },
+      { label: "Delivery SLAs & QA", desc: "Zero-defect quality benchmarks & milestone adherence." },
+      { label: "Resource Planning", desc: "Optimizing full-stack talent & long-term client retention." },
+    ],
+  },
+];
 
 export default function AboutPage() {
   const stats = [
@@ -278,147 +351,115 @@ export default function AboutPage() {
             </SlideUp>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-            {/* Devayani Kodipelli */}
-            <SlideUp delay={0.15}>
-              <div className="group h-full flex flex-col justify-between bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:border-sky-300 transition-all duration-300 relative overflow-hidden">
-                <div className="h-2 w-full bg-gradient-to-r from-[#004f6e] via-[#00779e] to-[#0284c7]" />
-                <div className="p-7 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
-                  <div>
-                    <div className="flex items-start justify-between gap-3 mb-5">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#004f6e] to-[#00779e] text-white font-black text-lg flex items-center justify-center shadow-md border-2 border-white ring-2 ring-sky-100">
-                        <span>DK</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider uppercase border bg-sky-50 text-[#004f6e] border-sky-200">
-                          GLOBAL LEADERSHIP
-                        </span>
-                        <div className="flex items-center justify-end gap-1 text-xs font-semibold text-slate-500 mt-1.5">
-                          <MapPin size={12} className="text-[#00779e]" />
-                          <span>Hyderabad, India</span>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+            {LEADERS.map((leader, idx) => (
+              <SlideUp key={leader.name} delay={0.15 + idx * 0.1}>
+                <div className="group h-full flex flex-col justify-between bg-white rounded-3xl border border-slate-200/90 shadow-[0_10px_35px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(2,132,199,0.12)] hover:border-sky-400/60 transition-all duration-300 relative overflow-hidden">
+                  {/* Top Radiant Accent Ribbon */}
+                  <div className={`h-2 w-full bg-gradient-to-r ${leader.accentGradient}`} />
+
+                  {/* Card Main Body */}
+                  <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-5">
+                    {/* Header: Photo Avatar & Location / Domain Badge */}
+                    <div>
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        {/* Executive High-Res Professional Vector Avatar */}
+                        <div className="relative shrink-0">
+                          <div
+                            className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full p-1 bg-gradient-to-br ${leader.accentGradient} shadow-md ${leader.ringColor} border-2 border-white ring-4 ring-slate-100 overflow-hidden group-hover:scale-105 transition-transform duration-300`}
+                          >
+                            <div className="w-full h-full rounded-full overflow-hidden bg-white relative">
+                              <Image
+                                src={leader.image}
+                                alt={leader.name}
+                                width={256}
+                                height={256}
+                                quality={100}
+                                priority
+                                className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
+                              />
+                            </div>
+                          </div>
+                          {/* Miniature Executive Verified Shield */}
+                          <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[#00779e] shadow-xs">
+                            <Award size={13} className="text-[#00779e]" />
+                          </div>
                         </div>
+
+                        {/* Domain & Location Tag */}
+                        <div className="text-right">
+                          <span
+                            className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase border ${leader.badgeBg}`}
+                          >
+                            {leader.badge}
+                          </span>
+                          <div className="flex items-center justify-end gap-1 text-[11px] font-semibold text-slate-500 mt-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <MapPin size={12} className="text-[#00779e]" />
+                            <span>{leader.location}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Name & Title */}
+                      <div className="space-y-1 border-b border-slate-100 pb-4">
+                        <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight group-hover:text-[#004f6e] transition-colors">
+                          {leader.name}
+                        </h3>
+                        <p className="text-xs sm:text-sm font-bold text-[#00779e]">
+                          {leader.role}
+                        </p>
+                        <p className="text-[11px] font-semibold text-slate-400">
+                          {leader.division}
+                        </p>
                       </div>
                     </div>
 
-                    <div className="border-b border-slate-100 pb-4 mb-4">
-                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-[#004f6e] transition-colors">
-                        Devayani Kodipelli
-                      </h3>
-                      <p className="text-sm font-bold text-[#00779e] mt-1">
-                        Chief Executive Officer (CEO)
+                    {/* Executive Quote Vision Box */}
+                    <div className="p-3.5 rounded-xl bg-gradient-to-br from-slate-50 via-sky-50/40 to-slate-50 border border-slate-200/80 relative">
+                      <div className="text-[9px] font-black uppercase tracking-widest text-[#00779e] mb-1 flex items-center gap-1">
+                        <Sparkles size={10} />
+                        <span>Leadership Mandate</span>
+                      </div>
+                      <p className="text-xs text-slate-700 italic leading-relaxed font-medium">
+                        &ldquo;{leader.quote}&rdquo;
                       </p>
                     </div>
 
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
-                      Pioneering executive leader steering corporate strategy, international enterprise alliances, and continuous organizational scaling across IT recruitment, web architectures, and career development programs.
-                    </p>
+                    {/* Core Roles & Key Strategic Highlights */}
+                    <div className="space-y-2">
+                      <div className="text-[10px] font-extrabold uppercase tracking-widest text-[#004f6e] flex items-center gap-1.5">
+                        <CheckSquare2 size={12} className="text-[#00779e]" />
+                        <span>Key Responsibilities &amp; Focus</span>
+                      </div>
+                      <div className="space-y-1.5">
+                        {leader.topPoints.map((pt, pIdx) => (
+                          <div
+                            key={pIdx}
+                            className="flex items-start gap-2 p-2 rounded-xl bg-slate-50/90 border border-slate-100 hover:border-sky-200 hover:bg-sky-50/40 transition-colors"
+                          >
+                            <CheckCircle2 size={13} className="text-[#00779e] mt-0.5 shrink-0" />
+                            <div className="text-xs text-slate-700 leading-snug">
+                              <strong className="font-bold text-slate-900">{pt.label}:</strong>
+                              <span className="text-slate-600 ml-1">{pt.desc}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
-                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
-                      Global Enterprise Strategy
-                    </div>
-                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
-                      Strategic Partnerships
+                  {/* Card Bottom Enterprise Status Bar */}
+                  <div className="bg-slate-50/90 border-t border-slate-100 px-6 py-3 flex items-center justify-between text-xs text-slate-500">
+                    <span className="font-semibold text-slate-600 text-[11px]">{leader.country}</span>
+                    <div className="inline-flex items-center gap-1 text-[11px] font-bold text-[#00779e] group-hover:translate-x-0.5 transition-transform">
+                      <span>Executive Governance</span>
+                      <CheckCircle2 size={12} className="text-[#00779e]" />
                     </div>
                   </div>
                 </div>
-              </div>
-            </SlideUp>
-
-            {/* Vishnu Ganesh Kamsani */}
-            <SlideUp delay={0.25}>
-              <div className="group h-full flex flex-col justify-between bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300 relative overflow-hidden">
-                <div className="h-2 w-full bg-gradient-to-r from-[#0a2540] via-[#1e3a8a] to-[#2563eb]" />
-                <div className="p-7 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
-                  <div>
-                    <div className="flex items-start justify-between gap-3 mb-5">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0a2540] to-[#2563eb] text-white font-black text-lg flex items-center justify-center shadow-md border-2 border-white ring-2 ring-blue-100">
-                        <span>VG</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider uppercase border bg-blue-50 text-blue-900 border-blue-200">
-                          UK &amp; EUROPE
-                        </span>
-                        <div className="flex items-center justify-end gap-1 text-xs font-semibold text-slate-500 mt-1.5">
-                          <MapPin size={12} className="text-[#00779e]" />
-                          <span>London, UK</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="border-b border-slate-100 pb-4 mb-4">
-                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-[#004f6e] transition-colors">
-                        Vishnu Ganesh Kamsani
-                      </h3>
-                      <p className="text-sm font-bold text-[#00779e] mt-1">
-                        Director / UK Operations
-                      </p>
-                    </div>
-
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
-                      Leading overseas market expansion and enterprise technology client accounts. Vishnu bridges European market opportunities with precision technical execution and bespoke engineering delivery.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
-                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
-                      UK &amp; Europe Expansion
-                    </div>
-                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
-                      Cross-Border Delivery
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SlideUp>
-
-            {/* Srikanth Nallapu */}
-            <SlideUp delay={0.35}>
-              <div className="group h-full flex flex-col justify-between bg-white rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:border-teal-300 transition-all duration-300 relative overflow-hidden">
-                <div className="h-2 w-full bg-gradient-to-r from-[#064e3b] via-[#0d9488] to-[#0284c7]" />
-                <div className="p-7 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
-                  <div>
-                    <div className="flex items-start justify-between gap-3 mb-5">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#064e3b] to-[#0d9488] text-white font-black text-lg flex items-center justify-center shadow-md border-2 border-white ring-2 ring-teal-100">
-                        <span>SN</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider uppercase border bg-teal-50 text-teal-900 border-teal-200">
-                          OPERATIONS &amp; SLA
-                        </span>
-                        <div className="flex items-center justify-end gap-1 text-xs font-semibold text-slate-500 mt-1.5">
-                          <MapPin size={12} className="text-[#00779e]" />
-                          <span>Hyderabad, India</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="border-b border-slate-100 pb-4 mb-4">
-                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-[#004f6e] transition-colors">
-                        Srikanth Nallapu
-                      </h3>
-                      <p className="text-sm font-bold text-[#00779e] mt-1">
-                        Managing Director
-                      </p>
-                    </div>
-
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
-                      Directing daily organizational momentum, technical execution velocity, and delivery quality governance across all software projects, recruitment pipelines, and digital campaigns.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
-                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
-                      Operational Scalability
-                    </div>
-                    <div className="p-2 rounded-lg bg-slate-50 text-[11px] font-bold text-slate-700 text-center">
-                      Engineering SLAs &amp; QA
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SlideUp>
+              </SlideUp>
+            ))}
           </div>
         </div>
       </section>
