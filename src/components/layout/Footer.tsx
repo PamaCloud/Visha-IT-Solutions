@@ -101,11 +101,11 @@ export default function Footer() {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="mailto:contact@vishait.com"
+                  href="mailto:info@vishaitsolutions.com"
                   className="flex items-start gap-3 text-white/60 hover:text-[hsl(195,100%,50%)] transition-colors text-sm"
                 >
                   <Mail className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <span>contact@vishait.com</span>
+                  <span>info@vishaitsolutions.com</span>
                 </a>
               </li>
               <li>
@@ -119,9 +119,9 @@ export default function Footer() {
               </li>
               
               <li>
-                <span className="flex items-start gap-3 text-white/60 text-sm">
-                  <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <span>Hyderabad, Telangana, India</span>
+                <span className="flex items-start gap-3 text-white/60 text-sm leading-relaxed">
+                  <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
+                  <span>Apurupa Turbo Tower, No:36 Pillar No:1680, 2-293/82/a/787, Road, Jubilee Hills, Hyderabad, Telangana 500033 (Near Apurupa Turbo Towers)</span>
                 </span>
               </li>
             </ul>

@@ -426,7 +426,7 @@ export default function Navbar() {
                     <span>Call Us</span>
                   </a>
                   <a
-                    href="mailto:contact@vishait.com"
+                    href="mailto:info@vishaitsolutions.com"
                     className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-semibold hover:bg-slate-100 transition-colors"
                   >
                     <Mail size={13} className="text-[hsl(195,100%,25%)]" />

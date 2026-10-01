@@ -56,7 +56,9 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h4 className="font-bold text-slate-900 text-sm mb-0.5">Our Location</h4>
-                      <p className="text-slate-600 text-sm leading-relaxed">Hyderabad, Telangana, India</p>
+                      <p className="text-slate-600 text-sm leading-relaxed">
+                        Apurupa Turbo Tower, No:36 Pillar No:1680, 2-293/82/a/787, Road, Jubilee Hills, Hyderabad, Telangana 500033 (Near Apurupa Turbo Towers)
+                      </p>
                     </div>
                   </div>
 
@@ -92,7 +94,12 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h4 className="font-bold text-slate-900 text-sm mb-0.5">Email Address</h4>
-                      <p className="text-slate-600 text-sm font-medium">contact@vishait.com</p>
+                      <a
+                        href="mailto:info@vishaitsolutions.com"
+                        className="text-slate-600 text-sm font-medium hover:text-[hsl(195,100%,25%)] transition-colors"
+                      >
+                        info@vishaitsolutions.com
+                      </a>
                     </div>
                   </div>
 

@@ -23,8 +23,8 @@ export class EmailService {
 
     try {
       const info = await this.transporter.sendMail({
-        from: process.env.EMAIL_FROM || '"Visha IT Solutions" <noreply@vishait.com>',
-        to: process.env.ADMIN_EMAIL || "admin@vishait.com",
+        from: process.env.EMAIL_FROM || '"Visha IT Solutions" <noreply@vishaitsolutions.com>',
+        to: process.env.ADMIN_EMAIL || "info@vishaitsolutions.com",
         subject: `[Visha IT] ${subject}`,
         html: `<p>New enquiry received.</p><pre>${JSON.stringify(data, null, 2)}</pre>`,
       });

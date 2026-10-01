@@ -23,9 +23,9 @@ export interface ISiteSetting extends Document {
 const SiteSettingSchema: Schema = new Schema(
   {
     companyName: { type: String, required: true, default: "Visha IT Solutions" },
-    email: { type: String, required: true, default: "contact@vishait.com" },
+    email: { type: String, required: true, default: "info@vishaitsolutions.com" },
     phone: { type: String, required: true, default: "+91 90146 46804" },
-    address: { type: String, required: true, default: "Hyderabad, India" },
+    address: { type: String, required: true, default: "Apurupa Turbo Tower, No:36 Pillar No:1680, 2-293/82/a/787, Road, Jubilee Hills, Hyderabad, Telangana 500033 (Near Apurupa Turbo Towers)" },
     whatsapp: { type: String, default: "+91 90146 46804" },
     socialLinks: {
       facebook: { type: String },

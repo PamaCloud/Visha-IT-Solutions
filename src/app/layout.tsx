@@ -86,11 +86,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "any" },
       { url: "/favicon.png", type: "image/png" },
       { url: "/icon.png", type: "image/png" },
     ],
-    shortcut: "/favicon.png",
-    apple: "/icon.png",
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
 };
 
@@ -108,15 +109,18 @@ const organizationJsonLd = {
         "Enterprise technology architecture, e-commerce storefronts, digital marketing, recruitment staffing, and job-ready training academy.",
       address: {
         "@type": "PostalAddress",
+        streetAddress:
+          "Apurupa Turbo Tower, No:36 Pillar No:1680, 2-293/82/a/787, Road, Jubilee Hills (Near Apurupa Turbo Towers)",
         addressLocality: "Hyderabad",
         addressRegion: "Telangana",
+        postalCode: "500033",
         addressCountry: "IN",
       },
       contactPoint: {
         "@type": "ContactPoint",
         telephone: "+91-9014646804",
         contactType: "customer service",
-        email: "contact@vishait.com",
+        email: "info@vishaitsolutions.com",
         areaServed: "IN",
         availableLanguage: ["English", "Hindi", "Telugu"],
       },
@@ -140,12 +144,15 @@ const organizationJsonLd = {
       name: "Visha IT Solutions",
       url: "https://vishait.com",
       telephone: "+91-9014646804",
-      email: "contact@vishait.com",
+      email: "info@vishaitsolutions.com",
       priceRange: "$$",
       address: {
         "@type": "PostalAddress",
+        streetAddress:
+          "Apurupa Turbo Tower, No:36 Pillar No:1680, 2-293/82/a/787, Road, Jubilee Hills (Near Apurupa Turbo Towers)",
         addressLocality: "Hyderabad",
         addressRegion: "Telangana",
+        postalCode: "500033",
         addressCountry: "IN",
       },
     },

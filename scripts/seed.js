@@ -89,9 +89,9 @@ function seed() {
                     if (!!existingSettings) return [3 /*break*/, 9];
                     return [4 /*yield*/, SiteSetting_1.default.create({
                             companyName: "Visha IT Solutions",
-                            email: "contact@vishait.com",
-                            phone: "+91 9999999999",
-                            address: "Hyderabad, India",
+                            email: "info@vishaitsolutions.com",
+                            phone: "+91 90146 46804",
+                            address: "Apurupa Turbo Tower, No:36 Pillar No:1680, 2-293/82/a/787, Road, Jubilee Hills, Hyderabad, Telangana 500033 (Near Apurupa Turbo Towers)",
                             seoDefaults: {
                                 title: "Visha IT Solutions",
                                 description: "Technology. Talent. Solutions.",
